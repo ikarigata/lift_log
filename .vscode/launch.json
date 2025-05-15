@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-LiftLogApplication<lift_log>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "io.github.ikarigata.lift_log.LiftLogApplication",
+      "projectName": "lift_log",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
