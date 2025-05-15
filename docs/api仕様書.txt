@@ -1,0 +1,1043 @@
+openapi: 3.0.3
+info:
+  title: 筋トレ記録アプリAPI
+  description: シンプルでスタイリッシュな筋トレ記録アプリのためのRESTful API
+  version: 1.0.0
+servers:
+  - url: /api/v1
+    description: 開発サーバー
+
+paths:
+  #-------------------------
+  # ユーザー関連API
+  #-------------------------
+  /users:
+    post:
+      summary: ユーザー登録
+      operationId: createUser
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: ユーザー登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    
+  /users/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: ユーザーID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: ユーザー情報取得
+      operationId: getUser
+      tags:
+        - users
+      responses:
+        '200':
+          description: ユーザー情報取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    put:
+      summary: ユーザー情報更新
+      operationId: updateUser
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':
+          description: ユーザー情報更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    delete:
+      summary: ユーザー削除
+      operationId: deleteUser
+      tags:
+        - users
+      responses:
+        '204':
+          description: ユーザー削除成功
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  #-------------------------
+  # トレーニング日API
+  #-------------------------
+  /users/{userId}/workout-days:
+    parameters:
+      - name: userId
+        in: path
+        description: ユーザーID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: ユーザーのトレーニング日一覧取得
+      operationId: getUserWorkoutDays
+      tags:
+        - workout-days
+      responses:
+        '200':
+          description: トレーニング日一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutDayResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    post:
+      summary: トレーニング日登録
+      operationId: createWorkoutDay
+      tags:
+        - workout-days
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutDayRequest'
+      responses:
+        '201':
+          description: トレーニング日登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutDayResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  
+  /workout-days/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: トレーニング日ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: トレーニング日詳細取得
+      operationId: getWorkoutDay
+      tags:
+        - workout-days
+      responses:
+        '200':
+          description: トレーニング日詳細取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutDayResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    put:
+      summary: トレーニング日更新
+      operationId: updateWorkoutDay
+      tags:
+        - workout-days
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutDayRequest'
+      responses:
+        '200':
+          description: トレーニング日更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutDayResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    delete:
+      summary: トレーニング日削除
+      operationId: deleteWorkoutDay
+      tags:
+        - workout-days
+      responses:
+        '204':
+          description: トレーニング日削除成功
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  #-------------------------
+  # トレーニング実績API
+  #-------------------------
+  /workout-days/{workoutDayId}/workout-records:
+    parameters:
+      - name: workoutDayId
+        in: path
+        description: トレーニング日ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: トレーニング実績一覧取得
+      operationId: getWorkoutRecords
+      tags:
+        - workout-records
+      responses:
+        '200':
+          description: トレーニング実績一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutRecordResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    post:
+      summary: トレーニング実績登録
+      operationId: createWorkoutRecord
+      tags:
+        - workout-records
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutRecordRequest'
+      responses:
+        '201':
+          description: トレーニング実績登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutRecordResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  
+  /workout-records/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: トレーニング実績ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: トレーニング実績詳細取得
+      operationId: getWorkoutRecord
+      tags:
+        - workout-records
+      responses:
+        '200':
+          description: トレーニング実績詳細取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutRecordResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    put:
+      summary: トレーニング実績更新
+      operationId: updateWorkoutRecord
+      tags:
+        - workout-records
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutRecordRequest'
+      responses:
+        '200':
+          description: トレーニング実績更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutRecordResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    delete:
+      summary: トレーニング実績削除
+      operationId: deleteWorkoutRecord
+      tags:
+        - workout-records
+      responses:
+        '204':
+          description: トレーニング実績削除成功
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  #-------------------------
+  # トレーニングセットAPI
+  #-------------------------
+  /workout-records/{workoutRecordId}/workout-sets:
+    parameters:
+      - name: workoutRecordId
+        in: path
+        description: トレーニング実績ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: トレーニングセット一覧取得
+      operationId: getWorkoutSets
+      tags:
+        - workout-sets
+      responses:
+        '200':
+          description: トレーニングセット一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutSetResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    post:
+      summary: トレーニングセット登録
+      operationId: createWorkoutSet
+      tags:
+        - workout-sets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutSetRequest'
+      responses:
+        '201':
+          description: トレーニングセット登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutSetResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  
+  /workout-sets/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: トレーニングセットID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: トレーニングセット詳細取得
+      operationId: getWorkoutSet
+      tags:
+        - workout-sets
+      responses:
+        '200':
+          description: トレーニングセット詳細取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutSetResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    put:
+      summary: トレーニングセット更新
+      operationId: updateWorkoutSet
+      tags:
+        - workout-sets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutSetRequest'
+      responses:
+        '200':
+          description: トレーニングセット更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutSetResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    delete:
+      summary: トレーニングセット削除
+      operationId: deleteWorkoutSet
+      tags:
+        - workout-sets
+      responses:
+        '204':
+          description: トレーニングセット削除成功
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  #-------------------------
+  # トレーニング種目API（マスターデータ）
+  #-------------------------
+  /exercises:
+    get:
+      summary: トレーニング種目一覧取得
+      operationId: getExercises
+      tags:
+        - exercises
+      responses:
+        '200':
+          description: トレーニング種目一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExerciseResponse'
+    
+    post:
+      summary: トレーニング種目登録
+      operationId: createExercise
+      tags:
+        - exercises
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExerciseRequest'
+      responses:
+        '201':
+          description: トレーニング種目登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  
+  /exercises/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: トレーニング種目ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: トレーニング種目詳細取得
+      operationId: getExercise
+      tags:
+        - exercises
+      responses:
+        '200':
+          description: トレーニング種目詳細取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    put:
+      summary: トレーニング種目更新
+      operationId: updateExercise
+      tags:
+        - exercises
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExerciseRequest'
+      responses:
+        '200':
+          description: トレーニング種目更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    delete:
+      summary: トレーニング種目削除
+      operationId: deleteExercise
+      tags:
+        - exercises
+      responses:
+        '204':
+          description: トレーニング種目削除成功
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  #-------------------------
+  # 部位API（マスターデータ）
+  #-------------------------
+  /muscle-groups:
+    get:
+      summary: 部位一覧取得
+      operationId: getMuscleGroups
+      tags:
+        - muscle-groups
+      responses:
+        '200':
+          description: 部位一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MuscleGroupResponse'
+    
+    post:
+      summary: 部位登録
+      operationId: createMuscleGroup
+      tags:
+        - muscle-groups
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MuscleGroupRequest'
+      responses:
+        '201':
+          description: 部位登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MuscleGroupResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  
+  /muscle-groups/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: 部位ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: 部位詳細取得
+      operationId: getMuscleGroup
+      tags:
+        - muscle-groups
+      responses:
+        '200':
+          description: 部位詳細取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MuscleGroupResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    put:
+      summary: 部位更新
+      operationId: updateMuscleGroup
+      tags:
+        - muscle-groups
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MuscleGroupRequest'
+      responses:
+        '200':
+          description: 部位更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MuscleGroupResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    delete:
+      summary: 部位削除
+      operationId: deleteMuscleGroup
+      tags:
+        - muscle-groups
+      responses:
+        '204':
+          description: 部位削除成功
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  #-------------------------
+  # 集計/統計API
+  #-------------------------
+  /users/{userId}/statistics/volume:
+    parameters:
+      - name: userId
+        in: path
+        description: ユーザーID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: ユーザーの部位別総ボリューム取得
+      operationId: getUserVolumeByMuscleGroup
+      tags:
+        - statistics
+      responses:
+        '200':
+          description: 部位別総ボリューム取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VolumeByMuscleGroupResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  
+  /users/{userId}/statistics/progress/{exerciseId}:
+    parameters:
+      - name: userId
+        in: path
+        description: ユーザーID
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: exerciseId
+        in: path
+        description: トレーニング種目ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: 特定種目の進捗取得（時系列）
+      operationId: getUserExerciseProgress
+      tags:
+        - statistics
+      responses:
+        '200':
+          description: 種目進捗取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseProgressResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  schemas:
+    #-------------------------
+    # リクエストスキーマ
+    #-------------------------
+    UserRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "山田太郎"
+    
+    WorkoutDayRequest:
+      type: object
+      required:
+        - date
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2025-05-13"
+        title:
+          type: string
+          example: "胸トレの日"
+        notes:
+          type: string
+          example: "今日は調子が良かった"
+    
+    WorkoutRecordRequest:
+      type: object
+      required:
+        - exerciseId
+      properties:
+        exerciseId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440010"
+        notes:
+          type: string
+          example: "フォームに気をつけた"
+    
+    WorkoutSetRequest:
+      type: object
+      required:
+        - reps
+        - weight
+      properties:
+        reps:
+          type: integer
+          minimum: 1
+          example: 10
+        weight:
+          type: number
+          format: float
+          minimum: 0
+          example: 80.5
+    
+    ExerciseRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "ベンチプレス"
+        description:
+          type: string
+          example: "大胸筋のトレーニング"
+        muscleGroups:
+          type: array
+          items:
+            type: object
+            required:
+              - muscleGroupId
+            properties:
+              muscleGroupId:
+                type: string
+                format: uuid
+                example: "550e8400-e29b-41d4-a716-446655440020"
+              isPrimary:
+                type: boolean
+                default: false
+                example: true
+    
+    MuscleGroupRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "大胸筋"
+
+    #-------------------------
+    # レスポンススキーマ
+    #-------------------------
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        name:
+          type: string
+          example: "山田太郎"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-05-13T10:30:00Z"
+    
+    WorkoutDayResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440001"
+        userId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        date:
+          type: string
+          format: date
+          example: "2025-05-13"
+        title:
+          type: string
+          example: "胸トレの日"
+        notes:
+          type: string
+          example: "今日は調子が良かった"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-05-13T15:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-05-13T15:30:00Z"
+    
+    WorkoutRecordResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440002"
+        workoutDayId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440001"
+        exerciseId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440010"
+        exerciseName:
+          type: string
+          example: "ベンチプレス"
+        notes:
+          type: string
+          example: "フォームに気をつけた"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-05-13T15:35:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-05-13T15:35:00Z"
+    
+    WorkoutSetResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440003"
+        workoutRecordId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440002"
+        reps:
+          type: integer
+          example: 10
+        weight:
+          type: number
+          format: float
+          example: 80.5
+        volume:
+          type: number
+          format: float
+          example: 805.0
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-05-13T15:40:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-05-13T15:40:00Z"
+    
+    ExerciseMuscleGroupResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440030"
+        muscleGroupId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440020"
+        muscleGroupName:
+          type: string
+          example: "大胸筋"
+        isPrimary:
+          type: boolean
+          example: true
+    
+    ExerciseResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440010"
+        name:
+          type: string
+          example: "ベンチプレス"
+        description:
+          type: string
+          example: "大胸筋のトレーニング"
+        muscleGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExerciseMuscleGroupResponse'
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-05-13T14:00:00Z"
+    
+    MuscleGroupResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440020"
+        name:
+          type: string
+          example: "大胸筋"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-05-13T13:30:00Z"
+    
+    VolumeByMuscleGroupItem:
+      type: object
+      properties:
+        muscleGroupId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440020"
+        muscleGroupName:
+          type: string
+          example: "大胸筋"
+        totalVolume:
+          type: number
+          format: float
+          example: 24500.0
+    
+    VolumeByMuscleGroupResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        volumeByMuscleGroup:
+          type: array
+          items:
+            $ref: '#/components/schemas/VolumeByMuscleGroupItem'
+    
+    ExerciseProgressItem:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2025-05-01"
+        maxWeight:
+          type: number
+          format: float
+          example: 85.0
+        totalVolume:
+          type: number
+          format: float
+          example: 2550.0
+    
+    ExerciseProgressResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        exerciseId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440010"
+        exerciseName:
+          type: string
+          example: "ベンチプレス"
+        progress:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExerciseProgressItem'
+    
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-05-13T16:00:00Z"
+        status:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: "Bad Request"
+        message:
+          type: string
+          example: "Invalid request parameter"
+        path:
+          type: string
+          example: "/api/v1/users"
+
+  responses:
+    BadRequest:
+      description: リクエストが不正です
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    NotFound:
+      description: リソースが見つかりません
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
