@@ -1,35 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route } from "react-router-dom";
+import { Toaster } from "@/components/ui/toaster";
+import Layout from "@/components/layout/Layout";
 
-function App() {
-  const [count, setCount] = useState(0)
+// ページのインポート
+import { Dashboard } from "@/pages/DashBoard";
+import WorkoutDayPage from "@/pages/WorkoutDayPage";
+import WorkoutHistoryPage from "@/pages/WorkoutHistoryPage";
+import ExercisesPage from "@/pages/ExercisesPage";
+import ProfilePage from "@/pages/ProfilePage";
+import NotFoundPage from "@/pages/NotFoundPage";
 
+export const App = () => {
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count+1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="workout/:id?" element={<WorkoutDayPage />} />
+          <Route path="history" element={<WorkoutHistoryPage />} />
+          <Route path="exercises" element={<ExercisesPage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+      <Toaster />
     </>
-  )
+  );
 }
-
-export default App
