@@ -1,3 +1,5 @@
+import type { Exercise, MuscleGroup } from "@/types";
+
 // API基本設定
 const API_BASE_URL = "/api";
 
@@ -60,7 +62,10 @@ export const api = {
 
   // トレーニング種目関連API
   exercises: {
-    getAll: () => fetchAPI<any[]>("/exercises"),
+    getAll: async (): Promise<Exercise[]> => {
+      // TODO: 実際のAPI実装
+      return [];
+    },
     getById: (id: string) => fetchAPI<any>(`/exercises/${id}`),
     create: (data: any) =>
       fetchAPI<any>("/exercises", {
@@ -87,7 +92,10 @@ export const api = {
 
   // 筋肉グループ関連API
   muscleGroups: {
-    getAll: () => fetchAPI<any[]>("/muscle-groups"),
+    getAll: async (): Promise<MuscleGroup[]> => {
+      // TODO: 実際のAPI実装
+      return [];
+    },
     getById: (id: string) => fetchAPI<any>(`/muscle-groups/${id}`),
     create: (data: any) =>
       fetchAPI<any>("/muscle-groups", {

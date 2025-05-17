@@ -61,7 +61,7 @@ const ExercisesPage = () => {
       filtered = filtered.filter(
         (exercise) => 
           exercise.name.toLowerCase().includes(query) ||
-          (exercise.description && exercise.description.toLowerCase().includes(query))
+          exercise.description?.toLowerCase()?.includes(query)
       );
     }
     
