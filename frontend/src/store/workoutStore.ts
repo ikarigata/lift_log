@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { Exercise, MuscleGroup } from "@/types";
 import { api } from "@/lib/api";
+import type { Exercise, MuscleGroup } from "@/types";
 
 // 筋トレアプリのメイン状態ストア
 interface WorkoutState {
