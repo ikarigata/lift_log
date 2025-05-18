@@ -19,21 +19,38 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authz -> authz.anyRequest().permitAll());
         return http.build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
+    // @Bean
+    // public CorsConfigurationSource corsConfigurationSource() {
+    // CorsConfiguration configuration = new CorsConfiguration();
+    // configuration.setAllowedOrigins(Arrays.asList(
+    // "http://localhost:5173", // 開発環境
+    // "http://localhost:3000", // 別の開発ポート
+    // "http://localhost:8080" // Spring Boot開発サーバー
+    // ));
+    // configuration.setAllowedMethods(Arrays.asList(
+    // "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
+    // configuration.setAllowedHeaders(Arrays.asList(
+    // "Authorization",
+    // "Content-Type",
+    // "X-Requested-With",
+    // "Accept",
+    // "Origin",
+    // "Access-Control-Request-Method",
+    // "Access-Control-Request-Headers"));
+    // configuration.setExposedHeaders(Arrays.asList(
+    // "Access-Control-Allow-Origin",
+    // "Access-Control-Allow-Credentials"));
+    // configuration.setAllowCredentials(true);
+    // configuration.setMaxAge(3600L); // プリフライトリクエストのキャッシュ時間（1時間）
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+    // UrlBasedCorsConfigurationSource source = new
+    // UrlBasedCorsConfigurationSource();
+    // source.registerCorsConfiguration("/**", configuration);
+    // return source;
+    // }
 }
