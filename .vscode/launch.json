@@ -2,6 +2,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "LiftLogApplication",
+      "request": "launch",
+      "mainClass": "com.ikr.lift_log.LiftLogApplication",
+      "projectName": "lift_log"
+    },
+    {
+      "type": "java",
       "name": "Spring Boot-LiftLogApplication<lift_log>",
       "request": "launch",
       "cwd": "${workspaceFolder}",

@@ -1,0 +1,103 @@
+LiftLog - トレーニング記録アプリ
+シンプルでスタイリッシュなUIの筋トレ記録アプリケーションです。トレーニングの進捗を簡単に記録・管理できます。
+主な機能
+
+トレーニング日、トレーニング実績、トレーニングセットの記録
+トレーニング種目と筋肉グループの管理
+部位別のボリューム統計
+トレーニング履歴の閲覧
+シンプルで使いやすいUI
+
+技術スタック
+フロントエンド
+
+React - UIライブラリ
+Vite - 高速な開発環境
+TypeScript - 型安全な開発
+React Router - ルーティング
+Zustand - 状態管理
+Tailwind CSS - スタイリング
+shadcn/ui - UIコンポーネント
+Biome - リンター・フォーマッター
+
+バックエンド
+
+Spring Boot - バックエンドフレームワーク
+PostgreSQL - データベース
+NamedParameterJdbcTemplate - データアクセス
+
+プロジェクト構造
+frontend/
+├── node_modules/
+├── public/
+├── src/
+│   ├── assets/            # 画像などの静的ファイル
+│   ├── components/        # 再利用可能なコンポーネント
+│   │   ├── ui/            # shadcn/uiコンポーネント
+│   │   ├── layout/        # レイアウト関連コンポーネント
+│   │   └── features/      # 機能ごとのコンポーネント
+│   ├── hooks/             # カスタムフック
+│   ├── lib/               # ユーティリティ関数など
+│   ├── pages/             # ページコンポーネント
+│   ├── store/             # Zustandによる状態管理
+│   ├── types/             # 型定義
+│   ├── App.tsx            # アプリケーションのルートコンポーネント
+│   ├── main.tsx           # エントリーポイント
+│   └── routes.tsx         # ルーティング設定
+├── .gitignore
+├── biome.json             # Biome設定
+├── index.html
+├── package.json
+├── postcss.config.js
+├── tailwind.config.js
+├── tsconfig.json
+└── vite.config.ts
+セットアップ方法
+前提条件
+
+Node.js (v18以上)
+npm または yarn
+Java 21
+PostgreSQL
+
+フロントエンドのセットアップ
+bash# リポジトリのクローン
+git clone <リポジトリURL>
+cd <プロジェクトディレクトリ>/frontend
+
+# 依存関係のインストール
+npm install
+# または
+yarn install
+
+# 開発サーバーの起動
+npm run dev
+# または
+yarn dev
+バックエンドのセットアップ
+bash# バックエンドディレクトリに移動
+cd <プロジェクトディレクトリ>/backend
+
+# ビルド
+./mvnw clean package
+
+# 実行
+./mvnw spring-boot:run
+使い方
+
+アプリケーションにアクセスします（デフォルトでは http://localhost:5173）
+プロファイルページでユーザー情報を設定します
+ダッシュボードから「今日のトレーニングを開始」ボタンをクリックしてトレーニングを記録します
+トレーニング種目を選択してセットを記録します
+履歴ページで過去のトレーニングを確認できます
+
+データベース構造
+
+トレーニング日DB: 複数のトレーニング実績と紐づく
+トレーニング実績DB: 1つのトレーニング日と紐づく、複数のセットを持つ
+トレーニングセットDB: 1つのトレーニング実績と紐づく、レップ数と重量を記録
+トレーニング種目マスタ: 複数の部位と紐づく
+部位マスタ: 複数のトレーニング種目と紐づく
+
+ライセンス
+MIT
