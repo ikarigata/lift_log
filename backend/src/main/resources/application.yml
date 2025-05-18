@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: lift_log
+  datasource:
+    url: jdbc:postgresql://localhost:5433/lift_log
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
