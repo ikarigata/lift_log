@@ -26,32 +26,7 @@ Spring Boot - バックエンドフレームワーク
 PostgreSQL - データベース
 NamedParameterJdbcTemplate - データアクセス
 
-プロジェクト構造
-frontend/
-├── node_modules/
-├── public/
-├── src/
-│   ├── assets/            # 画像などの静的ファイル
-│   ├── components/        # 再利用可能なコンポーネント
-│   │   ├── ui/            # shadcn/uiコンポーネント
-│   │   ├── layout/        # レイアウト関連コンポーネント
-│   │   └── features/      # 機能ごとのコンポーネント
-│   ├── hooks/             # カスタムフック
-│   ├── lib/               # ユーティリティ関数など
-│   ├── pages/             # ページコンポーネント
-│   ├── store/             # Zustandによる状態管理
-│   ├── types/             # 型定義
-│   ├── App.tsx            # アプリケーションのルートコンポーネント
-│   ├── main.tsx           # エントリーポイント
-│   └── routes.tsx         # ルーティング設定
-├── .gitignore
-├── biome.json             # Biome設定
-├── index.html
-├── package.json
-├── postcss.config.js
-├── tailwind.config.js
-├── tsconfig.json
-└── vite.config.ts
+
 セットアップ方法
 前提条件
 
@@ -99,5 +74,3 @@ cd <プロジェクトディレクトリ>/backend
 トレーニング種目マスタ: 複数の部位と紐づく
 部位マスタ: 複数のトレーニング種目と紐づく
 
-ライセンス
-MIT
