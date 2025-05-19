@@ -9,7 +9,7 @@ async function fetchAPI<T>(
   options: RequestInit = {}
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
-　console.log("fetch実行_"+url);
+  console.log("fetch実行_"+url);
   const response = await fetch(url, {
     ...options,
     headers: {
