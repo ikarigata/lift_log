@@ -20,7 +20,7 @@ const ProfilePage = () => {
   const { toast } = useToast();
   
   const [name, setName] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -31,7 +31,7 @@ const ProfilePage = () => {
     }
     
     // ダークモードの設定を読み込み
-    const isDarkMode = localStorage.getItem("darkMode") === "true";
+    const isDarkMode = localStorage.getItem("darkMode") !== "false";
     setDarkMode(isDarkMode);
     
     // ダークモードの適用
@@ -41,14 +41,6 @@ const ProfilePage = () => {
       document.documentElement.classList.remove("dark");
     }
   }, [user]);
-
-  // ログイン状態の確認（デモ用）
-  useEffect(() => {
-    if (!user) {
-      // デモ用に固定ユーザーIDでログイン
-      login("550e8400-e29b-41d4-a716-446655440000");
-    }
-  }, [user, login]);
 
   // ユーザー情報の保存
   const handleSaveProfile = async () => {

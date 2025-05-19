@@ -64,8 +64,7 @@ export const api = {
   // トレーニング種目関連API
   exercises: {
     getAll: async (): Promise<Exercise[]> => {
-      // TODO: 実際のAPI実装
-      return [];
+      return fetchAPI<Exercise[]>("/exercises");
     },
     getById: (id: string) => fetchAPI<any>(`/exercises/${id}`),
     create: (data: any) =>
@@ -94,8 +93,7 @@ export const api = {
   // 筋肉グループ関連API
   muscleGroups: {
     getAll: async (): Promise<MuscleGroup[]> => {
-      // TODO: 実際のAPI実装
-      return [];
+      return fetchAPI<MuscleGroup[]>("/muscle-groups");
     },
     getById: (id: string) => fetchAPI<any>(`/muscle-groups/${id}`),
     create: (data: any) =>
