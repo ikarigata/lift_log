@@ -1,164 +1,82 @@
-
---------------------------------------------------------------------------------
--- Table : public.exercise_muscle_groups
-create table public.exercise_muscle_groups (
-  id uuid default gen_random_uuid() not null
-  , exercise_id uuid not null
-  , muscle_group_id uuid not null
-  , is_primary boolean default false
-  , primary key (id)
+CREATE TABLE public.exercise_muscle_groups (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  exercise_id uuid NOT NULL,
+  muscle_group_id uuid NOT NULL,
+  is_primary boolean DEFAULT false,
+  PRIMARY KEY (id)
 );
-/
 
-create unique index exercise_muscle_groups_pkey
-  on public.exercise_muscle_groups(id)
-/
+CREATE UNIQUE INDEX exercise_muscle_groups_exercise_id_muscle_group_id_key
+  ON public.exercise_muscle_groups(exercise_id, muscle_group_id);
 
-create unique index exercise_muscle_groups_exercise_id_muscle_group_id_key
-  on public.exercise_muscle_groups(exercise_id,muscle_group_id)
-/
-
-
---------------------------------------------------------------------------------
--- Table : public.exercises
-create table public.exercises (
-  id uuid default gen_random_uuid() not null
-  , name text not null
-  , description text
-  , created_at timestamp(6) with time zone default now()
-  , primary key (id)
+CREATE TABLE public.exercises (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  name text NOT NULL,
+  description text,
+  created_at timestamp(6) WITH TIME ZONE DEFAULT now(),
+  PRIMARY KEY (id)
 );
-/
 
-create unique index exercises_pkey
-  on public.exercises(id)
-/
-
-
---------------------------------------------------------------------------------
--- Table : public.muscle_groups
-create table public.muscle_groups (
-  id uuid default gen_random_uuid() not null
-  , name text not null
-  , created_at timestamp(6) with time zone default now()
-  , primary key (id)
+CREATE TABLE public.muscle_groups (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  name text NOT NULL,
+  created_at timestamp(6) WITH TIME ZONE DEFAULT now(),
+  PRIMARY KEY (id)
 );
-/
 
-create unique index muscle_groups_pkey
-  on public.muscle_groups(id)
-/
-
-
---------------------------------------------------------------------------------
--- Table : public.users
-create table public.users (
-  id uuid default gen_random_uuid() not null
-  , name text not null
-  , created_at timestamp(6) with time zone default now()
-  , primary key (id)
+CREATE TABLE public.users (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  name text NOT NULL,
+  created_at timestamp(6) WITH TIME ZONE DEFAULT now(),
+  PRIMARY KEY (id)
 );
-/
 
-create unique index users_pkey
-  on public.users(id)
-/
-
-
---------------------------------------------------------------------------------
--- Table : public.workout_days
-create table public.workout_days (
-  id uuid default gen_random_uuid() not null
-  , user_id uuid not null
-  , date date default CURRENT_DATE not null
-  , title text
-  , notes text
-  , created_at timestamp(6) with time zone default now()
-  , updated_at timestamp(6) with time zone default now()
-  , primary key (id)
+CREATE TABLE public.workout_days (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  user_id uuid NOT NULL,
+  date date DEFAULT CURRENT_DATE NOT NULL,
+  title text,
+  notes text,
+  created_at timestamp(6) WITH TIME ZONE DEFAULT now(),
+  updated_at timestamp(6) WITH TIME ZONE DEFAULT now(),
+  PRIMARY KEY (id)
 );
-/
 
-create unique index workout_days_pkey
-  on public.workout_days(id)
-/
-
-
---------------------------------------------------------------------------------
--- Table : public.workout_records
-create table public.workout_records (
-  id uuid default gen_random_uuid() not null
-  , workout_day_id uuid not null
-  , exercise_id uuid not null
-  , notes text
-  , created_at timestamp(6) with time zone default now()
-  , updated_at timestamp(6) with time zone default now()
-  , primary key (id)
+CREATE TABLE public.workout_records (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  workout_day_id uuid NOT NULL,
+  exercise_id uuid NOT NULL,
+  notes text,
+  created_at timestamp(6) WITH TIME ZONE DEFAULT now(),
+  updated_at timestamp(6) WITH TIME ZONE DEFAULT now(),
+  PRIMARY KEY (id)
 );
-/
 
-create unique index workout_records_pkey
-  on public.workout_records(id)
-/
-
-
---------------------------------------------------------------------------------
--- Table : public.workout_sets
-create table public.workout_sets (
-  id uuid default gen_random_uuid() not null
-  , workout_record_id uuid not null
-  , reps integer not null
-  , weight numeric(10, 2) not null
-  , volume <Virtual column>
-  , created_at timestamp(6) with time zone default now()
-  , updated_at timestamp(6) with time zone default now()
-  , primary key (id)
+CREATE TABLE public.workout_sets (
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  workout_record_id uuid NOT NULL,
+  reps integer NOT NULL,
+  weight numeric(10, 2) NOT NULL,
+  volume <Virtual column>,
+  created_at timestamp(6) WITH TIME ZONE DEFAULT now(),
+  updated_at timestamp(6) WITH TIME ZONE DEFAULT now(),
+  PRIMARY KEY (id)
 );
-/
 
-create unique index workout_sets_pkey
-  on public.workout_sets(id)
-/
+ALTER TABLE public.exercise_muscle_groups
+  ADD CONSTRAINT exercise_muscle_groups_exercise_id_fkey FOREIGN KEY (exercise_id) REFERENCES public.exercises(id);
 
+ALTER TABLE public.exercise_muscle_groups
+  ADD CONSTRAINT exercise_muscle_groups_muscle_group_id_fkey FOREIGN KEY (muscle_group_id) REFERENCES public.muscle_groups(id);
 
---------------------------------------------------------------------------------
--- Foreign Key : exercise_muscle_groups_exercise_id_fkey
-alter table public.exercise_muscle_groups
-  add constraint exercise_muscle_groups_exercise_id_fkey foreign key (exercise_id) references public.exercises(id);
-/
+ALTER TABLE public.workout_days
+  ADD CONSTRAINT workout_days_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
+ALTER TABLE public.workout_records
+  ADD CONSTRAINT workout_records_exercise_id_fkey FOREIGN KEY (exercise_id) REFERENCES public.exercises(id);
 
---------------------------------------------------------------------------------
--- Foreign Key : exercise_muscle_groups_muscle_group_id_fkey
-alter table public.exercise_muscle_groups
-  add constraint exercise_muscle_groups_muscle_group_id_fkey foreign key (muscle_group_id) references public.muscle_groups(id);
-/
+ALTER TABLE public.workout_records
+  ADD CONSTRAINT workout_records_workout_day_id_fkey FOREIGN KEY (workout_day_id) REFERENCES public.workout_days(id);
 
-
---------------------------------------------------------------------------------
--- Foreign Key : workout_days_user_id_fkey
-alter table public.workout_days
-  add constraint workout_days_user_id_fkey foreign key (user_id) references public.users(id);
-/
-
-
---------------------------------------------------------------------------------
--- Foreign Key : workout_records_exercise_id_fkey
-alter table public.workout_records
-  add constraint workout_records_exercise_id_fkey foreign key (exercise_id) references public.exercises(id);
-/
-
-
---------------------------------------------------------------------------------
--- Foreign Key : workout_records_workout_day_id_fkey
-alter table public.workout_records
-  add constraint workout_records_workout_day_id_fkey foreign key (workout_day_id) references public.workout_days(id);
-/
-
-
---------------------------------------------------------------------------------
--- Foreign Key : workout_sets_workout_record_id_fkey
-alter table public.workout_sets
-  add constraint workout_sets_workout_record_id_fkey foreign key (workout_record_id) references public.workout_records(id);
-/
-
+ALTER TABLE public.workout_sets
+  ADD CONSTRAINT workout_sets_workout_record_id_fkey FOREIGN KEY (workout_record_id) REFERENCES public.workout_records(id);
