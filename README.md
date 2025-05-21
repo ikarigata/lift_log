@@ -12,20 +12,20 @@ LiftLog - トレーニング記録アプリ
 ## 技術スタック
 フロントエンド
 
-React - UIライブラリ
-Vite - 高速な開発環境
-TypeScript - 型安全な開発
-React Router - ルーティング
-Zustand - 状態管理
-Tailwind CSS - スタイリング
-shadcn/ui - UIコンポーネント
-Biome - リンター・フォーマッター
+- React - UIライブラリ
+- Vite - 高速な開発環境
+- TypeScript - 型安全な開発
+- React Router - ルーティング
+- Zustand - 状態管理
+- Tailwind CSS - スタイリング
+- shadcn/ui - UIコンポーネント
+- Biome - リンター・フォーマッター
 
 バックエンド
 
-Spring Boot - バックエンドフレームワーク
-PostgreSQL - データベース
-NamedParameterJdbcTemplate - データアクセス
+- Spring Boot - バックエンドフレームワーク
+- PostgreSQL - データベース
+- NamedParameterJdbcTemplate - データアクセス
 
 
 ## セットアップ方法
