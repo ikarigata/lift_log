@@ -78,19 +78,22 @@ public class JdbcWorkoutDayRepository implements WorkoutDayRepository {
     }
 
     private WorkoutDay insert(WorkoutDay workoutDay) {
-        String sql = "INSERT INTO public.workout_days (user_id, date, title, notes, created_at, updated_at) " +
-                "VALUES (:userId, :date, :title, :notes, :createdAt, :updatedAt) RETURNING id";
+        // String sql = "INSERT INTO public.workout_days (user_id,title) " +
+        // "VALUES (:userId, :title) RETURNING id";
+
+        String sql = "INSERT INTO public.workout_days (user_id,title) " +
+                "VALUES ('550e8400-e29b-41d4-a716-446655440000', 'title') RETURNING id";
+
+        System.out.println("userId: " + workoutDay.getUserId().toString());
+        System.out.println("title: " + workoutDay.getTitle());
+        System.out.println("notes: " + workoutDay.getNotes());
 
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("userId", workoutDay.getUserId())
-                .addValue("date", workoutDay.getDate())
-                .addValue("title", workoutDay.getTitle())
-                .addValue("notes", workoutDay.getNotes())
-                .addValue("createdAt", workoutDay.getCreatedAt())
-                .addValue("updatedAt", workoutDay.getUpdatedAt());
+                .addValue("userId", workoutDay.getUserId().toString(), java.sql.Types.VARCHAR)
+                .addValue("title", workoutDay.getTitle(), java.sql.Types.VARCHAR);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, params, keyHolder);
+        jdbcTemplate.update(sql, params, keyHolder, new String[] { "id" });
 
         UUID id = UUID.fromString(keyHolder.getKeys().get("id").toString());
         workoutDay.setId(id);

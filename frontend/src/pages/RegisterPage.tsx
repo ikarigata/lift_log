@@ -40,9 +40,26 @@ const RegisterPage = () => {
     setIsLoading(true);
 
     try {
-      // TODO: 実際のAPIを使用して新規登録処理を実装
-      // デモ用に固定ユーザーIDでログイン
-      await login("550e8400-e29b-41d4-a716-446655440000");
+      const response = await fetch("/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password
+        }),
+      });
+
+      if (response.status !== 201) {
+        throw new Error("登録に失敗しました");
+      }
+
+      const data = await response.json();
+
+      // 登録成功後、ログイン処理を実行
+      await login(data.id);
       navigate("/");
       toast({
         title: "登録完了",
