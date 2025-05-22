@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/exercises/{exerciseId}/muscle-groups")
+@RequestMapping("/api/v1/exercises/{exerciseId}/muscle-groups")
 public class ExerciseMuscleGroupController {
 
     private final ExerciseMuscleGroupService exerciseMuscleGroupService;

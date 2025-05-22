@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/muscle-groups")
+@RequestMapping("/api/v1/muscle-groups")
 public class MuscleGroupController {
 
     private final MuscleGroupService muscleGroupService;

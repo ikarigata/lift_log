@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/workout-days")
+@RequestMapping("/api/v1/workout-days")
 public class WorkoutDayController {
 
     private final WorkoutDayService workoutDayService;
