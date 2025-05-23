@@ -9,4 +9,6 @@ public interface ExerciseRepository {
     List<Exercise> findAll();
 
     Optional<Exercise> findById(UUID id);
+
+    Exercise save(Exercise exercise);
 }

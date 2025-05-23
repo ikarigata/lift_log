@@ -14,4 +14,6 @@ public interface ExerciseMuscleGroupRepository {
     ExerciseMuscleGroup save(ExerciseMuscleGroup exerciseMuscleGroup);
 
     void deleteById(UUID id);
+
+    void deleteByExerciseId(UUID exerciseId);
 }

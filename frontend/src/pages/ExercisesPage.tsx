@@ -165,14 +165,18 @@ const ExercisesPage = () => {
     if (!editingExercise) return;
     
     try {
-      // 種目の更新
-      await api.exercises.update(editingExercise.id, {
+      // 更新する種目のデータを作成
+      const exerciseUpdateData: ExerciseRequest = {
         name: editingExercise.name,
-        description: editingExercise.description,
-      });
+        description: editingExercise.description || undefined,
+        muscleGroups: selectedMuscleGroups.map(mgId => ({
+          muscleGroupId: mgId,
+          isPrimary: mgId === primaryMuscleGroup,
+        })),
+      };
       
-      // TODO: 筋肉グループの関連付け更新（API側で実装が必要）
-      // 現状のAPIでは一度削除して再度追加する必要があるかもしれません
+      // 種目の更新
+      await api.exercises.update(editingExercise.id, exerciseUpdateData);
       
       // 種目一覧を更新
       await fetchExercises();
