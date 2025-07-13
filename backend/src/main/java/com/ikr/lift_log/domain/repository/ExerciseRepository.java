@@ -9,4 +9,10 @@ public interface ExerciseRepository {
     List<Exercise> findAll();
 
     Optional<Exercise> findById(UUID id);
+
+    Exercise save(Exercise exercise);
+
+    Exercise update(UUID id, Exercise exercise);
+
+    void deleteById(UUID id);
 }
