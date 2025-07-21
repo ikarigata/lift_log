@@ -24,4 +24,16 @@ public class ExerciseService {
     public Optional<Exercise> getExerciseById(UUID id) {
         return exerciseRepository.findById(id);
     }
+
+    public Exercise createExercise(Exercise exercise) {
+        return exerciseRepository.save(exercise);
+    }
+
+    public Exercise updateExercise(UUID id, Exercise exercise) {
+        return exerciseRepository.update(id, exercise);
+    }
+
+    public void deleteExercise(UUID id) {
+        exerciseRepository.deleteById(id);
+    }
 }
