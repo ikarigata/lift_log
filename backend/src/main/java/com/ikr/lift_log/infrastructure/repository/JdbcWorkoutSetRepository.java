@@ -2,47 +2,52 @@ package com.ikr.lift_log.infrastructure.repository;
 
 import com.ikr.lift_log.domain.model.WorkoutSet;
 import com.ikr.lift_log.domain.repository.WorkoutSetRepository;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.ikr.lift_log.jooq.tables.WorkoutSets.WORKOUT_SETS;
+
 @Repository
 public class JdbcWorkoutSetRepository implements WorkoutSetRepository {
 
-    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final DSLContext dsl;
 
-    public JdbcWorkoutSetRepository(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public JdbcWorkoutSetRepository(DSLContext dsl) {
+        this.dsl = dsl;
     }
 
     @Override
     public List<WorkoutSet> findByWorkoutRecordId(UUID workoutRecordId) {
-        String sql = "SELECT id, workout_record_id, reps, weight, created_at, updated_at FROM public.workout_sets " +
-                "WHERE workout_record_id = :workoutRecordId ORDER BY created_at";
-        var params = new MapSqlParameterSource().addValue("workoutRecordId", workoutRecordId);
-        return jdbcTemplate.query(sql, params, (rs, rowNum) -> mapRowToWorkoutSet(rs));
+        return dsl.selectFrom(WORKOUT_SETS)
+                .where(WORKOUT_SETS.WORKOUT_RECORD_ID.eq(workoutRecordId))
+                .orderBy(WORKOUT_SETS.CREATED_AT)
+                .fetch(record -> new WorkoutSet(
+                    record.get(WORKOUT_SETS.ID),
+                    record.get(WORKOUT_SETS.WORKOUT_RECORD_ID),
+                    record.get(WORKOUT_SETS.REPS),
+                    record.get(WORKOUT_SETS.WEIGHT),
+                    record.get(WORKOUT_SETS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
+                    record.get(WORKOUT_SETS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
     }
 
     @Override
     public Optional<WorkoutSet> findById(UUID id) {
-        String sql = "SELECT id, workout_record_id, reps, weight, created_at, updated_at FROM public.workout_sets WHERE id = :id";
-        var params = new MapSqlParameterSource().addValue("id", id);
-
-        try {
-            WorkoutSet workoutSet = jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> mapRowToWorkoutSet(rs));
-            return Optional.ofNullable(workoutSet);
-        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        return dsl.selectFrom(WORKOUT_SETS)
+                .where(WORKOUT_SETS.ID.eq(id))
+                .fetchOptional(record -> new WorkoutSet(
+                    record.get(WORKOUT_SETS.ID),
+                    record.get(WORKOUT_SETS.WORKOUT_RECORD_ID),
+                    record.get(WORKOUT_SETS.REPS),
+                    record.get(WORKOUT_SETS.WEIGHT),
+                    record.get(WORKOUT_SETS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
+                    record.get(WORKOUT_SETS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
     }
 
     @Override
@@ -56,54 +61,50 @@ public class JdbcWorkoutSetRepository implements WorkoutSetRepository {
 
     @Override
     public void deleteById(UUID id) {
-        String sql = "DELETE FROM public.workout_sets WHERE id = :id";
-        var params = new MapSqlParameterSource().addValue("id", id);
-        jdbcTemplate.update(sql, params);
+        int rowsAffected = dsl.deleteFrom(WORKOUT_SETS)
+                .where(WORKOUT_SETS.ID.eq(id))
+                .execute();
+        
+        if (rowsAffected == 0) {
+            throw new RuntimeException("WorkoutSet not found with id: " + id);
+        }
     }
 
     private WorkoutSet insert(WorkoutSet workoutSet) {
-        String sql = "INSERT INTO public.workout_sets (workout_record_id, reps, weight, created_at, updated_at) " +
-                "VALUES (:workoutRecordId, :reps, :weight, :createdAt, :updatedAt) RETURNING id";
+        UUID id = UUID.randomUUID();
+        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime createdAt = workoutSet.getCreatedAt() != null ? workoutSet.getCreatedAt() : now;
+        ZonedDateTime updatedAt = workoutSet.getUpdatedAt() != null ? workoutSet.getUpdatedAt() : now;
+        
+        dsl.insertInto(WORKOUT_SETS)
+                .set(WORKOUT_SETS.ID, id)
+                .set(WORKOUT_SETS.WORKOUT_RECORD_ID, workoutSet.getWorkoutRecordId())
+                .set(WORKOUT_SETS.REPS, workoutSet.getReps())
+                .set(WORKOUT_SETS.WEIGHT, workoutSet.getWeight())
+                .set(WORKOUT_SETS.CREATED_AT, createdAt.toOffsetDateTime())
+                .set(WORKOUT_SETS.UPDATED_AT, updatedAt.toOffsetDateTime())
+                .execute();
 
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("workoutRecordId", workoutSet.getWorkoutRecordId())
-                .addValue("reps", workoutSet.getReps())
-                .addValue("weight", workoutSet.getWeight())
-                .addValue("createdAt", workoutSet.getCreatedAt())
-                .addValue("updatedAt", workoutSet.getUpdatedAt());
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, params, keyHolder);
-
-        UUID id = UUID.fromString(keyHolder.getKeys().get("id").toString());
-        workoutSet.setId(id);
-
-        return workoutSet;
+        return new WorkoutSet(id, workoutSet.getWorkoutRecordId(), workoutSet.getReps(),
+                workoutSet.getWeight(), createdAt, updatedAt);
     }
 
     private WorkoutSet update(WorkoutSet workoutSet) {
-        String sql = "UPDATE public.workout_sets SET workout_record_id = :workoutRecordId, reps = :reps, " +
-                "weight = :weight, updated_at = :updatedAt WHERE id = :id";
+        ZonedDateTime now = ZonedDateTime.now();
+        
+        int rowsAffected = dsl.update(WORKOUT_SETS)
+                .set(WORKOUT_SETS.WORKOUT_RECORD_ID, workoutSet.getWorkoutRecordId())
+                .set(WORKOUT_SETS.REPS, workoutSet.getReps())
+                .set(WORKOUT_SETS.WEIGHT, workoutSet.getWeight())
+                .set(WORKOUT_SETS.UPDATED_AT, now.toOffsetDateTime())
+                .where(WORKOUT_SETS.ID.eq(workoutSet.getId()))
+                .execute();
+        
+        if (rowsAffected == 0) {
+            throw new RuntimeException("WorkoutSet not found with id: " + workoutSet.getId());
+        }
 
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id", workoutSet.getId())
-                .addValue("workoutRecordId", workoutSet.getWorkoutRecordId())
-                .addValue("reps", workoutSet.getReps())
-                .addValue("weight", workoutSet.getWeight())
-                .addValue("updatedAt", workoutSet.getUpdatedAt());
-
-        jdbcTemplate.update(sql, params);
-        return workoutSet;
-    }
-
-    private WorkoutSet mapRowToWorkoutSet(ResultSet rs) throws SQLException {
-        WorkoutSet workoutSet = new WorkoutSet(
-                UUID.fromString(rs.getString("id")),
-                UUID.fromString(rs.getString("workout_record_id")),
-                rs.getInt("reps"),
-                rs.getBigDecimal("weight"),
-                rs.getTimestamp("created_at").toInstant().atZone(java.time.ZoneId.systemDefault()),
-                rs.getTimestamp("updated_at").toInstant().atZone(java.time.ZoneId.systemDefault()));
-        return workoutSet;
+        return findById(workoutSet.getId())
+                .orElseThrow(() -> new RuntimeException("Failed to retrieve updated workout set"));
     }
 }

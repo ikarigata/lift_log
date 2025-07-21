@@ -2,44 +2,45 @@ package com.ikr.lift_log.infrastructure.repository;
 
 import com.ikr.lift_log.domain.model.MuscleGroup;
 import com.ikr.lift_log.domain.repository.MuscleGroupRepository;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.ikr.lift_log.jooq.tables.MuscleGroups.MUSCLE_GROUPS;
+
 @Repository
 public class JdbcMuscleGroupRepository implements MuscleGroupRepository {
 
-    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final DSLContext dsl;
 
-    public JdbcMuscleGroupRepository(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public JdbcMuscleGroupRepository(DSLContext dsl) {
+        this.dsl = dsl;
     }
 
     @Override
     public List<MuscleGroup> findAll() {
-        String sql = "SELECT id, name, created_at FROM public.muscle_groups ORDER BY name";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToMuscleGroup(rs));
+        return dsl.selectFrom(MUSCLE_GROUPS)
+                .orderBy(MUSCLE_GROUPS.NAME)
+                .fetch(record -> new MuscleGroup(
+                    record.get(MUSCLE_GROUPS.ID),
+                    record.get(MUSCLE_GROUPS.NAME),
+                    record.get(MUSCLE_GROUPS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
     }
 
     @Override
     public Optional<MuscleGroup> findById(UUID id) {
-        String sql = "SELECT id, name, created_at FROM public.muscle_groups WHERE id = :id";
-        var params = new MapSqlParameterSource().addValue("id", id);
-
-        try {
-            MuscleGroup muscleGroup = jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> mapRowToMuscleGroup(rs));
-            return Optional.ofNullable(muscleGroup);
-        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        return dsl.selectFrom(MUSCLE_GROUPS)
+                .where(MUSCLE_GROUPS.ID.eq(id))
+                .fetchOptional(record -> new MuscleGroup(
+                    record.get(MUSCLE_GROUPS.ID),
+                    record.get(MUSCLE_GROUPS.NAME),
+                    record.get(MUSCLE_GROUPS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
     }
 
     @Override
@@ -52,38 +53,29 @@ public class JdbcMuscleGroupRepository implements MuscleGroupRepository {
     }
 
     private MuscleGroup insert(MuscleGroup muscleGroup) {
-        String sql = "INSERT INTO public.muscle_groups (name) VALUES (:name) RETURNING id, created_at";
+        UUID id = UUID.randomUUID();
+        ZonedDateTime now = ZonedDateTime.now();
+        
+        dsl.insertInto(MUSCLE_GROUPS)
+                .set(MUSCLE_GROUPS.ID, id)
+                .set(MUSCLE_GROUPS.NAME, muscleGroup.getName())
+                .set(MUSCLE_GROUPS.CREATED_AT, now.toOffsetDateTime())
+                .execute();
 
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("name", muscleGroup.getName());
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, params, keyHolder);
-
-        UUID id = UUID.fromString(keyHolder.getKeys().get("id").toString());
-        muscleGroup.setId(id);
-
-        java.sql.Timestamp createdAt = (java.sql.Timestamp) keyHolder.getKeys().get("created_at");
-        muscleGroup.setCreatedAt(createdAt.toInstant().atZone(java.time.ZoneId.systemDefault()));
-
-        return muscleGroup;
+        return new MuscleGroup(id, muscleGroup.getName(), now);
     }
 
     private MuscleGroup update(MuscleGroup muscleGroup) {
-        String sql = "UPDATE public.muscle_groups SET name = :name WHERE id = :id";
+        int rowsAffected = dsl.update(MUSCLE_GROUPS)
+                .set(MUSCLE_GROUPS.NAME, muscleGroup.getName())
+                .where(MUSCLE_GROUPS.ID.eq(muscleGroup.getId()))
+                .execute();
+        
+        if (rowsAffected == 0) {
+            throw new RuntimeException("MuscleGroup not found with id: " + muscleGroup.getId());
+        }
 
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id", muscleGroup.getId())
-                .addValue("name", muscleGroup.getName());
-
-        jdbcTemplate.update(sql, params);
-        return muscleGroup;
-    }
-
-    private MuscleGroup mapRowToMuscleGroup(ResultSet rs) throws SQLException {
-        return new MuscleGroup(
-                UUID.fromString(rs.getString("id")),
-                rs.getString("name"),
-                rs.getTimestamp("created_at").toInstant().atZone(java.time.ZoneId.systemDefault()));
+        return findById(muscleGroup.getId())
+                .orElseThrow(() -> new RuntimeException("Failed to retrieve updated muscle group"));
     }
 }

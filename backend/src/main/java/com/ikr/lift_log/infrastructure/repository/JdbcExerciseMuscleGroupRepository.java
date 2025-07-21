@@ -2,46 +2,46 @@ package com.ikr.lift_log.infrastructure.repository;
 
 import com.ikr.lift_log.domain.model.ExerciseMuscleGroup;
 import com.ikr.lift_log.domain.repository.ExerciseMuscleGroupRepository;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.ikr.lift_log.jooq.tables.ExerciseMuscleGroups.EXERCISE_MUSCLE_GROUPS;
+
 @Repository
 public class JdbcExerciseMuscleGroupRepository implements ExerciseMuscleGroupRepository {
 
-    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final DSLContext dsl;
 
-    public JdbcExerciseMuscleGroupRepository(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public JdbcExerciseMuscleGroupRepository(DSLContext dsl) {
+        this.dsl = dsl;
     }
 
     @Override
     public List<ExerciseMuscleGroup> findByExerciseId(UUID exerciseId) {
-        String sql = "SELECT id, exercise_id, muscle_group_id, is_primary FROM public.exercise_muscle_groups WHERE exercise_id = :exerciseId";
-        var params = new MapSqlParameterSource().addValue("exerciseId", exerciseId);
-        return jdbcTemplate.query(sql, params, (rs, rowNum) -> mapRowToExerciseMuscleGroup(rs));
+        return dsl.selectFrom(EXERCISE_MUSCLE_GROUPS)
+                .where(EXERCISE_MUSCLE_GROUPS.EXERCISE_ID.eq(exerciseId))
+                .fetch(record -> new ExerciseMuscleGroup(
+                    record.get(EXERCISE_MUSCLE_GROUPS.ID),
+                    record.get(EXERCISE_MUSCLE_GROUPS.EXERCISE_ID),
+                    record.get(EXERCISE_MUSCLE_GROUPS.MUSCLE_GROUP_ID),
+                    record.get(EXERCISE_MUSCLE_GROUPS.IS_PRIMARY)
+                ));
     }
 
     @Override
     public Optional<ExerciseMuscleGroup> findById(UUID id) {
-        String sql = "SELECT id, exercise_id, muscle_group_id, is_primary FROM public.exercise_muscle_groups WHERE id = :id";
-        var params = new MapSqlParameterSource().addValue("id", id);
-
-        try {
-            ExerciseMuscleGroup exerciseMuscleGroup = jdbcTemplate.queryForObject(sql, params,
-                    (rs, rowNum) -> mapRowToExerciseMuscleGroup(rs));
-            return Optional.ofNullable(exerciseMuscleGroup);
-        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        return dsl.selectFrom(EXERCISE_MUSCLE_GROUPS)
+                .where(EXERCISE_MUSCLE_GROUPS.ID.eq(id))
+                .fetchOptional(record -> new ExerciseMuscleGroup(
+                    record.get(EXERCISE_MUSCLE_GROUPS.ID),
+                    record.get(EXERCISE_MUSCLE_GROUPS.EXERCISE_ID),
+                    record.get(EXERCISE_MUSCLE_GROUPS.MUSCLE_GROUP_ID),
+                    record.get(EXERCISE_MUSCLE_GROUPS.IS_PRIMARY)
+                ));
     }
 
     @Override
@@ -55,48 +55,42 @@ public class JdbcExerciseMuscleGroupRepository implements ExerciseMuscleGroupRep
 
     @Override
     public void deleteById(UUID id) {
-        String sql = "DELETE FROM public.exercise_muscle_groups WHERE id = :id";
-        var params = new MapSqlParameterSource().addValue("id", id);
-        jdbcTemplate.update(sql, params);
+        int rowsAffected = dsl.deleteFrom(EXERCISE_MUSCLE_GROUPS)
+                .where(EXERCISE_MUSCLE_GROUPS.ID.eq(id))
+                .execute();
+        
+        if (rowsAffected == 0) {
+            throw new RuntimeException("ExerciseMuscleGroup not found with id: " + id);
+        }
     }
 
     private ExerciseMuscleGroup insert(ExerciseMuscleGroup exerciseMuscleGroup) {
-        String sql = "INSERT INTO public.exercise_muscle_groups (exercise_id, muscle_group_id, is_primary) " +
-                "VALUES (:exerciseId, :muscleGroupId, :isPrimary) RETURNING id";
+        UUID id = UUID.randomUUID();
+        
+        dsl.insertInto(EXERCISE_MUSCLE_GROUPS)
+                .set(EXERCISE_MUSCLE_GROUPS.ID, id)
+                .set(EXERCISE_MUSCLE_GROUPS.EXERCISE_ID, exerciseMuscleGroup.getExerciseId())
+                .set(EXERCISE_MUSCLE_GROUPS.MUSCLE_GROUP_ID, exerciseMuscleGroup.getMuscleGroupId())
+                .set(EXERCISE_MUSCLE_GROUPS.IS_PRIMARY, exerciseMuscleGroup.isPrimary())
+                .execute();
 
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("exerciseId", exerciseMuscleGroup.getExerciseId())
-                .addValue("muscleGroupId", exerciseMuscleGroup.getMuscleGroupId())
-                .addValue("isPrimary", exerciseMuscleGroup.isPrimary());
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, params, keyHolder);
-
-        UUID id = UUID.fromString(keyHolder.getKeys().get("id").toString());
-        exerciseMuscleGroup.setId(id);
-
-        return exerciseMuscleGroup;
+        return new ExerciseMuscleGroup(id, exerciseMuscleGroup.getExerciseId(), 
+                exerciseMuscleGroup.getMuscleGroupId(), exerciseMuscleGroup.isPrimary());
     }
 
     private ExerciseMuscleGroup update(ExerciseMuscleGroup exerciseMuscleGroup) {
-        String sql = "UPDATE public.exercise_muscle_groups SET exercise_id = :exerciseId, " +
-                "muscle_group_id = :muscleGroupId, is_primary = :isPrimary WHERE id = :id";
+        int rowsAffected = dsl.update(EXERCISE_MUSCLE_GROUPS)
+                .set(EXERCISE_MUSCLE_GROUPS.EXERCISE_ID, exerciseMuscleGroup.getExerciseId())
+                .set(EXERCISE_MUSCLE_GROUPS.MUSCLE_GROUP_ID, exerciseMuscleGroup.getMuscleGroupId())
+                .set(EXERCISE_MUSCLE_GROUPS.IS_PRIMARY, exerciseMuscleGroup.isPrimary())
+                .where(EXERCISE_MUSCLE_GROUPS.ID.eq(exerciseMuscleGroup.getId()))
+                .execute();
+        
+        if (rowsAffected == 0) {
+            throw new RuntimeException("ExerciseMuscleGroup not found with id: " + exerciseMuscleGroup.getId());
+        }
 
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id", exerciseMuscleGroup.getId())
-                .addValue("exerciseId", exerciseMuscleGroup.getExerciseId())
-                .addValue("muscleGroupId", exerciseMuscleGroup.getMuscleGroupId())
-                .addValue("isPrimary", exerciseMuscleGroup.isPrimary());
-
-        jdbcTemplate.update(sql, params);
-        return exerciseMuscleGroup;
-    }
-
-    private ExerciseMuscleGroup mapRowToExerciseMuscleGroup(ResultSet rs) throws SQLException {
-        return new ExerciseMuscleGroup(
-                UUID.fromString(rs.getString("id")),
-                UUID.fromString(rs.getString("exercise_id")),
-                UUID.fromString(rs.getString("muscle_group_id")),
-                rs.getBoolean("is_primary"));
+        return findById(exerciseMuscleGroup.getId())
+                .orElseThrow(() -> new RuntimeException("Failed to retrieve updated exercise muscle group"));
     }
 }
