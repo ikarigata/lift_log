@@ -1,21 +1,23 @@
 import React from 'react';
-import SetRecord from './SetRecord';
+import { WorkoutSet } from '../types';
+import { calculateVolume, calculate1RM } from '../utils/calculation';
 
 interface CurrentWorkoutBlockProps {
   exerciseName: string;
-  sets: Array<{
-    setNumber: number;
-    weight: number;
-    reps: number;
-  }>;
+  sets: WorkoutSet[];
   onSetChange: (setNumber: number, weight: number, reps: number) => void;
+  onAddSet: () => void;
 }
 
 const CurrentWorkoutBlock: React.FC<CurrentWorkoutBlockProps> = ({
   exerciseName,
   sets,
   onSetChange,
+  onAddSet,
 }) => {
+  const volume = calculateVolume(sets);
+  const oneRM = calculate1RM(sets);
+
   return (
     <div className="flex flex-col w-full bg-primary-bg rounded-lg p-3">
       <div className="flex items-center justify-center w-full h-[49px] bg-primary-accent rounded-md px-5 py-2.5">
@@ -57,6 +59,24 @@ const CurrentWorkoutBlock: React.FC<CurrentWorkoutBlockProps> = ({
           </div>
         ))}
       </div>
+      <div className="flex flex-col gap-2.5 mt-2.5">
+        <div className="flex items-center justify-center w-full h-[66px] bg-primary-border rounded-lg px-2.5 py-1.5">
+          <div className="text-primary-text font-dotgothic text-base">
+            ボリューム: {volume.toFixed(1)}kg
+          </div>
+        </div>
+        <div className="flex items-center justify-center w-full h-[66px] bg-primary-border rounded-lg px-2.5 py-1.5">
+          <div className="text-primary-text font-dotgothic text-base">
+            1RM: {oneRM.toFixed(1)}kg
+          </div>
+        </div>
+      </div>
+      <button
+        onClick={onAddSet}
+        className="mt-4 bg-primary-accent text-primary-bg font-dotgothic text-lg py-2 rounded-lg"
+      >
+        セット追加
+      </button>
     </div>
   );
 };

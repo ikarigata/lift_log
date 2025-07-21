@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import type { Exercise, WorkoutRecord, WorkoutSet } from '../types';
-
+import { calculateVolume, calculate1RM } from '../utils/calculation';
 interface ExerciseInputProps {
   exercise: Exercise;
   previousRecords: WorkoutRecord[];
@@ -178,6 +178,19 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
               )}
             </div>
           ))}
+        </div>
+
+        <div className="flex flex-col gap-2.5 mt-2.5">
+          <div className="flex items-center justify-center w-full h-[66px] bg-primary-border rounded-lg px-2.5 py-1.5">
+            <div className="text-primary-text font-dotgothic text-base">
+              ボリューム: {useMemo(() => calculateVolume(currentSets), [currentSets]).toFixed(1)}kg
+            </div>
+          </div>
+          <div className="flex items-center justify-center w-full h-[66px] bg-primary-border rounded-lg px-2.5 py-1.5">
+            <div className="text-primary-text font-dotgothic text-base">
+              1RM: {useMemo(() => calculate1RM(currentSets), [currentSets]).toFixed(1)}kg
+            </div>
+          </div>
         </div>
       </div>
     </div>
