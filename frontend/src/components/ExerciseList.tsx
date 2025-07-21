@@ -1,16 +1,20 @@
 import React from 'react';
 import type { Exercise } from '../types';
+import TitleBar from './TitleBar';
+import { ClockIcon } from '@heroicons/react/24/outline';
 
 interface ExerciseListProps {
   exercises: Exercise[];
   onBack: () => void;
   onSelectExercise: (exercise: Exercise) => void;
+  onShowHistory: (exercise: Exercise) => void;
 }
 
 const ExerciseList: React.FC<ExerciseListProps> = ({ 
   exercises, 
   onBack, 
-  onSelectExercise 
+  onSelectExercise,
+  onShowHistory
 }) => {
   const exercisesByMuscleGroup = exercises.reduce((acc, exercise) => {
     if (!acc[exercise.muscleGroup]) {
@@ -22,20 +26,9 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-primary-bg min-h-screen">
-      <div className="flex items-center justify-between mb-[15px]">
-        <button 
-          onClick={onBack}
-          className="text-primary-text font-dotgothic text-2xl hover:opacity-70 transition-opacity"
-        >
-          ‹
-        </button>
-        <div className="text-center">
-          <h1 className="text-primary-text font-dotgothic text-xl">
-            種目選択
-          </h1>
-        </div>
-        <div className="w-6" />
-      </div>
+      <TitleBar onBack={onBack}>
+        <span className="font-dotgothic">種目選択</span>
+      </TitleBar>
 
       <div className="space-y-[15px]">
         {Object.entries(exercisesByMuscleGroup).map(([muscleGroup, groupExercises]) => (
@@ -45,18 +38,23 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
             </h3>
             <div className="space-y-[5px]">
               {groupExercises.map((exercise) => (
-                <button
+                <div
                   key={exercise.id}
-                  onClick={() => onSelectExercise(exercise)}
-                  className="flex items-center justify-between w-full bg-primary-bg rounded-[10px] p-[10px] border border-primary-border hover:bg-primary-border transition-colors"
+                  className="flex items-center justify-between w-full bg-primary-bg rounded-[10px] p-[10px] border border-primary-border"
                 >
-                  <span className="text-primary-text font-dotgothic text-base">
+                  <button
+                    onClick={() => onSelectExercise(exercise)}
+                    className="flex-grow text-left text-primary-text font-dotgothic text-base hover:opacity-70 transition-opacity"
+                  >
                     {exercise.name}
-                  </span>
-                  <div className="text-primary-text font-dotgothic text-xl">
-                    ›
-                  </div>
-                </button>
+                  </button>
+                  <button
+                    onClick={() => onShowHistory(exercise)}
+                    className="p-2 text-primary-text hover:opacity-70 transition-opacity"
+                  >
+                    <ClockIcon className="h-6 w-6" />
+                  </button>
+                </div>
               ))}
             </div>
           </div>

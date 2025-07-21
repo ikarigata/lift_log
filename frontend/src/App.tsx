@@ -5,9 +5,10 @@ import AddWorkoutButton from './components/AddWorkoutButton'
 import WorkoutDayDetail from './components/WorkoutDayDetail'
 import ExerciseList from './components/ExerciseList'
 import ExerciseInput from './components/ExerciseInput'
+import ExerciseHistory from './components/ExerciseHistory'
 import type { WorkoutDay, WorkoutRecord, Exercise, WorkoutSet } from './types'
 
-type AppView = 'list' | 'detail' | 'exerciseList' | 'exerciseInput';
+type AppView = 'list' | 'detail' | 'exerciseList' | 'exerciseInput' | 'exerciseHistory';
 
 function App() {
   const [currentView, setCurrentView] = useState<AppView>('list');
@@ -170,10 +171,19 @@ function App() {
     setCurrentView('detail');
   };
 
+  const handleBackToExerciseList = () => {
+    setCurrentView('exerciseList');
+  }
+
   const handleSelectExercise = (exercise: Exercise) => {
     setSelectedExercise(exercise);
     setEditingRecord(null);
     setCurrentView('exerciseInput');
+  };
+
+  const handleShowExerciseHistory = (exercise: Exercise) => {
+    setSelectedExercise(exercise);
+    setCurrentView('exerciseHistory');
   };
 
   const handleEditExercise = (record: WorkoutRecord) => {
@@ -253,6 +263,7 @@ function App() {
         exercises={exercises}
         onBack={handleBackToDetail}
         onSelectExercise={handleSelectExercise}
+        onShowHistory={handleShowExerciseHistory}
       />
     );
   }
@@ -269,6 +280,25 @@ function App() {
         currentRecord={editingRecord}
         onBack={handleBackToDetail}
         onSave={handleSaveExercise}
+      />
+    );
+  }
+
+  if (currentView === 'exerciseHistory' && selectedExercise) {
+    const historyRecords = workoutRecords
+      .filter(record => record.exerciseId === selectedExercise.id)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 20)
+      .map(record => ({
+        ...record,
+        workoutDay: workoutDays.find(day => day.id === record.workoutDayId)
+      }));
+
+    return (
+      <ExerciseHistory
+        exercise={selectedExercise}
+        records={historyRecords}
+        onBack={handleBackToExerciseList}
       />
     );
   }
