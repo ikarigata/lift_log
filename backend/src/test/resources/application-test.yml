@@ -2,17 +2,19 @@ spring:
   application:
     name: lift_log
   datasource:
-    url: jdbc:postgresql://localhost:5439/lift_log
+    url: jdbc:postgresql://localhost:5439/lift_log_test
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
   flyway:
-    enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: true
     validate-on-migrate: true
 
 server:
-  port: 8080
-  servlet:
-    context-path: /
+  port: 8081
+
+logging:
+  level:
+    com.ikr.lift_log: DEBUG
+    org.jooq: DEBUG

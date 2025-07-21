@@ -2,48 +2,52 @@ package com.ikr.lift_log.infrastructure.repository;
 
 import com.ikr.lift_log.domain.model.WorkoutRecord;
 import com.ikr.lift_log.domain.repository.WorkoutRecordRepository;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.ikr.lift_log.jooq.tables.WorkoutRecords.WORKOUT_RECORDS;
+
 @Repository
 public class JdbcWorkoutRecordRepository implements WorkoutRecordRepository {
 
-    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final DSLContext dsl;
 
-    public JdbcWorkoutRecordRepository(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public JdbcWorkoutRecordRepository(DSLContext dsl) {
+        this.dsl = dsl;
     }
 
     @Override
     public List<WorkoutRecord> findByWorkoutDayId(UUID workoutDayId) {
-        String sql = "SELECT id, workout_day_id, exercise_id, notes, created_at, updated_at FROM public.workout_records "
-                +
-                "WHERE workout_day_id = :workoutDayId ORDER BY created_at";
-        var params = new MapSqlParameterSource().addValue("workoutDayId", workoutDayId);
-        return jdbcTemplate.query(sql, params, (rs, rowNum) -> mapRowToWorkoutRecord(rs));
+        return dsl.selectFrom(WORKOUT_RECORDS)
+                .where(WORKOUT_RECORDS.WORKOUT_DAY_ID.eq(workoutDayId))
+                .orderBy(WORKOUT_RECORDS.CREATED_AT)
+                .fetch(record -> new WorkoutRecord(
+                    record.get(WORKOUT_RECORDS.ID),
+                    record.get(WORKOUT_RECORDS.WORKOUT_DAY_ID),
+                    record.get(WORKOUT_RECORDS.EXERCISE_ID),
+                    record.get(WORKOUT_RECORDS.NOTES),
+                    record.get(WORKOUT_RECORDS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
+                    record.get(WORKOUT_RECORDS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
     }
 
     @Override
     public Optional<WorkoutRecord> findById(UUID id) {
-        String sql = "SELECT id, workout_day_id, exercise_id, notes, created_at, updated_at FROM public.workout_records WHERE id = :id";
-        var params = new MapSqlParameterSource().addValue("id", id);
-
-        try {
-            WorkoutRecord workoutRecord = jdbcTemplate.queryForObject(sql, params,
-                    (rs, rowNum) -> mapRowToWorkoutRecord(rs));
-            return Optional.ofNullable(workoutRecord);
-        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        return dsl.selectFrom(WORKOUT_RECORDS)
+                .where(WORKOUT_RECORDS.ID.eq(id))
+                .fetchOptional(record -> new WorkoutRecord(
+                    record.get(WORKOUT_RECORDS.ID),
+                    record.get(WORKOUT_RECORDS.WORKOUT_DAY_ID),
+                    record.get(WORKOUT_RECORDS.EXERCISE_ID),
+                    record.get(WORKOUT_RECORDS.NOTES),
+                    record.get(WORKOUT_RECORDS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
+                    record.get(WORKOUT_RECORDS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
     }
 
     @Override
@@ -57,54 +61,50 @@ public class JdbcWorkoutRecordRepository implements WorkoutRecordRepository {
 
     @Override
     public void deleteById(UUID id) {
-        String sql = "DELETE FROM public.workout_records WHERE id = :id";
-        var params = new MapSqlParameterSource().addValue("id", id);
-        jdbcTemplate.update(sql, params);
+        int rowsAffected = dsl.deleteFrom(WORKOUT_RECORDS)
+                .where(WORKOUT_RECORDS.ID.eq(id))
+                .execute();
+        
+        if (rowsAffected == 0) {
+            throw new RuntimeException("WorkoutRecord not found with id: " + id);
+        }
     }
 
     private WorkoutRecord insert(WorkoutRecord workoutRecord) {
-        String sql = "INSERT INTO public.workout_records (workout_day_id, exercise_id, notes, created_at, updated_at) "
-                +
-                "VALUES (:workoutDayId, :exerciseId, :notes, :createdAt, :updatedAt) RETURNING id";
+        UUID id = UUID.randomUUID();
+        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime createdAt = workoutRecord.getCreatedAt() != null ? workoutRecord.getCreatedAt() : now;
+        ZonedDateTime updatedAt = workoutRecord.getUpdatedAt() != null ? workoutRecord.getUpdatedAt() : now;
+        
+        dsl.insertInto(WORKOUT_RECORDS)
+                .set(WORKOUT_RECORDS.ID, id)
+                .set(WORKOUT_RECORDS.WORKOUT_DAY_ID, workoutRecord.getWorkoutDayId())
+                .set(WORKOUT_RECORDS.EXERCISE_ID, workoutRecord.getExerciseId())
+                .set(WORKOUT_RECORDS.NOTES, workoutRecord.getNotes())
+                .set(WORKOUT_RECORDS.CREATED_AT, createdAt.toOffsetDateTime())
+                .set(WORKOUT_RECORDS.UPDATED_AT, updatedAt.toOffsetDateTime())
+                .execute();
 
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("workoutDayId", workoutRecord.getWorkoutDayId())
-                .addValue("exerciseId", workoutRecord.getExerciseId())
-                .addValue("notes", workoutRecord.getNotes())
-                .addValue("createdAt", workoutRecord.getCreatedAt())
-                .addValue("updatedAt", workoutRecord.getUpdatedAt());
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, params, keyHolder);
-
-        UUID id = UUID.fromString(keyHolder.getKeys().get("id").toString());
-        workoutRecord.setId(id);
-
-        return workoutRecord;
+        return new WorkoutRecord(id, workoutRecord.getWorkoutDayId(), workoutRecord.getExerciseId(), 
+                workoutRecord.getNotes(), createdAt, updatedAt);
     }
 
     private WorkoutRecord update(WorkoutRecord workoutRecord) {
-        String sql = "UPDATE public.workout_records SET workout_day_id = :workoutDayId, exercise_id = :exerciseId, " +
-                "notes = :notes, updated_at = :updatedAt WHERE id = :id";
+        ZonedDateTime now = ZonedDateTime.now();
+        
+        int rowsAffected = dsl.update(WORKOUT_RECORDS)
+                .set(WORKOUT_RECORDS.WORKOUT_DAY_ID, workoutRecord.getWorkoutDayId())
+                .set(WORKOUT_RECORDS.EXERCISE_ID, workoutRecord.getExerciseId())
+                .set(WORKOUT_RECORDS.NOTES, workoutRecord.getNotes())
+                .set(WORKOUT_RECORDS.UPDATED_AT, now.toOffsetDateTime())
+                .where(WORKOUT_RECORDS.ID.eq(workoutRecord.getId()))
+                .execute();
+        
+        if (rowsAffected == 0) {
+            throw new RuntimeException("WorkoutRecord not found with id: " + workoutRecord.getId());
+        }
 
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id", workoutRecord.getId())
-                .addValue("workoutDayId", workoutRecord.getWorkoutDayId())
-                .addValue("exerciseId", workoutRecord.getExerciseId())
-                .addValue("notes", workoutRecord.getNotes())
-                .addValue("updatedAt", workoutRecord.getUpdatedAt());
-
-        jdbcTemplate.update(sql, params);
-        return workoutRecord;
-    }
-
-    private WorkoutRecord mapRowToWorkoutRecord(ResultSet rs) throws SQLException {
-        return new WorkoutRecord(
-                UUID.fromString(rs.getString("id")),
-                UUID.fromString(rs.getString("workout_day_id")),
-                UUID.fromString(rs.getString("exercise_id")),
-                rs.getString("notes"),
-                rs.getTimestamp("created_at").toInstant().atZone(java.time.ZoneId.systemDefault()),
-                rs.getTimestamp("updated_at").toInstant().atZone(java.time.ZoneId.systemDefault()));
+        return findById(workoutRecord.getId())
+                .orElseThrow(() -> new RuntimeException("Failed to retrieve updated workout record"));
     }
 }
