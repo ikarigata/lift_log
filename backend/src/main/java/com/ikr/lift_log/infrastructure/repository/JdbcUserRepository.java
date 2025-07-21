@@ -2,44 +2,45 @@ package com.ikr.lift_log.infrastructure.repository;
 
 import com.ikr.lift_log.domain.model.User;
 import com.ikr.lift_log.domain.repository.UserRepository;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.ikr.lift_log.jooq.tables.Users.USERS;
+
 @Repository
 public class JdbcUserRepository implements UserRepository {
 
-    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final DSLContext dsl;
 
-    public JdbcUserRepository(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public JdbcUserRepository(DSLContext dsl) {
+        this.dsl = dsl;
     }
 
     @Override
     public List<User> findAll() {
-        String sql = "SELECT id, name, created_at FROM public.users ORDER BY name";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToUser(rs));
+        return dsl.selectFrom(USERS)
+                .orderBy(USERS.NAME)
+                .fetch(record -> new User(
+                    record.get(USERS.ID),
+                    record.get(USERS.NAME),
+                    record.get(USERS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
     }
 
     @Override
     public Optional<User> findById(UUID id) {
-        String sql = "SELECT id, name, created_at FROM public.users WHERE id = :id";
-        var params = new MapSqlParameterSource().addValue("id", id);
-
-        try {
-            User user = jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> mapRowToUser(rs));
-            return Optional.ofNullable(user);
-        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        return dsl.selectFrom(USERS)
+                .where(USERS.ID.eq(id))
+                .fetchOptional(record -> new User(
+                    record.get(USERS.ID),
+                    record.get(USERS.NAME),
+                    record.get(USERS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
     }
 
     @Override
@@ -52,38 +53,29 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     private User insert(User user) {
-        String sql = "INSERT INTO public.users (name) VALUES (:name) RETURNING id, created_at";
+        UUID id = UUID.randomUUID();
+        ZonedDateTime now = ZonedDateTime.now();
+        
+        dsl.insertInto(USERS)
+                .set(USERS.ID, id)
+                .set(USERS.NAME, user.getName())
+                .set(USERS.CREATED_AT, now.toOffsetDateTime())
+                .execute();
 
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("name", user.getName());
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, params, keyHolder);
-
-        UUID id = UUID.fromString(keyHolder.getKeys().get("id").toString());
-        user.setId(id);
-
-        java.sql.Timestamp createdAt = (java.sql.Timestamp) keyHolder.getKeys().get("created_at");
-        user.setCreatedAt(createdAt.toInstant().atZone(java.time.ZoneId.systemDefault()));
-
-        return user;
+        return new User(id, user.getName(), now);
     }
 
     private User update(User user) {
-        String sql = "UPDATE public.users SET name = :name WHERE id = :id";
+        int rowsAffected = dsl.update(USERS)
+                .set(USERS.NAME, user.getName())
+                .where(USERS.ID.eq(user.getId()))
+                .execute();
+        
+        if (rowsAffected == 0) {
+            throw new RuntimeException("User not found with id: " + user.getId());
+        }
 
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id", user.getId())
-                .addValue("name", user.getName());
-
-        jdbcTemplate.update(sql, params);
-        return user;
-    }
-
-    private User mapRowToUser(ResultSet rs) throws SQLException {
-        return new User(
-                UUID.fromString(rs.getString("id")),
-                rs.getString("name"),
-                rs.getTimestamp("created_at").toInstant().atZone(java.time.ZoneId.systemDefault()));
+        return findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Failed to retrieve updated user"));
     }
 }
