@@ -24,7 +24,8 @@
 
 - Spring Boot - バックエンドフレームワーク
 - PostgreSQL - データベース
-- NamedParameterJdbcTemplate - データアクセス
+- jOOQ - タイプセーフなSQL実行・データアクセス
+- Flyway - データベースマイグレーション
 
 
 ## セットアップ方法
