@@ -17,9 +17,9 @@ const CurrentWorkoutBlock: React.FC<CurrentWorkoutBlockProps> = ({
   onSetChange,
 }) => {
   return (
-    <div className="flex flex-col w-full bg-[#26272A] rounded-lg p-3">
-      <div className="flex items-center justify-center w-full h-[49px] bg-[#E86029] rounded-md px-5 py-2.5">
-        <div className="text-[#26272A] font-['DotGothic16'] text-xl">
+    <div className="flex flex-col w-full bg-primary-bg rounded-lg p-3">
+      <div className="flex items-center justify-center w-full h-[49px] bg-primary-accent rounded-md px-5 py-2.5">
+        <div className="text-primary-bg font-dotgothic text-xl">
           {exerciseName}
         </div>
       </div>
@@ -27,9 +27,9 @@ const CurrentWorkoutBlock: React.FC<CurrentWorkoutBlockProps> = ({
         {sets.map((set) => (
           <div
             key={set.setNumber}
-            className="flex items-center w-full h-6 border-b border-[#3B3C3F] px-2.5 py-1.5"
+            className="flex items-center w-full h-6 border-b border-primary-border px-2.5 py-1.5"
           >
-            <div className="text-[#F1EFDF] font-['DotGothic16'] text-base">
+            <div className="text-primary-text font-dotgothic text-base">
               {set.setNumber}セット目
             </div>
             <input
@@ -38,9 +38,9 @@ const CurrentWorkoutBlock: React.FC<CurrentWorkoutBlockProps> = ({
               onChange={(e) =>
                 onSetChange(set.setNumber, Number(e.target.value), set.reps)
               }
-              className="w-16 h-6 ml-2.5 bg-transparent text-[#F1EFDF] font-['DotGothic16'] text-base border-none focus:outline-none"
+              className="w-16 h-6 ml-2.5 bg-transparent text-primary-text font-dotgothic text-base border-none focus:outline-none"
             />
-            <div className="text-[#F1EFDF] font-['DotGothic16'] text-base mx-2.5">
+            <div className="text-primary-text font-dotgothic text-base mx-2.5">
               ×
             </div>
             <input
@@ -49,9 +49,9 @@ const CurrentWorkoutBlock: React.FC<CurrentWorkoutBlockProps> = ({
               onChange={(e) =>
                 onSetChange(set.setNumber, set.weight, Number(e.target.value))
               }
-              className="w-16 h-6 bg-transparent text-[#F1EFDF] font-['DotGothic16'] text-base border-none focus:outline-none"
+              className="w-16 h-6 bg-transparent text-primary-text font-dotgothic text-base border-none focus:outline-none"
             />
-            <div className="text-[#F1EFDF] font-['DotGothic16'] text-base ml-2.5">
+            <div className="text-primary-text font-dotgothic text-base ml-2.5">
               回
             </div>
           </div>
