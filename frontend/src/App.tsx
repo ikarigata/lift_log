@@ -1,19 +1,14 @@
 import React, { useState } from 'react'
-import TitleBar from './components/TitleBar'
-import WorkoutDayList from './components/WorkoutDayList'
-import AddWorkoutButton from './components/AddWorkoutButton'
-import WorkoutDayDetail from './components/WorkoutDayDetail'
-import ExerciseList from './components/ExerciseList'
-import ExerciseInput from './components/ExerciseInput'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import HomePage from './pages/HomePage'
+import WorkoutDetailPage from './pages/WorkoutDetailPage'
+import ExerciseListPage from './pages/ExerciseListPage'
+import ExerciseInputPage from './pages/ExerciseInputPage'
+import CalendarPage from './pages/CalendarPage'
+import ExerciseManagementPage from './pages/ExerciseManagementPage'
 import type { WorkoutDay, WorkoutRecord, Exercise, WorkoutSet } from './types'
 
-type AppView = 'list' | 'detail' | 'exerciseList' | 'exerciseInput';
-
 function App() {
-  const [currentView, setCurrentView] = useState<AppView>('list');
-  const [selectedWorkoutDay, setSelectedWorkoutDay] = useState<WorkoutDay | null>(null);
-  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
-  const [editingRecord, setEditingRecord] = useState<WorkoutRecord | null>(null);
   const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([
     {
       id: '1',
@@ -152,71 +147,6 @@ function App() {
     }
   ]);
 
-  const handleWorkoutDayClick = (workoutDay: WorkoutDay) => {
-    setSelectedWorkoutDay(workoutDay);
-    setCurrentView('detail');
-  };
-
-  const handleBackToList = () => {
-    setSelectedWorkoutDay(null);
-    setCurrentView('list');
-  };
-
-  const handleAddExercise = () => {
-    setCurrentView('exerciseList');
-  };
-
-  const handleBackToDetail = () => {
-    setCurrentView('detail');
-  };
-
-  const handleSelectExercise = (exercise: Exercise) => {
-    setSelectedExercise(exercise);
-    setEditingRecord(null);
-    setCurrentView('exerciseInput');
-  };
-
-  const handleEditExercise = (record: WorkoutRecord) => {
-    const exercise = exercises.find(ex => ex.id === record.exerciseId);
-    if (exercise) {
-      setSelectedExercise(exercise);
-      setEditingRecord(record);
-      setCurrentView('exerciseInput');
-    }
-  };
-
-  const handleSaveExercise = (sets: WorkoutSet[]) => {
-    if (!selectedWorkoutDay || !selectedExercise) return;
-
-    if (editingRecord) {
-      // 既存記録の更新
-      const updatedRecord: WorkoutRecord = {
-        ...editingRecord,
-        sets,
-        updatedAt: new Date().toISOString()
-      };
-      setWorkoutRecords(prev => 
-        prev.map(record => record.id === editingRecord.id ? updatedRecord : record)
-      );
-    } else {
-      // 新規記録の追加
-      const newRecord: WorkoutRecord = {
-        id: Date.now().toString(),
-        workoutDayId: selectedWorkoutDay.id,
-        exerciseId: selectedExercise.id,
-        exerciseName: selectedExercise.name,
-        sets,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      setWorkoutRecords(prev => [...prev, newRecord]);
-    }
-
-    setSelectedExercise(null);
-    setEditingRecord(null);
-    setCurrentView('detail');
-  };
-
   const handleAddWorkout = () => {
     const newWorkout: WorkoutDay = {
       id: Date.now().toString(),
@@ -227,64 +157,123 @@ function App() {
       updatedAt: new Date().toISOString()
     };
     setWorkoutDays([newWorkout, ...workoutDays]);
-    console.log('Added new workout:', newWorkout);
-    // TODO: Navigate to new workout page
   };
 
-  if (currentView === 'detail' && selectedWorkoutDay) {
-    const dayRecords = workoutRecords.filter(
-      record => record.workoutDayId === selectedWorkoutDay.id
-    );
-    
-    return (
-      <WorkoutDayDetail
-        workoutDay={selectedWorkoutDay}
-        workoutRecords={dayRecords}
-        onBack={handleBackToList}
-        onAddExercise={handleAddExercise}
-        onEditExercise={handleEditExercise}
-      />
-    );
-  }
+  const handleAddNewExercise = (name: string, muscleGroup: string) => {
+    const newExercise: Exercise = {
+      id: `ex${Date.now()}`,
+      name,
+      muscleGroup
+    };
+    setExercises(prev => [...prev, newExercise]);
+  };
 
-  if (currentView === 'exerciseList') {
-    return (
-      <ExerciseList
-        exercises={exercises}
-        onBack={handleBackToDetail}
-        onSelectExercise={handleSelectExercise}
-      />
-    );
-  }
+  const handleDeleteExercise = (exerciseId: string) => {
+    setExercises(prev => prev.filter(ex => ex.id !== exerciseId));
+    setWorkoutRecords(prev => prev.filter(record => record.exerciseId !== exerciseId));
+  };
 
-  if (currentView === 'exerciseInput' && selectedExercise) {
-    const previousRecords = workoutRecords
-      .filter(record => record.exerciseId === selectedExercise.id)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const handleSaveExercise = (workoutId: string, exerciseId: string, sets: WorkoutSet[], editingRecordId?: string) => {
+    const exercise = exercises.find(ex => ex.id === exerciseId);
+    if (!exercise) return;
 
-    return (
-      <ExerciseInput
-        exercise={selectedExercise}
-        previousRecords={previousRecords}
-        currentRecord={editingRecord}
-        onBack={handleBackToDetail}
-        onSave={handleSaveExercise}
-      />
-    );
-  }
+    if (editingRecordId) {
+      // 既存記録の更新
+      const editingRecord = workoutRecords.find(record => record.id === editingRecordId);
+      if (editingRecord) {
+        const updatedRecord: WorkoutRecord = {
+          ...editingRecord,
+          sets,
+          updatedAt: new Date().toISOString()
+        };
+        setWorkoutRecords(prev => 
+          prev.map(record => record.id === editingRecordId ? updatedRecord : record)
+        );
+      }
+    } else {
+      // 新規記録の追加
+      const newRecord: WorkoutRecord = {
+        id: Date.now().toString(),
+        workoutDayId: workoutId,
+        exerciseId: exerciseId,
+        exerciseName: exercise.name,
+        sets,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      setWorkoutRecords(prev => [...prev, newRecord]);
+    }
+  };
 
   return (
-    <div className="w-full px-2 py-4 space-y-[10px] bg-primary-bg min-h-screen">
-      <TitleBar />
-      
-      <div className="space-y-[10px]">
-        <AddWorkoutButton onClick={handleAddWorkout} />
-        <WorkoutDayList 
-          workoutDays={workoutDays}
-          onWorkoutDayClick={handleWorkoutDayClick}
+    <Router>
+      <Routes>
+        <Route 
+          path="/" 
+          element={
+            <HomePage 
+              workoutDays={workoutDays} 
+              onAddWorkout={handleAddWorkout}
+            />
+          } 
         />
-      </div>
-    </div>
+        <Route 
+          path="/workout/:workoutId" 
+          element={
+            <WorkoutDetailPage 
+              workoutDays={workoutDays}
+              workoutRecords={workoutRecords}
+            />
+          } 
+        />
+        <Route 
+          path="/workout/:workoutId/exercises" 
+          element={
+            <ExerciseListPage 
+              exercises={exercises}
+            />
+          } 
+        />
+        <Route 
+          path="/workout/:workoutId/exercise/:exerciseId" 
+          element={
+            <ExerciseInputPage 
+              exercises={exercises}
+              workoutRecords={workoutRecords}
+              onSaveExercise={handleSaveExercise}
+            />
+          } 
+        />
+        <Route 
+          path="/workout/:workoutId/exercise/:exerciseId/edit" 
+          element={
+            <ExerciseInputPage 
+              exercises={exercises}
+              workoutRecords={workoutRecords}
+              onSaveExercise={handleSaveExercise}
+            />
+          } 
+        />
+        <Route 
+          path="/calendar" 
+          element={
+            <CalendarPage 
+              workoutDays={workoutDays}
+            />
+          } 
+        />
+        <Route 
+          path="/exercises" 
+          element={
+            <ExerciseManagementPage 
+              exercises={exercises}
+              onAddExercise={handleAddNewExercise}
+              onDeleteExercise={handleDeleteExercise}
+            />
+          } 
+        />
+      </Routes>
+    </Router>
   )
 }
 
