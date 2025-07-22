@@ -78,7 +78,7 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
               onClick={() => onEditExercise(record)}
               className="w-full bg-primary-bg border border-primary-border rounded-[10px] p-[3px] hover:bg-primary-border transition-colors text-left"
             >
-              <h3 className="text-primary-text font-dotgothic text-lg mb-[10px] px-[10px] py-[5px]">
+              <h3 className="text-primary-text font-dotgothic text-lg mb-[10px] px-[3px] py-[5px]">
                 {record.exerciseName}
               </h3>
               
@@ -86,7 +86,7 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
                 {record.sets.map((set, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between py-[5px] px-[10px] border-b-2 border-primary-border"
+                    className="flex items-center justify-between py-[5px] px-[3px] border-b-2 border-primary-border"
                   >
                     <span className="text-primary-text font-dotgothic text-sm">
                       {set.setNumber}セット目
