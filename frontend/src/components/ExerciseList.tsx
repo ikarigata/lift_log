@@ -40,7 +40,7 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
       <div className="space-y-[15px]">
         {Object.entries(exercisesByMuscleGroup).map(([muscleGroup, groupExercises]) => (
           <div key={muscleGroup} className="space-y-[10px]">
-            <h3 className="text-primary-text font-dotgothic text-lg opacity-80 px-[5px]">
+            <h3 className="text-primary-text font-dotgothic text-lg opacity-80 px-[3px]">
               {muscleGroup}
             </h3>
             <div className="space-y-[5px]">

@@ -121,7 +121,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
           </h3>
           <button
             onClick={addSet}
-            className="bg-primary-accent hover:bg-primary-accent/80 rounded-[5px] px-[10px] py-[5px] text-primary-bg font-dotgothic text-sm transition-colors"
+            className="bg-primary-accent hover:bg-primary-accent/80 rounded-[5px] px-[5px] py-[5px] text-primary-bg font-dotgothic text-sm transition-colors"
           >
             + セット追加
           </button>
