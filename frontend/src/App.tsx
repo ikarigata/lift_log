@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import BottomNavigation from './components/BottomNavigation'
 import HomePage from './pages/HomePage'
 import WorkoutDetailPage from './pages/WorkoutDetailPage'
 import ExerciseListPage from './pages/ExerciseListPage'
@@ -84,6 +85,7 @@ function App() {
 
   return (
     <Router>
+      <div className="pb-20">
         <Routes>
           <Route
             path="/"
@@ -121,7 +123,7 @@ function App() {
               />
             }
           />
-          <Route
+            <Route
             path="/workout/:workoutId/exercise/:exerciseId/edit"
             element={
               <ExerciseInputPage
@@ -150,6 +152,8 @@ function App() {
             }
           />
         </Routes>
+      </div>
+      <BottomNavigation onAddWorkout={handleAddWorkout} />
     </Router>
   )
 }
