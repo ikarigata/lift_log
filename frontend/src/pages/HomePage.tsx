@@ -2,29 +2,18 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import TitleBar from '../components/TitleBar';
 import WorkoutDayList from '../components/WorkoutDayList';
-import AddWorkoutButton from '../components/AddWorkoutButton';
-import CalendarButton from '../components/CalendarButton';
-import ExerciseManagementButton from '../components/ExerciseManagementButton';
 import type { WorkoutDay } from '../types';
 
 interface HomePageProps {
   workoutDays: WorkoutDay[];
-  onAddWorkout: () => void;
+  onAddWorkout: () => void; // This prop is kept for the center button logic in App.tsx
 }
 
-const HomePage: React.FC<HomePageProps> = ({ workoutDays, onAddWorkout }) => {
+const HomePage: React.FC<HomePageProps> = ({ workoutDays }) => {
   const navigate = useNavigate();
 
   const handleWorkoutDayClick = (workoutDay: WorkoutDay) => {
     navigate(`/workout/${workoutDay.id}`);
-  };
-
-  const handleShowCalendar = () => {
-    navigate('/calendar');
-  };
-
-  const handleShowExerciseManagement = () => {
-    navigate('/exercises');
   };
 
   return (
@@ -32,9 +21,6 @@ const HomePage: React.FC<HomePageProps> = ({ workoutDays, onAddWorkout }) => {
       <TitleBar />
       
       <div className="space-y-[10px]">
-        <AddWorkoutButton onClick={onAddWorkout} />
-        <CalendarButton onClick={handleShowCalendar} />
-        <ExerciseManagementButton onClick={handleShowExerciseManagement} />
         <WorkoutDayList 
           workoutDays={workoutDays}
           onWorkoutDayClick={handleWorkoutDayClick}
