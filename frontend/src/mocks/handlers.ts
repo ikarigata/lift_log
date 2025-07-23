@@ -140,13 +140,83 @@ const workoutRecords: WorkoutRecord[] = [
 ];
 
 export const handlers = [
+  // Workout Days
   http.get('/api/workout-days', () => {
     return HttpResponse.json(workoutDays)
   }),
+  http.post('/api/workout-days', async ({ request }) => {
+    const newWorkoutData = await request.json() as Omit<WorkoutDay, 'id' | 'createdAt' | 'updatedAt'>;
+    const newWorkout: WorkoutDay = {
+      id: Date.now().toString(),
+      ...newWorkoutData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    workoutDays.unshift(newWorkout);
+    return HttpResponse.json(newWorkout);
+  }),
+
+  // Exercises
   http.get('/api/exercises', () => {
     return HttpResponse.json(exercises)
   }),
+  http.post('/api/exercises', async ({ request }) => {
+    const newExerciseData = await request.json() as Omit<Exercise, 'id'>;
+    const newExercise: Exercise = {
+      id: `ex${Date.now()}`,
+      ...newExerciseData
+    };
+    exercises.push(newExercise);
+    return HttpResponse.json(newExercise);
+  }),
+  http.delete('/api/exercises/:exerciseId', ({ params }) => {
+    const { exerciseId } = params;
+    const index = exercises.findIndex(ex => ex.id === exerciseId);
+    if (index !== -1) {
+      exercises.splice(index, 1);
+      // 関連するworkoutRecordsも削除
+      const recordIndexes = [];
+      for (let i = workoutRecords.length - 1; i >= 0; i--) {
+        if (workoutRecords[i].exerciseId === exerciseId) {
+          recordIndexes.push(i);
+        }
+      }
+      recordIndexes.forEach(i => workoutRecords.splice(i, 1));
+    }
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  // Workout Records
   http.get('/api/workout-records', () => {
     return HttpResponse.json(workoutRecords)
+  }),
+  http.post('/api/workout-records', async ({ request }) => {
+    const data = await request.json() as { workoutDayId: string; exerciseId: string; sets: any[] };
+    const exercise = exercises.find(ex => ex.id === data.exerciseId);
+    const newRecord: WorkoutRecord = {
+      id: Date.now().toString(),
+      workoutDayId: data.workoutDayId,
+      exerciseId: data.exerciseId,
+      exerciseName: exercise?.name || '',
+      sets: data.sets,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    workoutRecords.push(newRecord);
+    return HttpResponse.json(newRecord);
+  }),
+  http.put('/api/workout-records/:recordId', async ({ params, request }) => {
+    const { recordId } = params;
+    const data = await request.json() as { workoutDayId: string; exerciseId: string; sets: any[] };
+    const recordIndex = workoutRecords.findIndex(record => record.id === recordId);
+    if (recordIndex !== -1) {
+      workoutRecords[recordIndex] = {
+        ...workoutRecords[recordIndex],
+        sets: data.sets,
+        updatedAt: new Date().toISOString()
+      };
+      return HttpResponse.json(workoutRecords[recordIndex]);
+    }
+    return new HttpResponse(null, { status: 404 });
   }),
 ]
