@@ -83,8 +83,7 @@ function App() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto w-full">
-      <Router>
+    <Router>
         <Routes>
           <Route
             path="/"
@@ -151,8 +150,7 @@ function App() {
             }
           />
         </Routes>
-      </Router>
-    </div>
+    </Router>
   )
 }
 
