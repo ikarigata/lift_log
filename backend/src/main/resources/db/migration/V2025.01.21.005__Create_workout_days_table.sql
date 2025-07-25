@@ -1,6 +1,6 @@
 -- Workout days table
 CREATE TABLE workout_days (
-    id UUID DEFAULT gen_random_uuid() NOT NULL,
+    id UUID DEFAULT RANDOM_UUID() NOT NULL,
     user_id UUID NOT NULL,
     date DATE DEFAULT CURRENT_DATE NOT NULL,
     title TEXT,

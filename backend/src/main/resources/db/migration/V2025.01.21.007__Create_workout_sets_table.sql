@@ -1,6 +1,6 @@
 -- Workout sets table
 CREATE TABLE workout_sets (
-    id UUID DEFAULT gen_random_uuid() NOT NULL,
+    id UUID DEFAULT RANDOM_UUID() NOT NULL,
     workout_record_id UUID NOT NULL,
     reps INTEGER NOT NULL,
     weight NUMERIC(10, 2) NOT NULL,

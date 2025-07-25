@@ -1,6 +1,6 @@
 -- Workout records table
 CREATE TABLE workout_records (
-    id UUID DEFAULT gen_random_uuid() NOT NULL,
+    id UUID DEFAULT RANDOM_UUID() NOT NULL,
     workout_day_id UUID NOT NULL,
     exercise_id UUID NOT NULL,
     notes TEXT,
