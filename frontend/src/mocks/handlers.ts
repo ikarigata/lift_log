@@ -219,4 +219,30 @@ export const handlers = [
     }
     return new HttpResponse(null, { status: 404 });
   }),
+  // Login
+  http.post('/api/v1/login', async ({ request }) => {
+    try {
+      const { email, password } = await request.json() as any;
+      if (email === 'test@example.com' && password === 'password') {
+        return HttpResponse.json({
+          token: 'dummy-auth-token',
+          user: { id: 'user-1', name: 'Test User' },
+        });
+      } else {
+        return new HttpResponse(JSON.stringify({ message: 'Unauthorized' }), {
+          status: 401,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      }
+    } catch (e) {
+      return new HttpResponse(JSON.stringify({ message: 'Invalid request body' }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+  }),
 ]
