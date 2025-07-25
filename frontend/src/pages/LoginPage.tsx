@@ -38,7 +38,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-orange-500 font-dotgothic">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-surface-secondary text-content-accent font-dotgothic">
       <h1 className="text-6xl font-bold mb-8">lift_log</h1>
       <form onSubmit={handleLogin} className="flex flex-col items-center">
         <input
@@ -46,19 +46,19 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
           placeholder="メールアドレス"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-80 p-2 mb-4 bg-gray-800 text-orange-500 border border-orange-500 rounded focus:outline-none focus:border-orange-400"
+          className="w-80 p-2 mb-4 bg-input-bg text-input-text border-none rounded focus:outline-none placeholder:text-input-placeholder"
         />
         <input
           type="password"
           placeholder="パスワード"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-80 p-2 mb-4 bg-gray-800 text-orange-500 border border-orange-500 rounded focus:outline-none focus:border-orange-400"
+          className="w-80 p-2 mb-4 bg-input-bg text-input-text border-none rounded focus:outline-none placeholder:text-input-placeholder"
         />
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <button
           type="submit"
-          className="w-80 p-2 bg-orange-500 text-black font-bold rounded hover:bg-orange-600"
+          className="w-80 p-2 bg-interactive-primary text-content-inverse font-bold rounded border-none hover:bg-interactive-primary/80"
         >
           ログイン
         </button>

@@ -17,22 +17,22 @@ const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, onClick }) 
 
   return (
     <div 
-      className="flex items-center justify-between w-full bg-primary-bg rounded-[10px] p-[10px] border border-primary-border hover:bg-primary-border transition-colors cursor-pointer"
+      className="flex items-center justify-between w-full bg-surface-container rounded-[10px] p-[10px] border-none hover:bg-surface-secondary transition-colors cursor-pointer"
       onClick={onClick}
     >
       <div className="flex flex-col">
-        <div className="text-primary-text font-dotgothic text-lg">
+        <div className="text-content-secondary font-dotgothic text-lg">
           {formatDate(workoutDay.date)}
         </div>
         {workoutDay.name && (
-          <div className="text-primary-text opacity-80 font-dotgothic text-sm">
+          <div className="text-content-secondary opacity-80 font-dotgothic text-sm">
             {workoutDay.name}
           </div>
         )}
       </div>
       <div className="flex items-center space-x-[10px]">
         <div className={`w-3 h-3 rounded-full ${workoutDay.isCompleted ? 'bg-green-500' : 'bg-gray-500'}`} />
-        <div className="text-primary-text font-dotgothic text-2xl">
+        <div className="text-content-secondary font-dotgothic text-2xl">
           ›
         </div>
       </div>

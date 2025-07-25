@@ -28,7 +28,7 @@ const HomePage: React.FC<HomePageProps> = ({ workoutDays, onAddWorkout }) => {
   };
 
   return (
-    <div className="px-2 py-4 space-y-[10px] bg-primary-bg min-h-screen">
+    <div className="px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
       <TitleBar />
       
       <div className="space-y-[10px]">
