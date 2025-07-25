@@ -1,21 +1,38 @@
-import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-import WorkoutDetailPage from './pages/WorkoutDetailPage'
-import ExerciseListPage from './pages/ExerciseListPage'
-import ExerciseInputPage from './pages/ExerciseInputPage'
-import CalendarPage from './pages/CalendarPage'
-import ExerciseManagementPage from './pages/ExerciseManagementPage'
-import type { WorkoutDay, WorkoutRecord, Exercise, WorkoutSet } from './types'
-import { getWorkoutDays, addWorkoutDay } from './api/workouts'
-import { getExercises, addExercise, deleteExercise, getWorkoutRecords, saveWorkoutRecord } from './api/exercises'
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import WorkoutDetailPage from './pages/WorkoutDetailPage';
+import ExerciseListPage from './pages/ExerciseListPage';
+import ExerciseInputPage from './pages/ExerciseInputPage';
+import CalendarPage from './pages/CalendarPage';
+import ExerciseManagementPage from './pages/ExerciseManagementPage';
+import LoginPage from './pages/LoginPage'; // LoginPageをインポート
+import type { WorkoutDay, WorkoutRecord, Exercise, WorkoutSet } from './types';
+import { getWorkoutDays, addWorkoutDay } from './api/workouts';
+import { getExercises, addExercise, deleteExercise, getWorkoutRecords, saveWorkoutRecord } from './api/exercises';
+
+// 認証状態をチェックするコンポーネント
+const PrivateRoute = ({ element, isAuthenticated }: { element: React.ReactElement, isAuthenticated: boolean }) => {
+  return isAuthenticated ? element : <Navigate to="/login" />;
+};
 
 function App() {
   const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [workoutRecords, setWorkoutRecords] = useState<WorkoutRecord[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // 認証状態を管理
+
+  // 認証チェックのロジック（例：トークンをローカルストレージで確認）
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
 
   useEffect(() => {
+    if (!isAuthenticated) return; // 認証されていない場合はデータをフェッチしない
     const fetchData = async () => {
       try {
         const [days, exs, records] = await Promise.all([
@@ -31,7 +48,7 @@ function App() {
       }
     };
     fetchData();
-  }, []);
+  }, [isAuthenticated]);
 
   const handleAddWorkout = async () => {
     try {
@@ -82,70 +99,112 @@ function App() {
     }
   };
 
+  // ログイン成功時に呼び出される関数
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem('authToken', 'dummy_token'); // ダミーのトークンを保存
+  };
+
   return (
     <Router>
         <Routes>
+          <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
           <Route
             path="/"
             element={
-              <HomePage
-                workoutDays={workoutDays}
-                onAddWorkout={handleAddWorkout}
+              <PrivateRoute
+                isAuthenticated={isAuthenticated}
+                element={
+                  <HomePage
+                    workoutDays={workoutDays}
+                    onAddWorkout={handleAddWorkout}
+                  />
+                }
               />
             }
           />
           <Route
             path="/workout/:workoutId"
             element={
-              <WorkoutDetailPage
-                workoutDays={workoutDays}
-                workoutRecords={workoutRecords}
+              <PrivateRoute
+                isAuthenticated={isAuthenticated}
+                element={
+                  <WorkoutDetailPage
+                    workoutDays={workoutDays}
+                    workoutRecords={workoutRecords}
+                  />
+                }
               />
             }
           />
           <Route
             path="/workout/:workoutId/exercises"
             element={
-              <ExerciseListPage
-                exercises={exercises}
+              <PrivateRoute
+                isAuthenticated={isAuthenticated}
+                element={
+                  <ExerciseListPage
+                    exercises={exercises}
+                  />
+                }
               />
             }
           />
           <Route
             path="/workout/:workoutId/exercise/:exerciseId"
             element={
-              <ExerciseInputPage
-                exercises={exercises}
-                workoutRecords={workoutRecords}
-                onSaveExercise={handleSaveExercise}
+              <PrivateRoute
+                isAuthenticated={isAuthenticated}
+                element={
+                  <ExerciseInputPage
+                    exercises={exercises}
+                    workoutRecords={workoutRecords}
+                    onSaveExercise={handleSaveExercise}
+                  />
+                }
               />
             }
           />
           <Route
             path="/workout/:workoutId/exercise/:exerciseId/edit"
             element={
-              <ExerciseInputPage
-                exercises={exercises}
-                workoutRecords={workoutRecords}
-                onSaveExercise={handleSaveExercise}
+              <PrivateRoute
+                isAuthenticated={isAuthenticated}
+                element={
+                  <ExerciseInputPage
+                    exercises={exercises}
+                    workoutRecords={workoutRecords}
+                    onSaveExercise={handleSaveExercise}
+                  />
+                }
               />
             }
           />
           <Route
             path="/calendar"
             element={
-              <CalendarPage
-                workoutDays={workoutDays}
+              <PrivateRoute
+                isAuthenticated={isAuthenticated}
+                element={
+                  <CalendarPage
+                    workoutDays={workoutDays}
+                  />
+                }
               />
             }
           />
           <Route
             path="/exercises"
             element={
-              <ExerciseManagementPage
-                exercises={exercises}
-                onAddExercise={handleAddNewExercise}
-                onDeleteExercise={handleDeleteExercise}
+              <PrivateRoute
+                isAuthenticated={isAuthenticated}
+                element={
+                  <ExerciseManagementPage
+                    exercises={exercises}
+                    onAddExercise={handleAddNewExercise}
+                    onDeleteExercise={handleDeleteExercise}
+                  />
+                }
               />
             }
           />
