@@ -44,16 +44,16 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
   }, {} as Record<string, Exercise[]>);
 
   return (
-    <div className="w-full px-2 py-4 space-y-[10px] bg-primary-bg min-h-screen">
+    <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
       <div className="flex items-center justify-between mb-[15px]">
         <button 
           onClick={onBack}
-          className="text-primary-text font-dotgothic text-2xl hover:opacity-70 transition-opacity"
+          className="text-content-primary font-dotgothic text-2xl hover:opacity-70 transition-opacity"
         >
           ‹
         </button>
         <div className="text-center">
-          <h1 className="text-primary-text font-dotgothic text-xl">
+          <h1 className="text-content-primary font-dotgothic text-xl">
             種目管理
           </h1>
         </div>
@@ -63,13 +63,13 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
       {/* Add Exercise Button */}
       <button
         onClick={() => setShowAddForm(!showAddForm)}
-        className="flex items-center justify-center w-full bg-primary-accent hover:bg-primary-accent/80 rounded-[10px] p-[10px] transition-colors active:scale-95 transform duration-150"
+        className="flex items-center justify-center w-full bg-interactive-primary hover:bg-interactive-primary/80 rounded-[10px] p-[10px] transition-colors active:scale-95 transform duration-150"
       >
         <div className="flex items-center space-x-[10px]">
-          <div className="text-primary-bg font-dotgothic text-2xl">
+          <div className="text-content-inverse font-dotgothic text-2xl">
             +
           </div>
-          <div className="text-primary-bg font-dotgothic text-lg">
+          <div className="text-content-inverse font-dotgothic text-lg">
             新しい種目を追加
           </div>
         </div>
@@ -77,26 +77,26 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
 
       {/* Add Exercise Form */}
       {showAddForm && (
-        <div className="bg-primary-bg border border-primary-border rounded-[10px] p-[10px] space-y-[10px]">
-          <h3 className="text-primary-text font-dotgothic text-lg">新しい種目</h3>
+        <div className="bg-surface-secondary border border-content-primary rounded-[10px] p-[10px] space-y-[10px]">
+          <h3 className="text-content-secondary font-dotgothic text-lg">新しい種目</h3>
           
           <div className="space-y-[5px]">
-            <label className="text-primary-text font-dotgothic text-sm opacity-80">種目名</label>
+            <label className="text-content-secondary font-dotgothic text-sm opacity-80">種目名</label>
             <input
               type="text"
               value={newExerciseName}
               onChange={(e) => setNewExerciseName(e.target.value)}
               placeholder="例：ベンチプレス"
-              className="w-full bg-primary-border text-primary-text font-dotgothic rounded-[5px] px-[5px] py-[8px]"
+              className="w-full bg-input-bg text-input-text font-dotgothic rounded-[5px] px-[5px] py-[8px]"
             />
           </div>
 
           <div className="space-y-[5px]">
-            <label className="text-primary-text font-dotgothic text-sm opacity-80">部位</label>
+            <label className="text-content-secondary font-dotgothic text-sm opacity-80">部位</label>
             <select
               value={newMuscleGroup}
               onChange={(e) => setNewMuscleGroup(e.target.value)}
-              className="w-full bg-primary-border text-primary-text font-dotgothic rounded-[5px] px-[5px] py-[8px]"
+              className="w-full bg-input-bg text-input-text font-dotgothic rounded-[5px] px-[5px] py-[8px]"
             >
               <option value="">部位を選択</option>
               {muscleGroups.map(group => (
@@ -109,7 +109,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
             <button
               onClick={handleAddExercise}
               disabled={!newExerciseName.trim() || !newMuscleGroup.trim()}
-              className="flex-1 bg-primary-accent hover:bg-primary-accent/80 disabled:bg-gray-500 disabled:opacity-50 rounded-[5px] px-[5px] py-[8px] text-primary-bg font-dotgothic text-sm transition-colors"
+              className="flex-1 bg-interactive-primary hover:bg-interactive-primary/80 disabled:bg-gray-500 disabled:opacity-50 rounded-[5px] px-[5px] py-[8px] text-content-inverse font-dotgothic text-sm transition-colors"
             >
               追加
             </button>
@@ -119,7 +119,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
                 setNewExerciseName('');
                 setNewMuscleGroup('');
               }}
-              className="flex-1 bg-primary-border hover:bg-primary-border/80 rounded-[5px] px-[5px] py-[8px] text-primary-text font-dotgothic text-sm transition-colors"
+              className="flex-1 bg-interactive-secondary hover:bg-interactive-secondary/80 rounded-[5px] px-[5px] py-[8px] text-content-secondary font-dotgothic text-sm transition-colors"
             >
               キャンセル
             </button>
@@ -130,24 +130,26 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
       {/* Exercise List by Muscle Group */}
       <div className="space-y-[15px]">
         {Object.entries(exercisesByMuscleGroup).map(([muscleGroup, groupExercises]) => (
-          <div key={muscleGroup} className="space-y-[10px]">
-            <h3 className="text-primary-text font-dotgothic text-lg opacity-80 px-[3px]">
-              {muscleGroup} ({groupExercises.length}種目)
-            </h3>
-            <div className="space-y-[5px]">
+          <div key={muscleGroup} className="bg-surface-secondary rounded-[10px] overflow-hidden">
+            <div className="bg-surface-secondary px-[10px] py-[8px]">
+              <h3 className="text-content-secondary font-dotgothic text-lg">
+                {muscleGroup} ({groupExercises.length}種目)
+              </h3>
+            </div>
+            <div className="p-[10px] space-y-[5px]">
               {groupExercises.map((exercise) => (
                 <div
                   key={exercise.id}
-                  className="flex items-center justify-between bg-primary-bg border border-primary-border rounded-[10px] p-[10px]"
+                  className="flex items-center justify-between bg-surface-container rounded-[10px] p-[10px]"
                 >
-                  <span className="text-primary-text font-dotgothic text-base">
+                  <span className="text-content-secondary font-dotgothic text-base">
                     {exercise.name}
                   </span>
                   <button
                     onClick={() => handleDeleteExercise(exercise.id, exercise.name)}
-                    className="bg-red-600 hover:bg-red-700 rounded-[5px] px-[4px] py-[4px] text-white font-dotgothic text-xs transition-colors"
+                    className="bg-red-600 hover:bg-red-700 rounded-[5px] px-[10px] py-[4px] text-white font-dotgothic text-sm transition-colors"
                   >
-                    削除
+                    ×
                   </button>
                 </div>
               ))}
@@ -158,10 +160,10 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
 
       {exercises.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 text-center">
-          <div className="text-primary-text opacity-60 font-dotgothic text-lg mb-2">
+          <div className="text-content-primary opacity-60 font-dotgothic text-lg mb-2">
             まだ種目が登録されていません
           </div>
-          <div className="text-primary-text opacity-40 font-dotgothic text-sm">
+          <div className="text-content-primary opacity-40 font-dotgothic text-sm">
             上のボタンから新しい種目を追加しましょう
           </div>
         </div>

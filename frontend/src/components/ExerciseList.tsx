@@ -21,16 +21,16 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
   }, {} as Record<string, Exercise[]>);
 
   return (
-    <div className="w-full px-2 py-4 space-y-[10px] bg-primary-bg min-h-screen">
+    <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
       <div className="flex items-center justify-between mb-[15px]">
         <button 
           onClick={onBack}
-          className="text-primary-text font-dotgothic text-2xl hover:opacity-70 transition-opacity"
+          className="text-content-primary font-dotgothic text-2xl hover:opacity-70 transition-opacity"
         >
           ‹
         </button>
         <div className="text-center">
-          <h1 className="text-primary-text font-dotgothic text-xl">
+          <h1 className="text-content-primary font-dotgothic text-xl">
             種目選択
           </h1>
         </div>
@@ -39,21 +39,23 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
 
       <div className="space-y-[15px]">
         {Object.entries(exercisesByMuscleGroup).map(([muscleGroup, groupExercises]) => (
-          <div key={muscleGroup} className="space-y-[10px]">
-            <h3 className="text-primary-text font-dotgothic text-lg opacity-80 px-[3px]">
-              {muscleGroup}
-            </h3>
-            <div className="space-y-[5px]">
+          <div key={muscleGroup} className="bg-surface-secondary rounded-[10px] overflow-hidden">
+            <div className="bg-surface-secondary px-[10px] py-[8px]">
+              <h3 className="text-content-secondary font-dotgothic text-lg">
+                {muscleGroup}
+              </h3>
+            </div>
+            <div className="p-[10px] space-y-[5px]">
               {groupExercises.map((exercise) => (
                 <button
                   key={exercise.id}
                   onClick={() => onSelectExercise(exercise)}
-                  className="flex items-center justify-between w-full bg-primary-bg rounded-[10px] p-[10px] border border-primary-border hover:bg-primary-border transition-colors"
+                  className="flex items-center justify-between w-full bg-surface-container rounded-[8px] p-[10px] hover:bg-surface-primary transition-colors"
                 >
-                  <span className="text-primary-text font-dotgothic text-base">
+                  <span className="text-content-secondary font-dotgothic text-base">
                     {exercise.name}
                   </span>
-                  <div className="text-primary-text font-dotgothic text-xl">
+                  <div className="text-content-accent font-dotgothic text-xl">
                     ›
                   </div>
                 </button>

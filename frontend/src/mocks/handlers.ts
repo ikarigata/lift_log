@@ -4,27 +4,51 @@ import type { WorkoutDay, WorkoutRecord, Exercise } from '../types'
 const workoutDays: WorkoutDay[] = [
   {
     id: '1',
-    date: '2024-07-21',
+    date: '2025-07-23',
     name: '胸・肩の日',
     isCompleted: true,
-    createdAt: '2024-07-21T10:00:00Z',
-    updatedAt: '2024-07-21T12:30:00Z'
+    createdAt: '2025-07-23T10:00:00Z',
+    updatedAt: '2025-07-23T12:30:00Z'
   },
   {
     id: '2',
-    date: '2024-07-19',
+    date: '2025-07-19',
     name: '背中・腕の日',
     isCompleted: true,
-    createdAt: '2024-07-19T09:00:00Z',
-    updatedAt: '2024-07-19T11:15:00Z'
+    createdAt: '2025-07-19T09:00:00Z',
+    updatedAt: '2025-07-19T11:15:00Z'
   },
   {
     id: '3',
-    date: '2024-07-17',
+    date: '2025-07-15',
     name: '脚の日',
     isCompleted: false,
-    createdAt: '2024-07-17T08:30:00Z',
-    updatedAt: '2024-07-17T08:30:00Z'
+    createdAt: '2025-07-15T08:30:00Z',
+    updatedAt: '2025-07-15T08:30:00Z'
+  },
+  {
+    id: '4',
+    date: '2025-07-11',
+    name: '胸・腕の日',
+    isCompleted: true,
+    createdAt: '2025-07-11T10:00:00Z',
+    updatedAt: '2025-07-11T11:30:00Z'
+  },
+  {
+    id: '5',
+    date: '2025-07-07',
+    name: '背中・肩の日',
+    isCompleted: true,
+    createdAt: '2025-07-07T09:00:00Z',
+    updatedAt: '2025-07-07T10:45:00Z'
+  },
+  {
+    id: '6',
+    date: '2025-07-03',
+    name: '脚・腹筋の日',
+    isCompleted: true,
+    createdAt: '2025-07-03T08:00:00Z',
+    updatedAt: '2025-07-03T09:30:00Z'
   }
 ];
 
@@ -143,6 +167,26 @@ export const handlers = [
   // Workout Days
   http.get('/api/workout-days', () => {
     return HttpResponse.json(workoutDays)
+  }),
+  http.get('/api/workout-days/calendar', ({ request }) => {
+    console.log('MSW: Calendar API called with URL:', request.url);
+    const url = new URL(request.url);
+    const year = parseInt(url.searchParams.get('year') || '2025');
+    const month = parseInt(url.searchParams.get('month') || '1');
+    console.log(`MSW: Filtering workouts for ${year}-${month}`);
+    console.log('MSW: All workout days:', workoutDays.map(w => w.date));
+    
+    // Filter workout days by year and month
+    const filteredWorkouts = workoutDays.filter(workout => {
+      const workoutDate = new Date(workout.date);
+      const workoutYear = workoutDate.getFullYear();
+      const workoutMonth = workoutDate.getMonth() + 1;
+      console.log(`MSW: Checking ${workout.date} - parsed as ${workoutYear}-${workoutMonth}, looking for ${year}-${month}`);
+      return workoutYear === year && workoutMonth === month;
+    });
+    
+    console.log('MSW: Filtered workouts:', filteredWorkouts);
+    return HttpResponse.json(filteredWorkouts);
   }),
   http.post('/api/workout-days', async ({ request }) => {
     const newWorkoutData = await request.json() as Omit<WorkoutDay, 'id' | 'createdAt' | 'updatedAt'>;

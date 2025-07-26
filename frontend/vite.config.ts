@@ -12,7 +12,8 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    proxy: {
+    // 環境変数でMSW使用時はプロキシを無効化
+    proxy: process.env.USE_MSW === 'true' ? {} : {
       '/api': {
         target: 'http://localhost:8080',
         changeOrigin: true,

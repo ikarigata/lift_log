@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { WorkoutDay } from '../types';
+import { getWorkoutDaysByMonth } from '../api/workouts';
 
 interface CalendarProps {
-  workoutDays: WorkoutDay[];
   onBack: () => void;
   onSelectDate: (workoutDay: WorkoutDay) => void;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ workoutDays, onBack, onSelectDate }) => {
+const Calendar: React.FC<CalendarProps> = ({ onBack, onSelectDate }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([]);
   
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
+  
+  useEffect(() => {
+    const fetchWorkoutDays = async () => {
+      try {
+        console.log(`Fetching workout days for ${year}-${month + 1}`);
+        const data = await getWorkoutDaysByMonth(year, month + 1);
+        console.log('Fetched workout days:', data);
+        setWorkoutDays(data);
+      } catch (error) {
+        console.error('Failed to fetch workout days:', error);
+      }
+    };
+
+    fetchWorkoutDays();
+  }, [year, month]);
   
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
@@ -35,7 +51,11 @@ const Calendar: React.FC<CalendarProps> = ({ workoutDays, onBack, onSelectDate }
   
   const getWorkoutForDate = (date: number) => {
     const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-    return workoutDays.find(workout => workout.date === dateString);
+    const workout = workoutDays.find(workout => workout.date === dateString);
+    if (date <= 3) { // デバッグログを最初の3日だけに限定
+      console.log(`Looking for date: ${dateString}, found:`, workout);
+    }
+    return workout;
   };
   
   const renderCalendarDays = () => {
@@ -44,7 +64,7 @@ const Calendar: React.FC<CalendarProps> = ({ workoutDays, onBack, onSelectDate }
     // Empty cells for days before the first day of the month
     for (let i = 0; i < firstDayOfWeek; i++) {
       days.push(
-        <div key={`empty-${i}`} className="h-12 border border-primary-border opacity-30" />
+        <div key={`empty-${i}`} className="h-12 border border-white opacity-30" />
       );
     }
     
@@ -57,10 +77,10 @@ const Calendar: React.FC<CalendarProps> = ({ workoutDays, onBack, onSelectDate }
         <button
           key={day}
           onClick={() => workout && onSelectDate(workout)}
-          className={`h-12 border border-primary-border flex flex-col items-center justify-center font-dotgothic text-sm transition-colors ${
+          className={`h-12 border border-white flex flex-col items-center justify-center font-dotgothic text-sm transition-colors ${
             hasWorkout 
-              ? 'bg-primary-accent text-primary-bg hover:bg-primary-accent/80 cursor-pointer' 
-              : 'bg-primary-bg text-primary-text cursor-default'
+              ? 'bg-interactive-primary text-content-inverse hover:bg-interactive-primary/80 cursor-pointer' 
+              : 'bg-surface-secondary text-content-secondary cursor-default'
           }`}
           disabled={!hasWorkout}
         >
@@ -78,16 +98,16 @@ const Calendar: React.FC<CalendarProps> = ({ workoutDays, onBack, onSelectDate }
   };
   
   return (
-    <div className="w-full px-2 py-4 space-y-[10px] bg-primary-bg min-h-screen">
+    <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
       <div className="flex items-center justify-between mb-[15px]">
         <button 
           onClick={onBack}
-          className="text-primary-text font-dotgothic text-2xl hover:opacity-70 transition-opacity"
+          className="text-content-primary font-dotgothic text-2xl hover:opacity-70 transition-opacity"
         >
           ‹
         </button>
         <div className="text-center">
-          <h1 className="text-primary-text font-dotgothic text-xl">
+          <h1 className="text-content-primary font-dotgothic text-xl">
             トレーニング履歴
           </h1>
         </div>
@@ -96,31 +116,31 @@ const Calendar: React.FC<CalendarProps> = ({ workoutDays, onBack, onSelectDate }
 
       <div className="space-y-[10px]">
         {/* Month navigation */}
-        <div className="flex items-center justify-between bg-primary-bg border border-primary-border rounded-[10px] p-[10px]">
+        <div className="flex items-center justify-between bg-surface-secondary border border-white rounded-[10px] p-[10px]">
           <button
             onClick={goToPreviousMonth}
-            className="text-primary-text font-dotgothic text-xl hover:opacity-70 transition-opacity"
+            className="text-content-secondary font-dotgothic text-xl hover:opacity-70 transition-opacity"
           >
             ‹
           </button>
-          <h2 className="text-primary-text font-dotgothic text-lg">
+          <h2 className="text-content-secondary font-dotgothic text-lg">
             {year}年{monthNames[month]}
           </h2>
           <button
             onClick={goToNextMonth}
-            className="text-primary-text font-dotgothic text-xl hover:opacity-70 transition-opacity"
+            className="text-content-secondary font-dotgothic text-xl hover:opacity-70 transition-opacity"
           >
             ›
           </button>
         </div>
 
         {/* Calendar */}
-        <div className="bg-primary-bg border border-primary-border rounded-[10px] p-[10px]">
+        <div className="bg-surface-secondary border border-white rounded-[10px] p-[10px]">
           {/* Day names header */}
           <div className="grid grid-cols-7 mb-2">
             {dayNames.map(day => (
               <div key={day} className="h-8 flex items-center justify-center">
-                <span className="text-primary-text font-dotgothic text-sm opacity-80">
+                <span className="text-content-secondary font-dotgothic text-sm opacity-80">
                   {day}
                 </span>
               </div>
@@ -134,19 +154,19 @@ const Calendar: React.FC<CalendarProps> = ({ workoutDays, onBack, onSelectDate }
         </div>
 
         {/* Legend */}
-        <div className="bg-primary-bg border border-primary-border rounded-[10px] p-[10px]">
+        <div className="bg-surface-secondary border border-white rounded-[10px] p-[10px]">
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-primary-accent rounded-[3px]" />
-              <span className="text-primary-text font-dotgothic text-sm">トレーニング実施日</span>
+              <div className="w-4 h-4 bg-interactive-primary rounded-[3px]" />
+              <span className="text-content-secondary font-dotgothic text-sm">トレーニング実施日</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-400 rounded-full" />
-              <span className="text-primary-text font-dotgothic text-sm opacity-80">完了</span>
+              <span className="text-content-secondary font-dotgothic text-sm opacity-80">完了</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-yellow-400 rounded-full" />
-              <span className="text-primary-text font-dotgothic text-sm opacity-80">未完了</span>
+              <span className="text-content-secondary font-dotgothic text-sm opacity-80">未完了</span>
             </div>
           </div>
         </div>

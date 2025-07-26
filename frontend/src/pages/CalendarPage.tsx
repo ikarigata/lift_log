@@ -3,11 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Calendar from '../components/Calendar';
 import type { WorkoutDay } from '../types';
 
-interface CalendarPageProps {
-  workoutDays: WorkoutDay[];
-}
-
-const CalendarPage: React.FC<CalendarPageProps> = ({ workoutDays }) => {
+const CalendarPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -20,7 +16,6 @@ const CalendarPage: React.FC<CalendarPageProps> = ({ workoutDays }) => {
 
   return (
     <Calendar
-      workoutDays={workoutDays} 
       onBack={handleBack}
       onSelectDate={handleSelectDate}
     />
