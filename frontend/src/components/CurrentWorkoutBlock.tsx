@@ -18,8 +18,8 @@ const CurrentWorkoutBlock: React.FC<CurrentWorkoutBlockProps> = ({
 }) => {
   return (
     <div className="flex flex-col w-full bg-surface-secondary rounded-lg p-3 border-none">
-      <div className="flex items-center justify-center w-full h-[49px] bg-interactive-primary rounded-md px-5 py-2.5 border-none">
-        <div className="text-content-inverse font-dotgothic text-xl">
+      <div className="flex items-center justify-center w-full h-[49px] bg-surface-secondary rounded-md px-5 py-2.5 border-none">
+        <div className="text-content-secondary font-dotgothic text-xl">
           {exerciseName}
         </div>
       </div>

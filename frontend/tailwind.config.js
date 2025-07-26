@@ -23,8 +23,8 @@ export default {
 
         // デザインシステム - 用途別色定義
         surface: {
-          primary: '#F1EFDF',     // ベース画面背景
-          secondary: '#26272A',   // コンポーネント背景 
+          primary: '#F1EFDF',     // ベース画面背景（ベージュ）
+          secondary: '#26272A',   // コンポーネント背景（黒め）
           container: '#3B3C3F',   // 入力欄・内部要素背景
         },
         

@@ -17,7 +17,7 @@ const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, onClick }) 
 
   return (
     <div 
-      className="flex items-center justify-between w-full bg-surface-container rounded-[10px] p-[10px] border-none hover:bg-surface-secondary transition-colors cursor-pointer"
+      className="flex items-center justify-between w-full bg-surface-secondary rounded-[10px] p-[10px] border-none hover:bg-surface-container transition-colors cursor-pointer"
       onClick={onClick}
     >
       <div className="flex flex-col">
