@@ -37,6 +37,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     }
   };
 
+  // 開発用：入力なしでログイン
+  const handleDevLogin = () => {
+    onLoginSuccess();
+    navigate('/');
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-surface-secondary text-content-accent font-dotgothic">
       <h1 className="text-6xl font-bold mb-8">lift_log</h1>
@@ -63,6 +69,14 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
           ログイン
         </button>
       </form>
+      
+      {/* 開発用抜け穴ボタン */}
+      <button
+        onClick={handleDevLogin}
+        className="mt-4 px-4 py-1 bg-interactive-secondary text-content-secondary text-sm font-dotgothic rounded border-none hover:bg-interactive-secondary/80 opacity-50 hover:opacity-70"
+      >
+        🔓 開発用ログイン
+      </button>
     </div>
   );
 };

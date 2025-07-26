@@ -24,6 +24,9 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  /* スマホでのスクロール改善 */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
 }
 
 #root {
@@ -31,4 +34,13 @@ body {
   margin: 0;
   padding: 0;
   text-align: center;
+  /* セーフエリア対応 */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ボトムナビゲーション用のセーフエリア対応 */
+@supports (padding: max(0px)) {
+  .bottom-nav-safe {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
 }
