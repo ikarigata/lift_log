@@ -26,20 +26,20 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
   };
 
   return (
-    <div className="w-full px-2 py-4 space-y-[10px] bg-primary-bg min-h-screen">
+    <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
       <div className="flex items-center justify-between mb-[15px]">
         <button 
           onClick={onBack}
-          className="text-primary-text font-dotgothic text-2xl hover:opacity-70 transition-opacity"
+          className="text-content-primary font-dotgothic text-2xl hover:opacity-70 transition-opacity"
         >
           ‹
         </button>
         <div className="text-center">
-          <h1 className="text-primary-text font-dotgothic text-xl">
+          <h1 className="text-content-primary font-dotgothic text-xl">
             {formatDate(workoutDay.date)}
           </h1>
           {workoutDay.name && (
-            <p className="text-primary-text opacity-80 font-dotgothic text-sm">
+            <p className="text-content-primary opacity-80 font-dotgothic text-sm">
               {workoutDay.name}
             </p>
           )}
@@ -49,13 +49,13 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
 
       <button
         onClick={onAddExercise}
-        className="flex items-center justify-center w-full bg-primary-accent hover:bg-primary-accent/80 rounded-[10px] p-[10px] transition-colors active:scale-95 transform duration-150"
+        className="flex items-center justify-center w-full bg-interactive-primary hover:bg-interactive-primary/80 rounded-[10px] p-[10px] transition-colors active:scale-95 transform duration-150"
       >
         <div className="flex items-center space-x-[10px]">
-          <div className="text-primary-bg font-dotgothic text-2xl">
+          <div className="text-content-inverse font-dotgothic text-2xl">
             +
           </div>
-          <div className="text-primary-bg font-dotgothic text-lg">
+          <div className="text-content-inverse font-dotgothic text-lg">
             種目を追加
           </div>
         </div>
@@ -63,52 +63,53 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
 
       {workoutRecords.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
-          <div className="text-primary-text opacity-60 font-dotgothic text-lg mb-2">
+          <div className="text-content-primary opacity-60 font-dotgothic text-lg mb-2">
             まだトレーニング記録がありません
           </div>
-          <div className="text-primary-text opacity-40 font-dotgothic text-sm">
+          <div className="text-content-primary opacity-40 font-dotgothic text-sm">
             上のボタンから種目を追加しましょう
           </div>
         </div>
       ) : (
         <div className="space-y-[10px]">
           {workoutRecords.map((record) => (
-            <button
-              key={record.id}
-              onClick={() => onEditExercise(record)}
-              className="w-full bg-primary-bg border border-primary-border rounded-[10px] p-[3px] hover:bg-primary-border transition-colors text-left"
-            >
-              <h3 className="text-primary-text font-dotgothic text-lg mb-[10px] px-[3px] py-[5px]">
-                {record.exerciseName}
-              </h3>
-              
-              <div className="space-y-[10px]">
-                {record.sets.map((set, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between py-[5px] px-[3px] border-b-2 border-primary-border"
-                  >
-                    <span className="text-primary-text font-dotgothic text-sm">
-                      {set.setNumber}セット目
-                    </span>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-primary-text font-dotgothic text-sm">
-                        {set.weight}kg
+            <div key={record.id} className="bg-surface-secondary rounded-[10px] p-[10px]">
+              <button
+                onClick={() => onEditExercise(record)}
+                className="w-full hover:bg-surface-container transition-colors text-left rounded-[5px] p-[5px] -m-[5px]"
+              >
+                <h3 className="text-content-accent font-dotgothic text-lg mb-[10px] px-[3px] py-[5px]">
+                  {record.exerciseName}
+                </h3>
+                
+                <div className="space-y-[10px]">
+                  {record.sets.map((set, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between py-[5px] px-[3px] border-b border-surface-container last:border-b-0"
+                    >
+                      <span className="text-content-secondary font-dotgothic text-sm">
+                        {set.setNumber}セット目
                       </span>
-                      <span className="text-white font-dotgothic text-sm">
-                        ×
-                      </span>
-                      <span className="text-primary-text font-dotgothic text-sm">
-                        {set.reps}回
-                      </span>
-                      <div className={`w-2 h-2 rounded-full ml-2 ${
-                        set.completed ? 'bg-green-500' : 'bg-gray-500'
-                      }`} />
+                      <div className="flex items-center space-x-2">
+                        <span className="text-content-secondary font-dotgothic text-sm">
+                          {set.weight}kg
+                        </span>
+                        <span className="text-content-accent font-dotgothic text-sm">
+                          ×
+                        </span>
+                        <span className="text-content-secondary font-dotgothic text-sm">
+                          {set.reps}回
+                        </span>
+                        <div className={`w-2 h-2 rounded-full ml-2 ${
+                          set.completed ? 'bg-green-500' : 'bg-gray-500'
+                        }`} />
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </button>
+                  ))}
+                </div>
+              </button>
+            </div>
           ))}
         </div>
       )}

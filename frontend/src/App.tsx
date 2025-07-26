@@ -140,7 +140,6 @@ function App() {
                 element={
                   <HomePage
                     workoutDays={workoutDays}
-                    onAddWorkout={handleAddWorkout}
                   />
                 }
               />
@@ -208,11 +207,7 @@ function App() {
             element={
               <PrivateRoute
                 isAuthenticated={isAuthenticated}
-                element={
-                  <CalendarPage
-                    workoutDays={workoutDays}
-                  />
-                }
+                element={<CalendarPage />}
               />
             }
           />
