@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import WorkoutDetailPage from './pages/WorkoutDetailPage';
 import ExerciseListPage from './pages/ExerciseListPage';
@@ -20,9 +20,9 @@ const Layout = ({ children, onAddWorkout }: { children: React.ReactNode, onAddWo
   return (
     <div className="min-h-screen flex flex-col w-full overflow-x-hidden">
       <div 
-        className={`flex-1 w-full ${showBottomNav ? 'pb-12' : ''}`}
+        className={`flex-1 w-full ${showBottomNav ? 'pb-10' : ''}`}
         style={{ 
-          minHeight: showBottomNav ? 'calc(100vh - 3rem)' : '100vh',
+          minHeight: showBottomNav ? 'calc(100vh - 2.5rem)' : '100vh',
           WebkitOverflowScrolling: 'touch' // iOSでのスムーススクロール
         }}
       >
@@ -38,7 +38,9 @@ const PrivateRoute = ({ element, isAuthenticated }: { element: React.ReactElemen
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
-function App() {
+// ナビゲーション機能を持つコンポーネント
+const AppContent = () => {
+  const navigate = useNavigate();
   const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [workoutRecords, setWorkoutRecords] = useState<WorkoutRecord[]>([]);
@@ -74,13 +76,25 @@ function App() {
 
   const handleAddWorkout = async () => {
     try {
-      const newWorkoutData = {
-        date: new Date().toISOString().split('T')[0],
-        name: '',
-        isCompleted: false,
-      };
-      const newWorkout = await addWorkoutDay(newWorkoutData);
-      setWorkoutDays([newWorkout, ...workoutDays]);
+      const today = new Date().toISOString().split('T')[0];
+      
+      // 今日のトレーニング日が既に存在するかチェック
+      const existingWorkout = workoutDays.find(workout => workout.date === today);
+      
+      if (existingWorkout) {
+        // 既存のトレーニング日がある場合はそのページに遷移
+        navigate(`/workout/${existingWorkout.id}`);
+      } else {
+        // 新しいトレーニング日を作成してからページに遷移
+        const newWorkoutData = {
+          date: today,
+          name: '',
+          isCompleted: false,
+        };
+        const newWorkout = await addWorkoutDay(newWorkoutData);
+        setWorkoutDays([newWorkout, ...workoutDays]);
+        navigate(`/workout/${newWorkout.id}`);
+      }
     } catch (error) {
       console.error("Failed to add workout", error);
     }
@@ -128,108 +142,116 @@ function App() {
   };
 
   return (
+    <Layout onAddWorkout={handleAddWorkout}>
+      <Routes>
+        <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              element={
+                <HomePage
+                  workoutDays={workoutDays}
+                  workoutRecords={workoutRecords}
+                  exercises={exercises}
+                />
+              }
+            />
+          }
+        />
+        <Route
+          path="/workout/:workoutId"
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              element={
+                <WorkoutDetailPage
+                  workoutDays={workoutDays}
+                  workoutRecords={workoutRecords}
+                />
+              }
+            />
+          }
+        />
+        <Route
+          path="/workout/:workoutId/exercises"
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              element={
+                <ExerciseListPage
+                  exercises={exercises}
+                />
+              }
+            />
+          }
+        />
+        <Route
+          path="/workout/:workoutId/exercise/:exerciseId"
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              element={
+                <ExerciseInputPage
+                  exercises={exercises}
+                  workoutRecords={workoutRecords}
+                  onSaveExercise={handleSaveExercise}
+                />
+              }
+            />
+          }
+        />
+        <Route
+          path="/workout/:workoutId/exercise/:exerciseId/edit"
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              element={
+                <ExerciseInputPage
+                  exercises={exercises}
+                  workoutRecords={workoutRecords}
+                  onSaveExercise={handleSaveExercise}
+                />
+              }
+            />
+          }
+        />
+        <Route
+          path="/calendar"
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              element={<CalendarPage />}
+            />
+          }
+        />
+        <Route
+          path="/exercises"
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              element={
+                <ExerciseManagementPage
+                  exercises={exercises}
+                  onAddExercise={handleAddNewExercise}
+                  onDeleteExercise={handleDeleteExercise}
+                />
+              }
+            />
+          }
+        />
+      </Routes>
+    </Layout>
+  );
+};
+
+function App() {
+  return (
     <Router>
-      <Layout onAddWorkout={handleAddWorkout}>
-        <Routes>
-          <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
-          <Route
-            path="/"
-            element={
-              <PrivateRoute
-                isAuthenticated={isAuthenticated}
-                element={
-                  <HomePage
-                    workoutDays={workoutDays}
-                  />
-                }
-              />
-            }
-          />
-          <Route
-            path="/workout/:workoutId"
-            element={
-              <PrivateRoute
-                isAuthenticated={isAuthenticated}
-                element={
-                  <WorkoutDetailPage
-                    workoutDays={workoutDays}
-                    workoutRecords={workoutRecords}
-                  />
-                }
-              />
-            }
-          />
-          <Route
-            path="/workout/:workoutId/exercises"
-            element={
-              <PrivateRoute
-                isAuthenticated={isAuthenticated}
-                element={
-                  <ExerciseListPage
-                    exercises={exercises}
-                  />
-                }
-              />
-            }
-          />
-          <Route
-            path="/workout/:workoutId/exercise/:exerciseId"
-            element={
-              <PrivateRoute
-                isAuthenticated={isAuthenticated}
-                element={
-                  <ExerciseInputPage
-                    exercises={exercises}
-                    workoutRecords={workoutRecords}
-                    onSaveExercise={handleSaveExercise}
-                  />
-                }
-              />
-            }
-          />
-          <Route
-            path="/workout/:workoutId/exercise/:exerciseId/edit"
-            element={
-              <PrivateRoute
-                isAuthenticated={isAuthenticated}
-                element={
-                  <ExerciseInputPage
-                    exercises={exercises}
-                    workoutRecords={workoutRecords}
-                    onSaveExercise={handleSaveExercise}
-                  />
-                }
-              />
-            }
-          />
-          <Route
-            path="/calendar"
-            element={
-              <PrivateRoute
-                isAuthenticated={isAuthenticated}
-                element={<CalendarPage />}
-              />
-            }
-          />
-          <Route
-            path="/exercises"
-            element={
-              <PrivateRoute
-                isAuthenticated={isAuthenticated}
-                element={
-                  <ExerciseManagementPage
-                    exercises={exercises}
-                    onAddExercise={handleAddNewExercise}
-                    onDeleteExercise={handleDeleteExercise}
-                  />
-                }
-              />
-            }
-          />
-        </Routes>
-      </Layout>
+      <AppContent />
     </Router>
-  )
+  );
 }
 
 export default App

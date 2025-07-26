@@ -1,4 +1,4 @@
-import type { WorkoutDay } from '../types';
+import type { WorkoutDay, WorkoutRecord } from '../types';
 
 const BASE_URL = '/api';
 
@@ -26,10 +26,17 @@ export const addWorkoutDay = async (workoutDay: Omit<WorkoutDay, 'id' | 'created
 
 export const getWorkoutDaysByMonth = async (year: number, month: number): Promise<WorkoutDay[]> => {
   const url = `${BASE_URL}/workout-days/calendar?year=${year}&month=${month}`;
-  console.log('Fetching from URL:', url);
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error('Failed to fetch workout days for calendar');
+  }
+  return response.json();
+};
+
+export const getWorkoutRecords = async (): Promise<WorkoutRecord[]> => {
+  const response = await fetch(`${BASE_URL}/workout-records`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch workout records');
   }
   return response.json();
 };

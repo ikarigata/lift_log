@@ -1,13 +1,15 @@
 import React from 'react';
 import WorkoutDayItem from './WorkoutDayItem';
-import type { WorkoutDay } from '../types';
+import type { WorkoutDay, WorkoutRecord, Exercise } from '../types';
 
 interface WorkoutDayListProps {
   workoutDays: WorkoutDay[];
+  workoutRecords: WorkoutRecord[];
+  exercises: Exercise[];
   onWorkoutDayClick: (workoutDay: WorkoutDay) => void;
 }
 
-const WorkoutDayList: React.FC<WorkoutDayListProps> = ({ workoutDays, onWorkoutDayClick }) => {
+const WorkoutDayList: React.FC<WorkoutDayListProps> = ({ workoutDays, workoutRecords, exercises, onWorkoutDayClick }) => {
   if (workoutDays.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -27,6 +29,8 @@ const WorkoutDayList: React.FC<WorkoutDayListProps> = ({ workoutDays, onWorkoutD
         <WorkoutDayItem
           key={workoutDay.id}
           workoutDay={workoutDay}
+          workoutRecords={workoutRecords}
+          exercises={exercises}
           onClick={() => onWorkoutDayClick(workoutDay)}
         />
       ))}

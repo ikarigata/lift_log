@@ -45,19 +45,12 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <div className="flex items-center justify-between mb-[15px]">
-        <button 
-          onClick={onBack}
-          className="text-content-primary font-dotgothic text-2xl hover:opacity-70 transition-opacity"
-        >
-          ‹
-        </button>
-        <div className="text-center">
-          <h1 className="text-content-primary font-dotgothic text-xl">
-            種目管理
+      <div className="mb-[15px]">
+        <div className="w-full bg-surface-secondary rounded-[10px] px-[15px] py-[10px] text-center mb-[10px]">
+          <h1 className="text-surface-primary font-dotgothic text-xl">
+            Exercise Management
           </h1>
         </div>
-        <div className="w-6" />
       </div>
 
       {/* Add Exercise Button */}
@@ -78,7 +71,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
       {/* Add Exercise Form */}
       {showAddForm && (
         <div className="bg-surface-secondary border border-content-primary rounded-[10px] p-[10px] space-y-[10px]">
-          <h3 className="text-content-secondary font-dotgothic text-lg">新しい種目</h3>
+          <h3 className="text-interactive-primary font-dotgothic text-lg text-left">新しい種目</h3>
           
           <div className="space-y-[5px]">
             <label className="text-content-secondary font-dotgothic text-sm opacity-80">種目名</label>
@@ -132,7 +125,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
         {Object.entries(exercisesByMuscleGroup).map(([muscleGroup, groupExercises]) => (
           <div key={muscleGroup} className="bg-surface-secondary rounded-[10px] overflow-hidden">
             <div className="bg-surface-secondary px-[10px] py-[8px]">
-              <h3 className="text-content-secondary font-dotgothic text-lg">
+              <h3 className="text-interactive-primary font-dotgothic text-lg text-left">
                 {muscleGroup} ({groupExercises.length}種目)
               </h3>
             </div>

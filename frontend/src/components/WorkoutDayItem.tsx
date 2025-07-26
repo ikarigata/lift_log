@@ -1,12 +1,14 @@
 import React from 'react';
-import type { WorkoutDay } from '../types';
+import type { WorkoutDay, WorkoutRecord, Exercise } from '../types';
 
 interface WorkoutDayItemProps {
   workoutDay: WorkoutDay;
+  workoutRecords: WorkoutRecord[];
+  exercises: Exercise[];
   onClick: () => void;
 }
 
-const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, onClick }) => {
+const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, workoutRecords, exercises, onClick }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const month = date.getMonth() + 1;
@@ -14,6 +16,17 @@ const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, onClick }) 
     const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
     return `${month}/${day}(${dayOfWeek})`;
   };
+
+  // その日のトレーニング記録から部位を取得
+  const getMuscleGroups = () => {
+    const dayRecords = workoutRecords.filter(record => record.workoutDayId === workoutDay.id);
+    const exerciseIds = dayRecords.map(record => record.exerciseId);
+    const dayExercises = exercises.filter(exercise => exerciseIds.includes(exercise.id));
+    const muscleGroups = [...new Set(dayExercises.map(exercise => exercise.muscleGroup))];
+    return muscleGroups;
+  };
+
+  const muscleGroups = getMuscleGroups();
 
   return (
     <div 
@@ -27,6 +40,18 @@ const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, onClick }) 
         {workoutDay.name && (
           <div className="text-content-secondary opacity-80 font-dotgothic text-sm">
             {workoutDay.name}
+          </div>
+        )}
+        {muscleGroups.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-1">
+            {muscleGroups.map((muscleGroup) => (
+              <span
+                key={muscleGroup}
+                className="bg-surface-container text-content-secondary text-xs font-dotgothic px-2 py-1 rounded-md"
+              >
+                {muscleGroup}
+              </span>
+            ))}
           </div>
         )}
       </div>
