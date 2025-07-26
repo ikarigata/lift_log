@@ -1,15 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import WorkoutDetailPage from './pages/WorkoutDetailPage';
 import ExerciseListPage from './pages/ExerciseListPage';
 import ExerciseInputPage from './pages/ExerciseInputPage';
 import CalendarPage from './pages/CalendarPage';
 import ExerciseManagementPage from './pages/ExerciseManagementPage';
-import LoginPage from './pages/LoginPage'; // LoginPageをインポート
+import LoginPage from './pages/LoginPage';
+import BottomNavigation from './components/BottomNavigation';
 import type { WorkoutDay, WorkoutRecord, Exercise, WorkoutSet } from './types';
 import { getWorkoutDays, addWorkoutDay } from './api/workouts';
 import { getExercises, addExercise, deleteExercise, getWorkoutRecords, saveWorkoutRecord } from './api/exercises';
+
+// レイアウトコンポーネント（ボトムナビゲーション付き）
+const Layout = ({ children, onAddWorkout }: { children: React.ReactNode, onAddWorkout: () => void }) => {
+  const location = useLocation();
+  const showBottomNav = location.pathname !== '/login';
+
+  return (
+    <div className="min-h-screen flex flex-col w-full overflow-x-hidden">
+      <div 
+        className={`flex-1 w-full ${showBottomNav ? 'pb-12' : ''}`}
+        style={{ 
+          minHeight: showBottomNav ? 'calc(100vh - 3rem)' : '100vh',
+          WebkitOverflowScrolling: 'touch' // iOSでのスムーススクロール
+        }}
+      >
+        {children}
+      </div>
+      {showBottomNav && <BottomNavigation onAddWorkout={onAddWorkout} />}
+    </div>
+  );
+};
 
 // 認証状態をチェックするコンポーネント
 const PrivateRoute = ({ element, isAuthenticated }: { element: React.ReactElement, isAuthenticated: boolean }) => {
@@ -107,6 +129,7 @@ function App() {
 
   return (
     <Router>
+      <Layout onAddWorkout={handleAddWorkout}>
         <Routes>
           <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
           <Route
@@ -209,6 +232,7 @@ function App() {
             }
           />
         </Routes>
+      </Layout>
     </Router>
   )
 }
