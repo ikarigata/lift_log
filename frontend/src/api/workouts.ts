@@ -23,3 +23,13 @@ export const addWorkoutDay = async (workoutDay: Omit<WorkoutDay, 'id' | 'created
   }
   return response.json();
 };
+
+export const getWorkoutDaysByMonth = async (year: number, month: number): Promise<WorkoutDay[]> => {
+  const url = `${BASE_URL}/workout-days/calendar?year=${year}&month=${month}`;
+  console.log('Fetching from URL:', url);
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error('Failed to fetch workout days for calendar');
+  }
+  return response.json();
+};

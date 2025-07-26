@@ -44,7 +44,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-surface-secondary text-content-accent font-dotgothic">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-surface-primary text-content-accent font-dotgothic">
       <h1 className="text-6xl font-bold mb-8">lift_log</h1>
       <form onSubmit={handleLogin} className="flex flex-col items-center">
         <input
