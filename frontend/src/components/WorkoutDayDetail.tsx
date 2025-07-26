@@ -27,24 +27,18 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <div className="flex items-center justify-between mb-[15px]">
-        <button 
-          onClick={onBack}
-          className="text-content-primary font-dotgothic text-2xl hover:opacity-70 transition-opacity"
-        >
-          ‹
-        </button>
-        <div className="text-center">
-          <h1 className="text-content-primary font-dotgothic text-xl">
-            {formatDate(workoutDay.date)}
+      <div className="mb-[15px]">
+        <div className="w-full bg-surface-secondary rounded-[10px] px-[15px] py-[10px] text-center mb-[10px]">
+          <h1 className="text-surface-primary font-dotgothic text-xl">
+            Workout Detail
           </h1>
-          {workoutDay.name && (
-            <p className="text-content-primary opacity-80 font-dotgothic text-sm">
-              {workoutDay.name}
-            </p>
-          )}
+          <p className="text-surface-primary opacity-80 font-dotgothic text-sm">
+            {formatDate(workoutDay.date)}{workoutDay.name && ` - ${workoutDay.name}`}
+          </p>
         </div>
-        <div className={`w-3 h-3 rounded-full ${workoutDay.isCompleted ? 'bg-green-500' : 'bg-gray-500'}`} />
+        <div className="flex justify-end">
+          <div className={`w-3 h-3 rounded-full ${workoutDay.isCompleted ? 'bg-green-500' : 'bg-gray-500'}`} />
+        </div>
       </div>
 
       <button
@@ -78,7 +72,7 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
                 onClick={() => onEditExercise(record)}
                 className="w-full hover:bg-surface-container transition-colors text-left rounded-[5px] p-[5px] -m-[5px]"
               >
-                <h3 className="text-content-accent font-dotgothic text-lg mb-[10px] px-[3px] py-[5px]">
+                <h3 className="text-interactive-primary font-dotgothic text-lg mb-[10px] px-[3px] py-[5px]">
                   {record.exerciseName}
                 </h3>
                 

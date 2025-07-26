@@ -66,6 +66,7 @@ const exercises: Exercise[] = [
 ];
 
 const workoutRecords: WorkoutRecord[] = [
+  // 2025年7月23日 - 胸・肩の日
   {
     id: '1',
     workoutDayId: '1',
@@ -76,8 +77,8 @@ const workoutRecords: WorkoutRecord[] = [
       { setNumber: 2, weight: 80, reps: 6, completed: true },
       { setNumber: 3, weight: 75, reps: 8, completed: true }
     ],
-    createdAt: '2024-07-21T10:00:00Z',
-    updatedAt: '2024-07-21T10:30:00Z'
+    createdAt: '2025-07-23T10:00:00Z',
+    updatedAt: '2025-07-23T10:30:00Z'
   },
   {
     id: '2',
@@ -89,9 +90,10 @@ const workoutRecords: WorkoutRecord[] = [
       { setNumber: 2, weight: 40, reps: 8, completed: true },
       { setNumber: 3, weight: 35, reps: 12, completed: true }
     ],
-    createdAt: '2024-07-21T10:45:00Z',
-    updatedAt: '2024-07-21T11:00:00Z'
+    createdAt: '2025-07-23T10:45:00Z',
+    updatedAt: '2025-07-23T11:00:00Z'
   },
+  // 2025年7月19日 - 背中・腕の日
   {
     id: '3',
     workoutDayId: '2',
@@ -102,12 +104,39 @@ const workoutRecords: WorkoutRecord[] = [
       { setNumber: 2, weight: 100, reps: 5, completed: true },
       { setNumber: 3, weight: 95, reps: 6, completed: true }
     ],
-    createdAt: '2024-07-19T09:00:00Z',
-    updatedAt: '2024-07-19T09:30:00Z'
+    createdAt: '2025-07-19T09:00:00Z',
+    updatedAt: '2025-07-19T09:30:00Z'
   },
-  // 前回のベンチプレス記録
   {
     id: '4',
+    workoutDayId: '2',
+    exerciseId: 'ex9',
+    exerciseName: 'バーベルカール',
+    sets: [
+      { setNumber: 1, weight: 30, reps: 12, completed: true },
+      { setNumber: 2, weight: 30, reps: 10, completed: true },
+      { setNumber: 3, weight: 25, reps: 15, completed: true }
+    ],
+    createdAt: '2025-07-19T09:30:00Z',
+    updatedAt: '2025-07-19T10:00:00Z'
+  },
+  // 2025年7月15日 - 脚の日
+  {
+    id: '5',
+    workoutDayId: '3',
+    exerciseId: 'ex4',
+    exerciseName: 'スクワット',
+    sets: [
+      { setNumber: 1, weight: 90, reps: 10, completed: false },
+      { setNumber: 2, weight: 85, reps: 12, completed: false },
+      { setNumber: 3, weight: 80, reps: 15, completed: false }
+    ],
+    createdAt: '2025-07-15T08:30:00Z',
+    updatedAt: '2025-07-15T08:30:00Z'
+  },
+  // 2025年7月11日 - 胸・腕の日
+  {
+    id: '6',
     workoutDayId: '4',
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
@@ -116,50 +145,62 @@ const workoutRecords: WorkoutRecord[] = [
       { setNumber: 2, weight: 75, reps: 8, completed: true },
       { setNumber: 3, weight: 70, reps: 10, completed: true }
     ],
-    createdAt: '2024-07-15T10:00:00Z',
-    updatedAt: '2024-07-15T10:30:00Z'
-  },
-  // 前々回のベンチプレス記録
-  {
-    id: '5',
-    workoutDayId: '5',
-    exerciseId: 'ex1',
-    exerciseName: 'ベンチプレス',
-    sets: [
-      { setNumber: 1, weight: 70, reps: 10, completed: true },
-      { setNumber: 2, weight: 70, reps: 8, completed: true },
-      { setNumber: 3, weight: 65, reps: 12, completed: true },
-      { setNumber: 4, weight: 65, reps: 10, completed: true }
-    ],
-    createdAt: '2024-07-12T10:00:00Z',
-    updatedAt: '2024-07-12T10:30:00Z'
-  },
-  // ショルダープレスの過去記録
-  {
-    id: '6',
-    workoutDayId: '4',
-    exerciseId: 'ex2',
-    exerciseName: 'ショルダープレス',
-    sets: [
-      { setNumber: 1, weight: 35, reps: 12, completed: true },
-      { setNumber: 2, weight: 35, reps: 10, completed: true },
-      { setNumber: 3, weight: 30, reps: 15, completed: true }
-    ],
-    createdAt: '2024-07-15T11:00:00Z',
-    updatedAt: '2024-07-15T11:15:00Z'
+    createdAt: '2025-07-11T10:00:00Z',
+    updatedAt: '2025-07-11T10:30:00Z'
   },
   {
     id: '7',
-    workoutDayId: '5',
-    exerciseId: 'ex2',
-    exerciseName: 'ショルダープレス',
+    workoutDayId: '4',
+    exerciseId: 'ex10',
+    exerciseName: 'トライセップスプレス',
     sets: [
-      { setNumber: 1, weight: 30, reps: 15, completed: true },
-      { setNumber: 2, weight: 30, reps: 12, completed: true },
-      { setNumber: 3, weight: 25, reps: 15, completed: true }
+      { setNumber: 1, weight: 25, reps: 12, completed: true },
+      { setNumber: 2, weight: 25, reps: 10, completed: true },
+      { setNumber: 3, weight: 20, reps: 15, completed: true }
     ],
-    createdAt: '2024-07-12T11:00:00Z',
-    updatedAt: '2024-07-12T11:15:00Z'
+    createdAt: '2025-07-11T10:45:00Z',
+    updatedAt: '2025-07-11T11:00:00Z'
+  },
+  // 2025年7月7日 - 背中・肩の日
+  {
+    id: '8',
+    workoutDayId: '5',
+    exerciseId: 'ex7',
+    exerciseName: 'プルアップ',
+    sets: [
+      { setNumber: 1, weight: 0, reps: 8, completed: true },
+      { setNumber: 2, weight: 0, reps: 6, completed: true },
+      { setNumber: 3, weight: 0, reps: 5, completed: true }
+    ],
+    createdAt: '2025-07-07T09:00:00Z',
+    updatedAt: '2025-07-07T09:30:00Z'
+  },
+  {
+    id: '9',
+    workoutDayId: '5',
+    exerciseId: 'ex6',
+    exerciseName: 'ラテラルレイズ',
+    sets: [
+      { setNumber: 1, weight: 10, reps: 15, completed: true },
+      { setNumber: 2, weight: 10, reps: 12, completed: true },
+      { setNumber: 3, weight: 8, reps: 18, completed: true }
+    ],
+    createdAt: '2025-07-07T09:30:00Z',
+    updatedAt: '2025-07-07T10:00:00Z'
+  },
+  // 2025年7月3日 - 脚・腹筋の日
+  {
+    id: '10',
+    workoutDayId: '6',
+    exerciseId: 'ex8',
+    exerciseName: 'レッグプレス',
+    sets: [
+      { setNumber: 1, weight: 120, reps: 12, completed: true },
+      { setNumber: 2, weight: 120, reps: 10, completed: true },
+      { setNumber: 3, weight: 100, reps: 15, completed: true }
+    ],
+    createdAt: '2025-07-03T08:00:00Z',
+    updatedAt: '2025-07-03T08:30:00Z'
   }
 ];
 
@@ -169,23 +210,17 @@ export const handlers = [
     return HttpResponse.json(workoutDays)
   }),
   http.get('/api/workout-days/calendar', ({ request }) => {
-    console.log('MSW: Calendar API called with URL:', request.url);
     const url = new URL(request.url);
     const year = parseInt(url.searchParams.get('year') || '2025');
     const month = parseInt(url.searchParams.get('month') || '1');
-    console.log(`MSW: Filtering workouts for ${year}-${month}`);
-    console.log('MSW: All workout days:', workoutDays.map(w => w.date));
     
-    // Filter workout days by year and month
     const filteredWorkouts = workoutDays.filter(workout => {
       const workoutDate = new Date(workout.date);
       const workoutYear = workoutDate.getFullYear();
       const workoutMonth = workoutDate.getMonth() + 1;
-      console.log(`MSW: Checking ${workout.date} - parsed as ${workoutYear}-${workoutMonth}, looking for ${year}-${month}`);
       return workoutYear === year && workoutMonth === month;
     });
     
-    console.log('MSW: Filtered workouts:', filteredWorkouts);
     return HttpResponse.json(filteredWorkouts);
   }),
   http.post('/api/workout-days', async ({ request }) => {

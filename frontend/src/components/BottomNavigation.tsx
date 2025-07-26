@@ -58,35 +58,57 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-navigation-bg border-none z-50 w-full bottom-nav-safe">
-      <div className="flex justify-around items-center h-12 w-full mx-auto">
-        {navigationItems.map((item) => {
+    <div className="fixed bottom-0 left-0 right-0 bg-surface-secondary border-none z-50 w-full h-10">
+      <div className="grid grid-cols-5 items-center h-full w-full mx-auto relative">
+        {navigationItems.map((item, index) => {
           const isActive = item.type === 'navigation' && isActivePath(item.path);
           const isAddButton = item.type === 'action' && item.id === 'add-workout';
+          
+          if (isAddButton) {
+            return <div key={item.id} className="col-start-3" />; // 真ん中のグリッド位置を確保
+          }
+          
+          // グリッドポジションを設定（プラスボタンの位置を除く）
+          let colStart = '';
+          if (index === 0) colStart = 'col-start-1';
+          else if (index === 1) colStart = 'col-start-2';
+          else if (index === 3) colStart = 'col-start-4';
+          else if (index === 4) colStart = 'col-start-5';
           
           return (
             <button
               key={item.id}
               onClick={() => handleItemClick(item)}
-              className={`flex items-center justify-center h-full flex-1 font-dotgothic transition-all border-none touch-manipulation ${
-                isAddButton
-                  ? 'bg-interactive-primary text-content-inverse rounded-full w-10 h-10 mx-1 font-bold hover:bg-interactive-primary/80 active:scale-95 transform'
-                  : isActive
-                  ? 'text-navigation-active'
-                  : 'text-navigation-text hover:text-navigation-active active:bg-navigation-bg/10 opacity-70 hover:opacity-100'
+              className={`flex items-center justify-center font-dotgothic transition-all border-none touch-manipulation h-full ${colStart} ${
+                isActive
+                  ? 'text-interactive-primary'
+                  : 'text-content-secondary hover:text-interactive-primary active:bg-surface-secondary/10 opacity-70 hover:opacity-100'
               }`}
               style={{ 
                 WebkitTapHighlightColor: 'transparent',
-                minHeight: '40px', // タップ領域を少し小さく
-                minWidth: '40px'
+                minHeight: '24px',
+                minWidth: '24px'
               }}
             >
-              <span className={`leading-none font-dotgothic ${isAddButton ? 'text-2xl' : 'text-xl'}`}>
+              <span className={`leading-none font-dotgothic text-sm`}>
                 {item.icon}
               </span>
             </button>
           );
         })}
+        
+        {/* プラスボタンを別途レンダリング - 3番目のグリッド位置に配置 */}
+        <button
+          onClick={() => handleItemClick(navigationItems[2])} // add-workout ボタン
+          className="bg-interactive-primary text-content-inverse rounded-full w-16 h-16 font-bold active:scale-95 transform col-start-3 justify-self-center -top-12 relative flex items-center justify-center font-dotgothic transition-all border-none touch-manipulation z-10"
+          style={{ 
+            WebkitTapHighlightColor: 'transparent',
+            minHeight: '64px',
+            minWidth: '64px'
+          }}
+        >
+          <span className="leading-none font-dotgothic text-2xl">+</span>
+        </button>
       </div>
     </div>
   );

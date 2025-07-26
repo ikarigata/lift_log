@@ -17,9 +17,7 @@ const Calendar: React.FC<CalendarProps> = ({ onBack, onSelectDate }) => {
   useEffect(() => {
     const fetchWorkoutDays = async () => {
       try {
-        console.log(`Fetching workout days for ${year}-${month + 1}`);
         const data = await getWorkoutDaysByMonth(year, month + 1);
-        console.log('Fetched workout days:', data);
         setWorkoutDays(data);
       } catch (error) {
         console.error('Failed to fetch workout days:', error);
@@ -51,11 +49,7 @@ const Calendar: React.FC<CalendarProps> = ({ onBack, onSelectDate }) => {
   
   const getWorkoutForDate = (date: number) => {
     const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-    const workout = workoutDays.find(workout => workout.date === dateString);
-    if (date <= 3) { // デバッグログを最初の3日だけに限定
-      console.log(`Looking for date: ${dateString}, found:`, workout);
-    }
-    return workout;
+    return workoutDays.find(workout => workout.date === dateString);
   };
   
   const renderCalendarDays = () => {
@@ -99,19 +93,12 @@ const Calendar: React.FC<CalendarProps> = ({ onBack, onSelectDate }) => {
   
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <div className="flex items-center justify-between mb-[15px]">
-        <button 
-          onClick={onBack}
-          className="text-content-primary font-dotgothic text-2xl hover:opacity-70 transition-opacity"
-        >
-          ‹
-        </button>
-        <div className="text-center">
-          <h1 className="text-content-primary font-dotgothic text-xl">
-            トレーニング履歴
+      <div className="mb-[15px]">
+        <div className="w-full bg-surface-secondary rounded-[10px] px-[15px] py-[10px] text-center mb-[10px]">
+          <h1 className="text-surface-primary font-dotgothic text-xl">
+            Calendar
           </h1>
         </div>
-        <div className="w-6" />
       </div>
 
       <div className="space-y-[10px]">

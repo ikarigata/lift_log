@@ -22,26 +22,19 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <div className="flex items-center justify-between mb-[15px]">
-        <button 
-          onClick={onBack}
-          className="text-content-primary font-dotgothic text-2xl hover:opacity-70 transition-opacity"
-        >
-          ‹
-        </button>
-        <div className="text-center">
-          <h1 className="text-content-primary font-dotgothic text-xl">
-            種目選択
+      <div className="mb-[15px]">
+        <div className="w-full bg-surface-secondary rounded-[10px] px-[15px] py-[10px] text-center mb-[10px]">
+          <h1 className="text-surface-primary font-dotgothic text-xl">
+            Exercise Selection
           </h1>
         </div>
-        <div className="w-6" />
       </div>
 
       <div className="space-y-[15px]">
         {Object.entries(exercisesByMuscleGroup).map(([muscleGroup, groupExercises]) => (
           <div key={muscleGroup} className="bg-surface-secondary rounded-[10px] overflow-hidden">
             <div className="bg-surface-secondary px-[10px] py-[8px]">
-              <h3 className="text-content-secondary font-dotgothic text-lg">
+              <h3 className="text-interactive-primary font-dotgothic text-lg">
                 {muscleGroup}
               </h3>
             </div>
