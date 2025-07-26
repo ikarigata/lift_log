@@ -6,13 +6,15 @@ interface ExerciseManagementProps {
   onBack: () => void;
   onAddExercise: (name: string, muscleGroup: string) => void;
   onDeleteExercise: (exerciseId: string) => void;
+  onToggleFavorite: (exerciseId: string) => void;
 }
 
 const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
   exercises,
   onBack,
   onAddExercise,
-  onDeleteExercise
+  onDeleteExercise,
+  onToggleFavorite
 }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newExerciseName, setNewExerciseName] = useState('');
@@ -135,15 +137,32 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
                   key={exercise.id}
                   className="flex items-center justify-between bg-surface-container rounded-[10px] p-[10px]"
                 >
-                  <span className="text-content-secondary font-dotgothic text-base">
-                    {exercise.name}
-                  </span>
-                  <button
-                    onClick={() => handleDeleteExercise(exercise.id, exercise.name)}
-                    className="bg-red-600 hover:bg-red-700 rounded-[5px] px-[10px] py-[4px] text-white font-dotgothic text-sm transition-colors"
-                  >
-                    ×
-                  </button>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-content-secondary font-dotgothic text-base">
+                      {exercise.name}
+                    </span>
+                    {exercise.isFavorite && (
+                      <span className="text-interactive-primary font-dotgothic text-sm">★</span>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => onToggleFavorite(exercise.id)}
+                      className={`rounded-[5px] px-[8px] py-[4px] font-dotgothic text-sm transition-colors ${
+                        exercise.isFavorite
+                          ? 'bg-interactive-primary text-surface-primary hover:bg-interactive-primary/80'
+                          : 'bg-gray-600 text-white hover:bg-gray-700'
+                      }`}
+                    >
+                      {exercise.isFavorite ? '★' : '☆'}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteExercise(exercise.id, exercise.name)}
+                      className="bg-red-600 hover:bg-red-700 rounded-[5px] px-[10px] py-[4px] text-white font-dotgothic text-sm transition-colors"
+                    >
+                      ×
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

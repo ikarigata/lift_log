@@ -7,12 +7,14 @@ interface ExerciseManagementPageProps {
   exercises: Exercise[];
   onAddExercise: (name: string, muscleGroup: string) => void;
   onDeleteExercise: (exerciseId: string) => void;
+  onToggleFavorite: (exerciseId: string) => void;
 }
 
 const ExerciseManagementPage: React.FC<ExerciseManagementPageProps> = ({ 
   exercises, 
   onAddExercise, 
-  onDeleteExercise 
+  onDeleteExercise,
+  onToggleFavorite
 }) => {
   const navigate = useNavigate();
 
@@ -26,6 +28,7 @@ const ExerciseManagementPage: React.FC<ExerciseManagementPageProps> = ({
       onBack={handleBack}
       onAddExercise={onAddExercise}
       onDeleteExercise={onDeleteExercise}
+      onToggleFavorite={onToggleFavorite}
     />
   );
 };

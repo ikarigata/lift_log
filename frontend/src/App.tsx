@@ -120,6 +120,16 @@ const AppContent = () => {
     }
   };
 
+  const handleToggleFavorite = (exerciseId: string) => {
+    setExercises(prev => 
+      prev.map(exercise => 
+        exercise.id === exerciseId 
+          ? { ...exercise, isFavorite: !exercise.isFavorite }
+          : exercise
+      )
+    );
+  };
+
   const handleSaveExercise = async (workoutId: string, exerciseId: string, sets: WorkoutSet[], editingRecordId?: string) => {
     try {
       const savedRecord = await saveWorkoutRecord(workoutId, exerciseId, sets, editingRecordId);
@@ -236,6 +246,7 @@ const AppContent = () => {
                   exercises={exercises}
                   onAddExercise={handleAddNewExercise}
                   onDeleteExercise={handleDeleteExercise}
+                  onToggleFavorite={handleToggleFavorite}
                 />
               }
             />

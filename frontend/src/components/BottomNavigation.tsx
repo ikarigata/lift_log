@@ -107,7 +107,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
             minWidth: '64px'
           }}
         >
-          <span className="leading-none font-dotgothic text-2xl">+</span>
+          <span className="leading-none font-dotgothic text-2xl" style={{ marginTop: '-2px' }}>+</span>
         </button>
       </div>
     </div>

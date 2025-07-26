@@ -58,7 +58,7 @@ const Calendar: React.FC<CalendarProps> = ({ onBack, onSelectDate }) => {
     // Empty cells for days before the first day of the month
     for (let i = 0; i < firstDayOfWeek; i++) {
       days.push(
-        <div key={`empty-${i}`} className="h-12 border border-white opacity-30" />
+        <div key={`empty-${i}`} className="h-12 border border-surface-primary opacity-30" />
       );
     }
     
@@ -71,7 +71,7 @@ const Calendar: React.FC<CalendarProps> = ({ onBack, onSelectDate }) => {
         <button
           key={day}
           onClick={() => workout && onSelectDate(workout)}
-          className={`h-12 border border-white flex flex-col items-center justify-center font-dotgothic text-sm transition-colors ${
+          className={`h-12 border border-surface-primary flex flex-col items-center justify-center font-dotgothic text-sm transition-colors ${
             hasWorkout 
               ? 'bg-interactive-primary text-content-inverse hover:bg-interactive-primary/80 cursor-pointer' 
               : 'bg-surface-secondary text-content-secondary cursor-default'
