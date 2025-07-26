@@ -61,14 +61,6 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
             {exercise.name} - {exercise.muscleGroup}
           </p>
         </div>
-        <div className="flex justify-end">
-          <button 
-            onClick={handleSave}
-            className="text-interactive-primary font-dotgothic text-base hover:opacity-70 transition-opacity"
-          >
-            保存
-          </button>
-        </div>
       </div>
 
       {previousRecords.filter(record => record.id !== currentRecord?.id).length > 0 && (
@@ -119,7 +111,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
           </h3>
           <button
             onClick={addSet}
-            className="bg-content-inverse hover:bg-content-inverse/80 rounded-[5px] px-[5px] py-[5px] text-interactive-primary font-dotgothic text-sm transition-colors"
+            className="bg-interactive-primary hover:bg-interactive-primary/80 rounded-[5px] px-[10px] py-[5px] text-surface-primary font-dotgothic text-sm transition-colors"
           >
             + セット追加
           </button>
@@ -177,6 +169,13 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
             </div>
           ))}
         </div>
+        
+        <button 
+          onClick={handleSave}
+          className="w-full bg-interactive-primary hover:bg-interactive-primary/80 text-surface-primary font-dotgothic text-base rounded-[10px] px-[10px] py-[10px] mt-[10px] transition-colors"
+        >
+          保存
+        </button>
       </div>
     </div>
   );

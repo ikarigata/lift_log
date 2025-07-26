@@ -4,51 +4,203 @@ import type { WorkoutDay, WorkoutRecord, Exercise } from '../types'
 const workoutDays: WorkoutDay[] = [
   {
     id: '1',
-    date: '2025-07-23',
+    date: '2025-07-26',
     name: '胸・肩の日',
     isCompleted: true,
-    createdAt: '2025-07-23T10:00:00Z',
-    updatedAt: '2025-07-23T12:30:00Z'
+    createdAt: '2025-07-26T10:00:00Z',
+    updatedAt: '2025-07-26T12:30:00Z'
   },
   {
     id: '2',
-    date: '2025-07-19',
+    date: '2025-07-23',
     name: '背中・腕の日',
     isCompleted: true,
-    createdAt: '2025-07-19T09:00:00Z',
-    updatedAt: '2025-07-19T11:15:00Z'
+    createdAt: '2025-07-23T09:00:00Z',
+    updatedAt: '2025-07-23T11:15:00Z'
   },
   {
     id: '3',
-    date: '2025-07-15',
+    date: '2025-07-20',
     name: '脚の日',
     isCompleted: false,
-    createdAt: '2025-07-15T08:30:00Z',
-    updatedAt: '2025-07-15T08:30:00Z'
+    createdAt: '2025-07-20T08:30:00Z',
+    updatedAt: '2025-07-20T08:30:00Z'
   },
   {
     id: '4',
-    date: '2025-07-11',
+    date: '2025-07-17',
     name: '胸・腕の日',
     isCompleted: true,
-    createdAt: '2025-07-11T10:00:00Z',
-    updatedAt: '2025-07-11T11:30:00Z'
+    createdAt: '2025-07-17T10:00:00Z',
+    updatedAt: '2025-07-17T11:30:00Z'
   },
   {
     id: '5',
-    date: '2025-07-07',
+    date: '2025-07-14',
     name: '背中・肩の日',
     isCompleted: true,
-    createdAt: '2025-07-07T09:00:00Z',
-    updatedAt: '2025-07-07T10:45:00Z'
+    createdAt: '2025-07-14T09:00:00Z',
+    updatedAt: '2025-07-14T10:45:00Z'
   },
   {
     id: '6',
-    date: '2025-07-03',
+    date: '2025-07-11',
     name: '脚・腹筋の日',
     isCompleted: true,
-    createdAt: '2025-07-03T08:00:00Z',
-    updatedAt: '2025-07-03T09:30:00Z'
+    createdAt: '2025-07-11T08:00:00Z',
+    updatedAt: '2025-07-11T09:30:00Z'
+  },
+  {
+    id: '7',
+    date: '2025-07-08',
+    name: '胸・三頭の日',
+    isCompleted: true,
+    createdAt: '2025-07-08T10:00:00Z',
+    updatedAt: '2025-07-08T11:30:00Z'
+  },
+  {
+    id: '8',
+    date: '2025-07-05',
+    name: '背中・二頭の日',
+    isCompleted: true,
+    createdAt: '2025-07-05T09:00:00Z',
+    updatedAt: '2025-07-05T10:45:00Z'
+  },
+  {
+    id: '9',
+    date: '2025-07-02',
+    name: '脚・肩の日',
+    isCompleted: true,
+    createdAt: '2025-07-02T08:00:00Z',
+    updatedAt: '2025-07-02T09:30:00Z'
+  },
+  {
+    id: '10',
+    date: '2025-06-29',
+    name: '胸・腹筋の日',
+    isCompleted: true,
+    createdAt: '2025-06-29T10:00:00Z',
+    updatedAt: '2025-06-29T11:30:00Z'
+  },
+  {
+    id: '11',
+    date: '2025-06-26',
+    name: '背中・腕の日',
+    isCompleted: true,
+    createdAt: '2025-06-26T09:00:00Z',
+    updatedAt: '2025-06-26T10:45:00Z'
+  },
+  {
+    id: '12',
+    date: '2025-06-23',
+    name: '脚・肩の日',
+    isCompleted: true,
+    createdAt: '2025-06-23T08:00:00Z',
+    updatedAt: '2025-06-23T09:30:00Z'
+  },
+  {
+    id: '13',
+    date: '2025-06-20',
+    name: '胸・三頭の日',
+    isCompleted: true,
+    createdAt: '2025-06-20T10:00:00Z',
+    updatedAt: '2025-06-20T11:30:00Z'
+  },
+  {
+    id: '14',
+    date: '2025-06-17',
+    name: '背中・二頭の日',
+    isCompleted: true,
+    createdAt: '2025-06-17T09:00:00Z',
+    updatedAt: '2025-06-17T10:45:00Z'
+  },
+  {
+    id: '15',
+    date: '2025-06-14',
+    name: '脚・腹筋の日',
+    isCompleted: true,
+    createdAt: '2025-06-14T08:00:00Z',
+    updatedAt: '2025-06-14T09:30:00Z'
+  },
+  {
+    id: '16',
+    date: '2025-06-11',
+    name: '胸・肩の日',
+    isCompleted: true,
+    createdAt: '2025-06-11T10:00:00Z',
+    updatedAt: '2025-06-11T11:30:00Z'
+  },
+  {
+    id: '17',
+    date: '2025-06-08',
+    name: '背中・腕の日',
+    isCompleted: true,
+    createdAt: '2025-06-08T09:00:00Z',
+    updatedAt: '2025-06-08T10:45:00Z'
+  },
+  {
+    id: '18',
+    date: '2025-06-05',
+    name: '脚・肩の日',
+    isCompleted: true,
+    createdAt: '2025-06-05T08:00:00Z',
+    updatedAt: '2025-06-05T09:30:00Z'
+  },
+  {
+    id: '19',
+    date: '2025-06-02',
+    name: '胸・三頭の日',
+    isCompleted: true,
+    createdAt: '2025-06-02T10:00:00Z',
+    updatedAt: '2025-06-02T11:30:00Z'
+  },
+  {
+    id: '20',
+    date: '2025-05-30',
+    name: '背中・二頭の日',
+    isCompleted: true,
+    createdAt: '2025-05-30T09:00:00Z',
+    updatedAt: '2025-05-30T10:45:00Z'
+  },
+  {
+    id: '21',
+    date: '2025-05-27',
+    name: '脚・腹筋の日',
+    isCompleted: true,
+    createdAt: '2025-05-27T08:00:00Z',
+    updatedAt: '2025-05-27T09:30:00Z'
+  },
+  {
+    id: '22',
+    date: '2025-05-24',
+    name: '胸・肩の日',
+    isCompleted: true,
+    createdAt: '2025-05-24T10:00:00Z',
+    updatedAt: '2025-05-24T11:30:00Z'
+  },
+  {
+    id: '23',
+    date: '2025-05-21',
+    name: '背中・腕の日',
+    isCompleted: true,
+    createdAt: '2025-05-21T09:00:00Z',
+    updatedAt: '2025-05-21T10:45:00Z'
+  },
+  {
+    id: '24',
+    date: '2025-05-18',
+    name: '脚・肩の日',
+    isCompleted: true,
+    createdAt: '2025-05-18T08:00:00Z',
+    updatedAt: '2025-05-18T09:30:00Z'
+  },
+  {
+    id: '25',
+    date: '2025-05-15',
+    name: '胸・三頭の日',
+    isCompleted: true,
+    createdAt: '2025-05-15T10:00:00Z',
+    updatedAt: '2025-05-15T11:30:00Z'
   }
 ];
 
@@ -56,13 +208,16 @@ const exercises: Exercise[] = [
   { id: 'ex1', name: 'ベンチプレス', muscleGroup: '胸' },
   { id: 'ex2', name: 'ショルダープレス', muscleGroup: '肩' },
   { id: 'ex3', name: 'デッドリフト', muscleGroup: '背中' },
-  { id: 'ex4', name: 'スクワット', muscleGroup: '脚' },
+  { id: 'ex4', name: 'スクワット', muscleGroup: '脚', isFavorite: true },
   { id: 'ex5', name: 'インクラインベンチプレス', muscleGroup: '胸' },
   { id: 'ex6', name: 'ラテラルレイズ', muscleGroup: '肩' },
   { id: 'ex7', name: 'プルアップ', muscleGroup: '背中' },
   { id: 'ex8', name: 'レッグプレス', muscleGroup: '脚' },
   { id: 'ex9', name: 'バーベルカール', muscleGroup: '腕' },
   { id: 'ex10', name: 'トライセップスプレス', muscleGroup: '腕' },
+  { id: 'ex11', name: 'ラットプルダウン', muscleGroup: '背中', isFavorite: true },
+  { id: 'ex12', name: 'チェストプレス', muscleGroup: '胸', isFavorite: true },
+  { id: 'ex13', name: 'プッシュアップ', muscleGroup: '胸', isFavorite: true },
 ];
 
 const workoutRecords: WorkoutRecord[] = [

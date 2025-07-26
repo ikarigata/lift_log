@@ -26,36 +26,67 @@ const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, workoutReco
     return muscleGroups;
   };
 
+  // その日のトレーニングの総ボリュームを計算
+  const getTotalVolume = () => {
+    const dayRecords = workoutRecords.filter(record => record.workoutDayId === workoutDay.id);
+    let totalVolume = 0;
+    
+    dayRecords.forEach(record => {
+      record.sets.forEach(set => {
+        if (set.completed) {
+          totalVolume += set.weight * set.reps;
+        }
+      });
+    });
+    
+    return totalVolume;
+  };
+
   const muscleGroups = getMuscleGroups();
+  const totalVolume = getTotalVolume();
 
   return (
     <div 
       className="flex items-center justify-between w-full bg-surface-secondary rounded-[10px] p-[10px] border-none hover:bg-surface-container transition-colors cursor-pointer"
       onClick={onClick}
     >
-      <div className="flex flex-col">
-        <div className="text-content-secondary font-dotgothic text-lg">
+      <div className="flex flex-col flex-1">
+        <div className="text-content-secondary font-dotgothic text-lg text-left">
           {formatDate(workoutDay.date)}
         </div>
-        {workoutDay.name && (
-          <div className="text-content-secondary opacity-80 font-dotgothic text-sm">
-            {workoutDay.name}
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col">
+            {workoutDay.name && (
+              <div className="text-content-secondary opacity-80 font-dotgothic text-sm">
+                {workoutDay.name}
+              </div>
+            )}
+            {muscleGroups.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-1">
+                {muscleGroups.map((muscleGroup) => (
+                  <span
+                    key={muscleGroup}
+                    className="bg-surface-container text-content-secondary text-xs font-dotgothic px-2 py-1 rounded-md"
+                  >
+                    {muscleGroup}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
-        )}
-        {muscleGroups.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-1">
-            {muscleGroups.map((muscleGroup) => (
-              <span
-                key={muscleGroup}
-                className="bg-surface-container text-content-secondary text-xs font-dotgothic px-2 py-1 rounded-md"
-              >
-                {muscleGroup}
-              </span>
-            ))}
-          </div>
-        )}
+          {totalVolume > 0 && (
+            <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md ml-4">
+              <div className="text-surface-primary opacity-80 mb-0.5">
+                総ボリューム
+              </div>
+              <div className="text-surface-primary">
+                {totalVolume.toLocaleString()}kg
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-      <div className="flex items-center space-x-[10px]">
+      <div className="flex items-center space-x-[10px] ml-4">
         <div className={`w-3 h-3 rounded-full ${workoutDay.isCompleted ? 'bg-green-500' : 'bg-gray-500'}`} />
         <div className="text-content-secondary font-dotgothic text-2xl">
           ›
