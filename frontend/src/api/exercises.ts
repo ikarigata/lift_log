@@ -1,6 +1,5 @@
 import type { Exercise, WorkoutRecord, WorkoutSet } from '../types';
-
-const BASE_URL = '/api';
+import { BASE_URL } from './config';
 
 export const getExercises = async (): Promise<Exercise[]> => {
   const response = await fetch(`${BASE_URL}/exercises`);

@@ -1,6 +1,5 @@
 import type { WorkoutDay, WorkoutRecord } from '../types';
-
-const BASE_URL = '/api';
+import { BASE_URL } from './config';
 
 export const getWorkoutDays = async (): Promise<WorkoutDay[]> => {
   const response = await fetch(`${BASE_URL}/workout-days`);
