@@ -8,17 +8,19 @@ public class Exercise {
     private UUID userId;
     private String name;
     private String description;
+    private UUID muscleGroupId;
     private ZonedDateTime createdAt;
 
     // コンストラクタ
     public Exercise() {
     }
 
-    public Exercise(UUID id, UUID userId, String name, String description, ZonedDateTime createdAt) {
+    public Exercise(UUID id, UUID userId, String name, String description, UUID muscleGroupId, ZonedDateTime createdAt) {
         this.id = id;
         this.userId = userId;
         this.name = name;
         this.description = description;
+        this.muscleGroupId = muscleGroupId;
         this.createdAt = createdAt;
     }
 
@@ -61,5 +63,13 @@ public class Exercise {
 
     public void setCreatedAt(ZonedDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public UUID getMuscleGroupId() {
+        return muscleGroupId;
+    }
+
+    public void setMuscleGroupId(UUID muscleGroupId) {
+        this.muscleGroupId = muscleGroupId;
     }
 }

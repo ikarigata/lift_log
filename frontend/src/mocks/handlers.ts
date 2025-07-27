@@ -1,6 +1,58 @@
 import { http, HttpResponse } from 'msw'
 import type { WorkoutDay, WorkoutRecord, Exercise } from '../types'
 
+// JWT関連の定数とユーティリティ
+const JWT_SECRET = 'mock-secret-key'
+const MOCK_USER_ID = '123e4567-e89b-12d3-a456-426614174000' // UUID形式
+
+// 簡易JWT生成（モック用）
+const generateMockJWT = (userId: string): string => {
+  const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }))
+  const payload = btoa(JSON.stringify({
+    userId,
+    exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // 24時間後
+    iat: Math.floor(Date.now() / 1000)
+  }))
+  const signature = btoa('mock-signature')
+  return `${header}.${payload}.${signature}`
+}
+
+// JWTトークンを検証
+const verifyAuthToken = (request: Request): string | null => {
+  const authHeader = request.headers.get('Authorization')
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null
+  }
+  
+  const token = authHeader.substring(7)
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    const now = Math.floor(Date.now() / 1000)
+    
+    if (payload.exp < now) {
+      return null // トークン期限切れ
+    }
+    
+    return payload.userId
+  } catch {
+    return null
+  }
+}
+
+// 認証が必要なエンドポイント用のミドルウェア
+const requireAuth = (handler: any) => {
+  return ({ request, params }: { request: Request; params?: any }) => {
+    const userId = verifyAuthToken(request)
+    if (!userId) {
+      return new HttpResponse(JSON.stringify({ message: 'Unauthorized' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      })
+    }
+    return handler({ request, params, userId })
+  }
+}
+
 const workoutDays: WorkoutDay[] = [
   {
     id: '1',
@@ -377,10 +429,10 @@ const workoutRecords: WorkoutRecord[] = [
 
 export const handlers = [
   // Workout Days
-  http.get('/api/workout-days', () => {
+  http.get('/api/workout-days', requireAuth(() => {
     return HttpResponse.json(workoutDays)
-  }),
-  http.get('/api/workout-days/calendar', ({ request }) => {
+  })),
+  http.get('/api/workout-days/calendar', requireAuth(({ request }: { request: Request }) => {
     const url = new URL(request.url);
     const year = parseInt(url.searchParams.get('year') || '2025');
     const month = parseInt(url.searchParams.get('month') || '1');
@@ -393,8 +445,8 @@ export const handlers = [
     });
     
     return HttpResponse.json(filteredWorkouts);
-  }),
-  http.post('/api/workout-days', async ({ request }) => {
+  })),
+  http.post('/api/workout-days', requireAuth(async ({ request }: { request: Request }) => {
     const newWorkoutData = await request.json() as Omit<WorkoutDay, 'id' | 'createdAt' | 'updatedAt'>;
     const newWorkout: WorkoutDay = {
       id: Date.now().toString(),
@@ -404,13 +456,13 @@ export const handlers = [
     };
     workoutDays.unshift(newWorkout);
     return HttpResponse.json(newWorkout);
-  }),
+  })),
 
   // Exercises
-  http.get('/api/exercises', () => {
+  http.get('/api/exercises', requireAuth(() => {
     return HttpResponse.json(exercises)
-  }),
-  http.post('/api/exercises', async ({ request }) => {
+  })),
+  http.post('/api/exercises', requireAuth(async ({ request }: { request: Request }) => {
     const newExerciseData = await request.json() as Omit<Exercise, 'id'>;
     const newExercise: Exercise = {
       id: `ex${Date.now()}`,
@@ -418,8 +470,8 @@ export const handlers = [
     };
     exercises.push(newExercise);
     return HttpResponse.json(newExercise);
-  }),
-  http.delete('/api/exercises/:exerciseId', ({ params }) => {
+  })),
+  http.delete('/api/exercises/:exerciseId', requireAuth(({ params }: { params: any }) => {
     const { exerciseId } = params;
     const index = exercises.findIndex(ex => ex.id === exerciseId);
     if (index !== -1) {
@@ -434,13 +486,13 @@ export const handlers = [
       recordIndexes.forEach(i => workoutRecords.splice(i, 1));
     }
     return new HttpResponse(null, { status: 204 });
-  }),
+  })),
 
   // Workout Records
-  http.get('/api/workout-records', () => {
+  http.get('/api/workout-records', requireAuth(() => {
     return HttpResponse.json(workoutRecords)
-  }),
-  http.post('/api/workout-records', async ({ request }) => {
+  })),
+  http.post('/api/workout-records', requireAuth(async ({ request }: { request: Request }) => {
     const data = await request.json() as { workoutDayId: string; exerciseId: string; sets: any[]; memo?: string };
     const exercise = exercises.find(ex => ex.id === data.exerciseId);
     const newRecord: WorkoutRecord = {
@@ -455,8 +507,8 @@ export const handlers = [
     };
     workoutRecords.push(newRecord);
     return HttpResponse.json(newRecord);
-  }),
-  http.put('/api/workout-records/:recordId', async ({ params, request }) => {
+  })),
+  http.put('/api/workout-records/:recordId', requireAuth(async ({ params, request }: { params: any; request: Request }) => {
     const { recordId } = params;
     const data = await request.json() as { workoutDayId: string; exerciseId: string; sets: any[]; memo?: string };
     const recordIndex = workoutRecords.findIndex(record => record.id === recordId);
@@ -470,18 +522,19 @@ export const handlers = [
       return HttpResponse.json(workoutRecords[recordIndex]);
     }
     return new HttpResponse(null, { status: 404 });
-  }),
+  })),
   // Login
   http.post('/api/v1/login', async ({ request }) => {
     try {
       const { email, password } = await request.json() as any;
       if (email === 'test@example.com' && password === 'password') {
+        const token = generateMockJWT(MOCK_USER_ID)
         return HttpResponse.json({
-          token: 'dummy-auth-token',
-          user: { id: 'user-1', name: 'Test User' },
+          token,
+          user: { id: MOCK_USER_ID, name: 'Test User', email },
         });
       } else {
-        return new HttpResponse(JSON.stringify({ message: 'Unauthorized' }), {
+        return new HttpResponse(JSON.stringify({ message: 'Invalid email or password' }), {
           status: 401,
           headers: {
             'Content-Type': 'application/json',
