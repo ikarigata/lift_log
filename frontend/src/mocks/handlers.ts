@@ -232,6 +232,7 @@ const workoutRecords: WorkoutRecord[] = [
       { setNumber: 2, weight: 85, reps: 6, completed: true },
       { setNumber: 3, weight: 80, reps: 8, completed: true }
     ],
+    memo: '今日は調子が良く、重量を5kg上げることができた！',
     createdAt: '2025-07-26T10:00:00Z',
     updatedAt: '2025-07-26T10:30:00Z'
   },
@@ -259,6 +260,7 @@ const workoutRecords: WorkoutRecord[] = [
       { setNumber: 2, weight: 80, reps: 6, completed: true },
       { setNumber: 3, weight: 75, reps: 8, completed: true }
     ],
+    memo: '胸の日だが肩も一緒にやった。少し疲れ気味。',
     createdAt: '2025-07-23T10:00:00Z',
     updatedAt: '2025-07-23T10:30:00Z'
   },
@@ -464,7 +466,7 @@ export const handlers = [
     return HttpResponse.json(workoutRecords)
   }),
   http.post('/api/workout-records', async ({ request }) => {
-    const data = await request.json() as { workoutDayId: string; exerciseId: string; sets: any[] };
+    const data = await request.json() as { workoutDayId: string; exerciseId: string; sets: any[]; memo?: string };
     const exercise = exercises.find(ex => ex.id === data.exerciseId);
     const newRecord: WorkoutRecord = {
       id: Date.now().toString(),
@@ -472,6 +474,7 @@ export const handlers = [
       exerciseId: data.exerciseId,
       exerciseName: exercise?.name || '',
       sets: data.sets,
+      memo: data.memo,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -480,12 +483,13 @@ export const handlers = [
   }),
   http.put('/api/workout-records/:recordId', async ({ params, request }) => {
     const { recordId } = params;
-    const data = await request.json() as { workoutDayId: string; exerciseId: string; sets: any[] };
+    const data = await request.json() as { workoutDayId: string; exerciseId: string; sets: any[]; memo?: string };
     const recordIndex = workoutRecords.findIndex(record => record.id === recordId);
     if (recordIndex !== -1) {
       workoutRecords[recordIndex] = {
         ...workoutRecords[recordIndex],
         sets: data.sets,
+        memo: data.memo,
         updatedAt: new Date().toISOString()
       };
       return HttpResponse.json(workoutRecords[recordIndex]);

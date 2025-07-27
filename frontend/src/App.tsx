@@ -130,9 +130,9 @@ const AppContent = () => {
     );
   };
 
-  const handleSaveExercise = async (workoutId: string, exerciseId: string, sets: WorkoutSet[], editingRecordId?: string) => {
+  const handleSaveExercise = async (workoutId: string, exerciseId: string, sets: WorkoutSet[], memo?: string, editingRecordId?: string) => {
     try {
-      const savedRecord = await saveWorkoutRecord(workoutId, exerciseId, sets, editingRecordId);
+      const savedRecord = await saveWorkoutRecord(workoutId, exerciseId, sets, memo, editingRecordId);
       if (editingRecordId) {
         setWorkoutRecords(prev => 
           prev.map(record => record.id === editingRecordId ? savedRecord : record)

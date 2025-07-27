@@ -20,6 +20,7 @@ export interface WorkoutRecord {
   exerciseId: string;
   exerciseName: string;
   sets: WorkoutSet[];
+  memo?: string;
   createdAt: string;
   updatedAt: string;
 }

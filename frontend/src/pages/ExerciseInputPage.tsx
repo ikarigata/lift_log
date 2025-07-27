@@ -6,7 +6,7 @@ import type { Exercise, WorkoutRecord, WorkoutSet } from '../types';
 interface ExerciseInputPageProps {
   exercises: Exercise[];
   workoutRecords: WorkoutRecord[];
-  onSaveExercise: (workoutId: string, exerciseId: string, sets: WorkoutSet[], editingRecordId?: string) => void;
+  onSaveExercise: (workoutId: string, exerciseId: string, sets: WorkoutSet[], memo?: string, editingRecordId?: string) => void;
 }
 
 const ExerciseInputPage: React.FC<ExerciseInputPageProps> = ({ 
@@ -34,8 +34,8 @@ const ExerciseInputPage: React.FC<ExerciseInputPageProps> = ({
     navigate(`/workout/${workoutId}`);
   };
 
-  const handleSave = (sets: WorkoutSet[]) => {
-    onSaveExercise(workoutId, exerciseId, sets, editingRecord?.id);
+  const handleSave = (sets: WorkoutSet[], memo?: string) => {
+    onSaveExercise(workoutId, exerciseId, sets, memo, editingRecord?.id);
     navigate(`/workout/${workoutId}`);
   };
 

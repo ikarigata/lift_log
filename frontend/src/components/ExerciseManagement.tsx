@@ -150,15 +150,15 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
                       onClick={() => onToggleFavorite(exercise.id)}
                       className={`rounded-[5px] px-[8px] py-[4px] font-dotgothic text-sm transition-colors ${
                         exercise.isFavorite
-                          ? 'bg-interactive-primary text-surface-primary hover:bg-interactive-primary/80'
-                          : 'bg-gray-600 text-white hover:bg-gray-700'
+                          ? 'bg-surface-secondary text-interactive-primary hover:bg-surface-secondary/80'
+                          : 'bg-surface-secondary text-white hover:bg-surface-secondary/80'
                       }`}
                     >
                       {exercise.isFavorite ? '★' : '☆'}
                     </button>
                     <button
                       onClick={() => handleDeleteExercise(exercise.id, exercise.name)}
-                      className="bg-red-600 hover:bg-red-700 rounded-[5px] px-[10px] py-[4px] text-white font-dotgothic text-sm transition-colors"
+                      className="bg-interactive-primary hover:bg-interactive-primary/80 rounded-[5px] px-[10px] py-[4px] text-surface-primary font-dotgothic text-sm transition-colors"
                     >
                       ×
                     </button>

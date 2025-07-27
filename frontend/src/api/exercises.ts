@@ -42,7 +42,7 @@ export const getWorkoutRecords = async (): Promise<WorkoutRecord[]> => {
     return response.json();
 };
 
-export const saveWorkoutRecord = async (workoutId: string, exerciseId: string, sets: WorkoutSet[], editingRecordId?: string): Promise<WorkoutRecord> => {
+export const saveWorkoutRecord = async (workoutId: string, exerciseId: string, sets: WorkoutSet[], memo?: string, editingRecordId?: string): Promise<WorkoutRecord> => {
     const url = editingRecordId
       ? `${BASE_URL}/workout-records/${editingRecordId}`
       : `${BASE_URL}/workout-records`;
@@ -53,6 +53,7 @@ export const saveWorkoutRecord = async (workoutId: string, exerciseId: string, s
         workoutDayId: workoutId,
         exerciseId,
         sets,
+        memo,
     });
 
     const response = await fetch(url, {
