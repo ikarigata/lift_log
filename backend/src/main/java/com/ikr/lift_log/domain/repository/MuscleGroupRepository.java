@@ -11,5 +11,7 @@ public interface MuscleGroupRepository {
 
     Optional<MuscleGroup> findById(UUID id);
 
+    Optional<MuscleGroup> findByName(String name);
+
     MuscleGroup save(MuscleGroup muscleGroup);
 }

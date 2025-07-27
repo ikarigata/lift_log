@@ -1,8 +1,8 @@
 import type { Exercise, WorkoutRecord, WorkoutSet } from '../types';
-import { BASE_URL } from './config';
+import { BASE_URL, authenticatedFetch } from './config';
 
 export const getExercises = async (): Promise<Exercise[]> => {
-  const response = await fetch(`${BASE_URL}/exercises`);
+  const response = await authenticatedFetch(`${BASE_URL}/exercises`);
   if (!response.ok) {
     throw new Error('Failed to fetch exercises');
   }
@@ -10,11 +10,8 @@ export const getExercises = async (): Promise<Exercise[]> => {
 };
 
 export const addExercise = async (exercise: Omit<Exercise, 'id'>): Promise<Exercise> => {
-  const response = await fetch(`${BASE_URL}/exercises`, {
+  const response = await authenticatedFetch(`${BASE_URL}/exercises`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(exercise),
   });
   if (!response.ok) {
@@ -24,7 +21,7 @@ export const addExercise = async (exercise: Omit<Exercise, 'id'>): Promise<Exerc
 };
 
 export const deleteExercise = async (exerciseId: string): Promise<void> => {
-  const response = await fetch(`${BASE_URL}/exercises/${exerciseId}`, {
+  const response = await authenticatedFetch(`${BASE_URL}/exercises/${exerciseId}`, {
     method: 'DELETE',
   });
   if (!response.ok) {
@@ -34,7 +31,7 @@ export const deleteExercise = async (exerciseId: string): Promise<void> => {
 
 
 export const getWorkoutRecords = async (): Promise<WorkoutRecord[]> => {
-    const response = await fetch(`${BASE_URL}/workout-records`);
+    const response = await authenticatedFetch(`${BASE_URL}/workout-records`);
     if (!response.ok) {
       throw new Error('Failed to fetch workout records');
     }
@@ -55,11 +52,8 @@ export const saveWorkoutRecord = async (workoutId: string, exerciseId: string, s
         memo,
     });
 
-    const response = await fetch(url, {
+    const response = await authenticatedFetch(url, {
         method,
-        headers: {
-            'Content-Type': 'application/json',
-        },
         body,
     });
 

@@ -17,12 +17,7 @@ const HomePage: React.FC<HomePageProps> = ({ workoutDays, workoutRecords, exerci
   };
 
   return (
-    <div className="px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <div className="w-full bg-surface-secondary rounded-[10px] px-[15px] py-[10px] text-center mb-[15px]">
-        <h1 className="text-surface-primary font-dotgothic text-xl">
-          History
-        </h1>
-      </div>
+    <div className="space-y-[10px] bg-surface-primary min-h-screen">
       <WorkoutDayList 
         workoutDays={workoutDays.slice(0, 10)}
         workoutRecords={workoutRecords}

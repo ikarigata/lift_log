@@ -28,6 +28,8 @@ public class JdbcUserRepository implements UserRepository {
                 .fetch(record -> new User(
                     record.get(USERS.ID),
                     record.get(USERS.NAME),
+                    record.get(USERS.EMAIL),
+                    record.get(USERS.PASSWORD_HASH),
                     record.get(USERS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
                 ));
     }
@@ -39,6 +41,21 @@ public class JdbcUserRepository implements UserRepository {
                 .fetchOptional(record -> new User(
                     record.get(USERS.ID),
                     record.get(USERS.NAME),
+                    record.get(USERS.EMAIL),
+                    record.get(USERS.PASSWORD_HASH),
+                    record.get(USERS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return dsl.selectFrom(USERS)
+                .where(USERS.EMAIL.eq(email))
+                .fetchOptional(record -> new User(
+                    record.get(USERS.ID),
+                    record.get(USERS.NAME),
+                    record.get(USERS.EMAIL),
+                    record.get(USERS.PASSWORD_HASH),
                     record.get(USERS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
                 ));
     }
@@ -59,15 +76,19 @@ public class JdbcUserRepository implements UserRepository {
         dsl.insertInto(USERS)
                 .set(USERS.ID, id)
                 .set(USERS.NAME, user.getName())
+                .set(USERS.EMAIL, user.getEmail())
+                .set(USERS.PASSWORD_HASH, user.getPasswordHash())
                 .set(USERS.CREATED_AT, now.toOffsetDateTime())
                 .execute();
 
-        return new User(id, user.getName(), now);
+        return new User(id, user.getName(), user.getEmail(), user.getPasswordHash(), now);
     }
 
     private User update(User user) {
         int rowsAffected = dsl.update(USERS)
                 .set(USERS.NAME, user.getName())
+                .set(USERS.EMAIL, user.getEmail())
+                .set(USERS.PASSWORD_HASH, user.getPasswordHash())
                 .where(USERS.ID.eq(user.getId()))
                 .execute();
         
