@@ -11,6 +11,7 @@ CREATE UNIQUE INDEX exercise_muscle_groups_exercise_id_muscle_group_id_key
 
 CREATE TABLE public.exercises (
   id uuid DEFAULT gen_random_uuid() NOT NULL,
+  user_id uuid NOT NULL,
   name text NOT NULL,
   description text,
   created_at timestamp(6) WITH TIME ZONE DEFAULT now(),
@@ -62,6 +63,9 @@ CREATE TABLE public.workout_sets (
   updated_at timestamp(6) WITH TIME ZONE DEFAULT now(),
   PRIMARY KEY (id)
 );
+
+ALTER TABLE public.exercises
+  ADD CONSTRAINT exercises_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 ALTER TABLE public.exercise_muscle_groups
   ADD CONSTRAINT exercise_muscle_groups_exercise_id_fkey FOREIGN KEY (exercise_id) REFERENCES public.exercises(id);
