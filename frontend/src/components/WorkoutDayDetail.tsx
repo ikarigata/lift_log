@@ -36,9 +36,6 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
             {formatDate(workoutDay.date)}{workoutDay.name && ` - ${workoutDay.name}`}
           </p>
         </div>
-        <div className="flex justify-end">
-          <div className={`w-3 h-3 rounded-full ${workoutDay.isCompleted ? 'bg-green-500' : 'bg-gray-500'}`} />
-        </div>
       </div>
 
       <button
@@ -95,9 +92,6 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
                         <span className="text-content-secondary font-dotgothic text-sm">
                           {set.reps}回
                         </span>
-                        <div className={`w-2 h-2 rounded-full ml-2 ${
-                          set.completed ? 'bg-green-500' : 'bg-gray-500'
-                        }`} />
                       </div>
                     </div>
                   ))}

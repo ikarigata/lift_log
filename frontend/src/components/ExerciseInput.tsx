@@ -18,7 +18,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
 }) => {
   const [currentSets, setCurrentSets] = useState<WorkoutSet[]>(
     currentRecord ? currentRecord.sets : [
-      { setNumber: 1, weight: 0, reps: 0, completed: false }
+      { setNumber: 1, weight: 0, reps: 0 }
     ]
   );
   const [memo, setMemo] = useState<string>(currentRecord?.memo || '');
@@ -27,13 +27,12 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
     const newSet: WorkoutSet = {
       setNumber: currentSets.length + 1,
       weight: currentSets[currentSets.length - 1]?.weight || 0,
-      reps: currentSets[currentSets.length - 1]?.reps || 0,
-      completed: false
+      reps: currentSets[currentSets.length - 1]?.reps || 0
     };
     setCurrentSets([...currentSets, newSet]);
   };
 
-  const updateSet = (index: number, field: keyof WorkoutSet, value: number | boolean) => {
+  const updateSet = (index: number, field: keyof WorkoutSet, value: number) => {
     const updatedSets = [...currentSets];
     updatedSets[index] = { ...updatedSets[index], [field]: value };
     setCurrentSets(updatedSets);
@@ -107,7 +106,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
                       総ボリューム
                     </div>
                     <div className="text-surface-primary">
-                      {record.sets.reduce((total, set) => total + (set.completed ? set.weight * set.reps : 0), 0).toLocaleString()}kg
+                      {record.sets.reduce((total, set) => total + (set.weight * set.reps), 0).toLocaleString()}kg
                     </div>
                   </div>
                   <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
@@ -115,7 +114,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
                       1RM
                     </div>
                     <div className="text-surface-primary">
-                      {Math.max(...record.sets.filter(set => set.completed && set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30)))).toLocaleString()}kg
+                      {record.sets.filter(set => set.reps > 0).length > 0 ? Math.max(...record.sets.filter(set => set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30)))).toLocaleString() : '0'}kg
                     </div>
                   </div>
                   <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
@@ -123,7 +122,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
                       5RM
                     </div>
                     <div className="text-surface-primary">
-                      {Math.max(...record.sets.filter(set => set.completed && set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30) * 0.87))).toLocaleString()}kg
+                      {record.sets.filter(set => set.reps > 0).length > 0 ? Math.max(...record.sets.filter(set => set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30) * 0.87))).toLocaleString() : '0'}kg
                     </div>
                   </div>
                 </div>

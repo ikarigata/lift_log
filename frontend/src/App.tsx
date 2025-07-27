@@ -89,7 +89,6 @@ const AppContent = () => {
         const newWorkoutData = {
           date: today,
           name: '',
-          isCompleted: false,
         };
         const newWorkout = await addWorkoutDay(newWorkoutData);
         setWorkoutDays([newWorkout, ...workoutDays]);
