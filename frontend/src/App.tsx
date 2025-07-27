@@ -13,25 +13,27 @@ import { getWorkoutDays, addWorkoutDay } from './api/workouts';
 import { getExercises, addExercise, deleteExercise, getWorkoutRecords, saveWorkoutRecord } from './api/exercises';
 import { isAuthenticated, removeToken } from './utils/auth';
 
+import TitleBar from './components/TitleBar';
+
 // レイアウトコンポーネント（ボトムナビゲーション付き）
 const Layout = ({ children, onAddWorkout, onLogout }: { children: React.ReactNode, onAddWorkout: () => void, onLogout: () => void }) => {
   const location = useLocation();
   const showBottomNav = location.pathname !== '/login';
 
+  const getTitle = () => {
+    const path = location.pathname;
+    if (path === '/') return 'History';
+    if (path.startsWith('/workout/')) return 'Workout Detail';
+    if (path.endsWith('/exercises')) return 'Exercise List';
+    if (path.includes('/exercise/')) return 'Exercise Input';
+    if (path === '/calendar') return 'Calendar';
+    if (path === '/exercises') return 'Exercise Management';
+    return 'lift_log';
+  };
+
   return (
-    <div className="min-h-screen flex flex-col w-full overflow-x-hidden">
-      {/* ヘッダー（ログアウトボタン） */}
-      {showBottomNav && (
-        <div className="bg-surface-secondary p-4 flex justify-between items-center">
-          <h1 className="text-lg font-bold text-content-primary">lift_log</h1>
-          <button
-            onClick={onLogout}
-            className="px-3 py-1 bg-interactive-secondary text-content-secondary text-sm rounded hover:bg-interactive-secondary/80"
-          >
-            ログアウト
-          </button>
-        </div>
-      )}
+    <div className="min-h-screen flex flex-col w-full overflow-x-hidden px-2 py-4 space-y-[10px] bg-surface-primary">
+      {showBottomNav && <TitleBar title={getTitle()} onLogout={onLogout} />}
       
       <div 
         className={`flex-1 w-full ${showBottomNav ? 'pb-10' : ''}`}
