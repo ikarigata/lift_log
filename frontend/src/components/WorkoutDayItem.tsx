@@ -33,9 +33,7 @@ const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, workoutReco
     
     dayRecords.forEach(record => {
       record.sets.forEach(set => {
-        if (set.completed) {
-          totalVolume += set.weight * set.reps;
-        }
+        totalVolume += set.weight * set.reps;
       });
     });
     
@@ -86,8 +84,7 @@ const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, workoutReco
           )}
         </div>
       </div>
-      <div className="flex items-center space-x-[10px] ml-4">
-        <div className={`w-3 h-3 rounded-full ${workoutDay.isCompleted ? 'bg-green-500' : 'bg-gray-500'}`} />
+      <div className="flex items-center ml-4">
         <div className="text-content-secondary font-dotgothic text-2xl">
           ›
         </div>

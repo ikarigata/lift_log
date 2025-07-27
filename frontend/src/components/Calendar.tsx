@@ -80,9 +80,7 @@ const Calendar: React.FC<CalendarProps> = ({ onBack, onSelectDate }) => {
         >
           <span>{day}</span>
           {hasWorkout && (
-            <div className={`w-1.5 h-1.5 rounded-full mt-0.5 ${
-              workout.isCompleted ? 'bg-green-400' : 'bg-yellow-400'
-            }`} />
+            <div className="w-1.5 h-1.5 rounded-full mt-0.5 bg-green-400" />
           )}
         </button>
       );
@@ -149,11 +147,7 @@ const Calendar: React.FC<CalendarProps> = ({ onBack, onSelectDate }) => {
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-400 rounded-full" />
-              <span className="text-content-secondary font-dotgothic text-sm opacity-80">完了</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-yellow-400 rounded-full" />
-              <span className="text-content-secondary font-dotgothic text-sm opacity-80">未完了</span>
+              <span className="text-content-secondary font-dotgothic text-sm opacity-80">トレーニング実施</span>
             </div>
           </div>
         </div>

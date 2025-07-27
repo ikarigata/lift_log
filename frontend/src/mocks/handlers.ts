@@ -6,7 +6,6 @@ const workoutDays: WorkoutDay[] = [
     id: '1',
     date: '2025-07-26',
     name: '胸・肩の日',
-    isCompleted: true,
     createdAt: '2025-07-26T10:00:00Z',
     updatedAt: '2025-07-26T12:30:00Z'
   },
@@ -14,7 +13,6 @@ const workoutDays: WorkoutDay[] = [
     id: '2',
     date: '2025-07-23',
     name: '背中・腕の日',
-    isCompleted: true,
     createdAt: '2025-07-23T09:00:00Z',
     updatedAt: '2025-07-23T11:15:00Z'
   },
@@ -22,7 +20,6 @@ const workoutDays: WorkoutDay[] = [
     id: '3',
     date: '2025-07-20',
     name: '脚の日',
-    isCompleted: false,
     createdAt: '2025-07-20T08:30:00Z',
     updatedAt: '2025-07-20T08:30:00Z'
   },
@@ -30,7 +27,6 @@ const workoutDays: WorkoutDay[] = [
     id: '4',
     date: '2025-07-17',
     name: '胸・腕の日',
-    isCompleted: true,
     createdAt: '2025-07-17T10:00:00Z',
     updatedAt: '2025-07-17T11:30:00Z'
   },
@@ -38,7 +34,6 @@ const workoutDays: WorkoutDay[] = [
     id: '5',
     date: '2025-07-14',
     name: '背中・肩の日',
-    isCompleted: true,
     createdAt: '2025-07-14T09:00:00Z',
     updatedAt: '2025-07-14T10:45:00Z'
   },
@@ -46,7 +41,6 @@ const workoutDays: WorkoutDay[] = [
     id: '6',
     date: '2025-07-11',
     name: '脚・腹筋の日',
-    isCompleted: true,
     createdAt: '2025-07-11T08:00:00Z',
     updatedAt: '2025-07-11T09:30:00Z'
   },
@@ -54,7 +48,6 @@ const workoutDays: WorkoutDay[] = [
     id: '7',
     date: '2025-07-08',
     name: '胸・三頭の日',
-    isCompleted: true,
     createdAt: '2025-07-08T10:00:00Z',
     updatedAt: '2025-07-08T11:30:00Z'
   },
@@ -62,7 +55,6 @@ const workoutDays: WorkoutDay[] = [
     id: '8',
     date: '2025-07-05',
     name: '背中・二頭の日',
-    isCompleted: true,
     createdAt: '2025-07-05T09:00:00Z',
     updatedAt: '2025-07-05T10:45:00Z'
   },
@@ -70,7 +62,6 @@ const workoutDays: WorkoutDay[] = [
     id: '9',
     date: '2025-07-02',
     name: '脚・肩の日',
-    isCompleted: true,
     createdAt: '2025-07-02T08:00:00Z',
     updatedAt: '2025-07-02T09:30:00Z'
   },
@@ -78,7 +69,6 @@ const workoutDays: WorkoutDay[] = [
     id: '10',
     date: '2025-06-29',
     name: '胸・腹筋の日',
-    isCompleted: true,
     createdAt: '2025-06-29T10:00:00Z',
     updatedAt: '2025-06-29T11:30:00Z'
   },
@@ -86,7 +76,6 @@ const workoutDays: WorkoutDay[] = [
     id: '11',
     date: '2025-06-26',
     name: '背中・腕の日',
-    isCompleted: true,
     createdAt: '2025-06-26T09:00:00Z',
     updatedAt: '2025-06-26T10:45:00Z'
   },
@@ -94,7 +83,6 @@ const workoutDays: WorkoutDay[] = [
     id: '12',
     date: '2025-06-23',
     name: '脚・肩の日',
-    isCompleted: true,
     createdAt: '2025-06-23T08:00:00Z',
     updatedAt: '2025-06-23T09:30:00Z'
   },
@@ -102,7 +90,6 @@ const workoutDays: WorkoutDay[] = [
     id: '13',
     date: '2025-06-20',
     name: '胸・三頭の日',
-    isCompleted: true,
     createdAt: '2025-06-20T10:00:00Z',
     updatedAt: '2025-06-20T11:30:00Z'
   },
@@ -110,7 +97,6 @@ const workoutDays: WorkoutDay[] = [
     id: '14',
     date: '2025-06-17',
     name: '背中・二頭の日',
-    isCompleted: true,
     createdAt: '2025-06-17T09:00:00Z',
     updatedAt: '2025-06-17T10:45:00Z'
   },
@@ -118,7 +104,6 @@ const workoutDays: WorkoutDay[] = [
     id: '15',
     date: '2025-06-14',
     name: '脚・腹筋の日',
-    isCompleted: true,
     createdAt: '2025-06-14T08:00:00Z',
     updatedAt: '2025-06-14T09:30:00Z'
   },
@@ -126,7 +111,6 @@ const workoutDays: WorkoutDay[] = [
     id: '16',
     date: '2025-06-11',
     name: '胸・肩の日',
-    isCompleted: true,
     createdAt: '2025-06-11T10:00:00Z',
     updatedAt: '2025-06-11T11:30:00Z'
   },
@@ -134,7 +118,6 @@ const workoutDays: WorkoutDay[] = [
     id: '17',
     date: '2025-06-08',
     name: '背中・腕の日',
-    isCompleted: true,
     createdAt: '2025-06-08T09:00:00Z',
     updatedAt: '2025-06-08T10:45:00Z'
   },
@@ -142,7 +125,6 @@ const workoutDays: WorkoutDay[] = [
     id: '18',
     date: '2025-06-05',
     name: '脚・肩の日',
-    isCompleted: true,
     createdAt: '2025-06-05T08:00:00Z',
     updatedAt: '2025-06-05T09:30:00Z'
   },
@@ -150,7 +132,6 @@ const workoutDays: WorkoutDay[] = [
     id: '19',
     date: '2025-06-02',
     name: '胸・三頭の日',
-    isCompleted: true,
     createdAt: '2025-06-02T10:00:00Z',
     updatedAt: '2025-06-02T11:30:00Z'
   },
@@ -158,7 +139,6 @@ const workoutDays: WorkoutDay[] = [
     id: '20',
     date: '2025-05-30',
     name: '背中・二頭の日',
-    isCompleted: true,
     createdAt: '2025-05-30T09:00:00Z',
     updatedAt: '2025-05-30T10:45:00Z'
   },
@@ -166,7 +146,6 @@ const workoutDays: WorkoutDay[] = [
     id: '21',
     date: '2025-05-27',
     name: '脚・腹筋の日',
-    isCompleted: true,
     createdAt: '2025-05-27T08:00:00Z',
     updatedAt: '2025-05-27T09:30:00Z'
   },
@@ -174,7 +153,6 @@ const workoutDays: WorkoutDay[] = [
     id: '22',
     date: '2025-05-24',
     name: '胸・肩の日',
-    isCompleted: true,
     createdAt: '2025-05-24T10:00:00Z',
     updatedAt: '2025-05-24T11:30:00Z'
   },
@@ -182,7 +160,6 @@ const workoutDays: WorkoutDay[] = [
     id: '23',
     date: '2025-05-21',
     name: '背中・腕の日',
-    isCompleted: true,
     createdAt: '2025-05-21T09:00:00Z',
     updatedAt: '2025-05-21T10:45:00Z'
   },
@@ -190,7 +167,6 @@ const workoutDays: WorkoutDay[] = [
     id: '24',
     date: '2025-05-18',
     name: '脚・肩の日',
-    isCompleted: true,
     createdAt: '2025-05-18T08:00:00Z',
     updatedAt: '2025-05-18T09:30:00Z'
   },
@@ -198,7 +174,6 @@ const workoutDays: WorkoutDay[] = [
     id: '25',
     date: '2025-05-15',
     name: '胸・三頭の日',
-    isCompleted: true,
     createdAt: '2025-05-15T10:00:00Z',
     updatedAt: '2025-05-15T11:30:00Z'
   }
@@ -228,9 +203,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 85, reps: 8, completed: true },
-      { setNumber: 2, weight: 85, reps: 6, completed: true },
-      { setNumber: 3, weight: 80, reps: 8, completed: true }
+      { setNumber: 1, weight: 85, reps: 8 },
+      { setNumber: 2, weight: 85, reps: 6 },
+      { setNumber: 3, weight: 80, reps: 8 }
     ],
     memo: '今日は調子が良く、重量を5kg上げることができた！',
     createdAt: '2025-07-26T10:00:00Z',
@@ -242,9 +217,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex2',
     exerciseName: 'ショルダープレス',
     sets: [
-      { setNumber: 1, weight: 42.5, reps: 10, completed: true },
-      { setNumber: 2, weight: 42.5, reps: 8, completed: true },
-      { setNumber: 3, weight: 40, reps: 12, completed: true }
+      { setNumber: 1, weight: 42.5, reps: 10 },
+      { setNumber: 2, weight: 42.5, reps: 8 },
+      { setNumber: 3, weight: 40, reps: 12 }
     ],
     createdAt: '2025-07-26T10:45:00Z',
     updatedAt: '2025-07-26T11:00:00Z'
@@ -256,9 +231,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 80, reps: 8, completed: true },
-      { setNumber: 2, weight: 80, reps: 6, completed: true },
-      { setNumber: 3, weight: 75, reps: 8, completed: true }
+      { setNumber: 1, weight: 80, reps: 8 },
+      { setNumber: 2, weight: 80, reps: 6 },
+      { setNumber: 3, weight: 75, reps: 8 }
     ],
     memo: '胸の日だが肩も一緒にやった。少し疲れ気味。',
     createdAt: '2025-07-23T10:00:00Z',
@@ -270,9 +245,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex2',
     exerciseName: 'ショルダープレス',
     sets: [
-      { setNumber: 1, weight: 40, reps: 10, completed: true },
-      { setNumber: 2, weight: 40, reps: 8, completed: true },
-      { setNumber: 3, weight: 35, reps: 12, completed: true }
+      { setNumber: 1, weight: 40, reps: 10 },
+      { setNumber: 2, weight: 40, reps: 8 },
+      { setNumber: 3, weight: 35, reps: 12 }
     ],
     createdAt: '2025-07-23T10:45:00Z',
     updatedAt: '2025-07-23T11:00:00Z'
@@ -283,9 +258,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex3',
     exerciseName: 'デッドリフト',
     sets: [
-      { setNumber: 1, weight: 105, reps: 5, completed: true },
-      { setNumber: 2, weight: 105, reps: 5, completed: true },
-      { setNumber: 3, weight: 100, reps: 6, completed: true }
+      { setNumber: 1, weight: 105, reps: 5 },
+      { setNumber: 2, weight: 105, reps: 5 },
+      { setNumber: 3, weight: 100, reps: 6 }
     ],
     createdAt: '2025-07-23T09:00:00Z',
     updatedAt: '2025-07-23T09:30:00Z'
@@ -296,9 +271,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex9',
     exerciseName: 'バーベルカール',
     sets: [
-      { setNumber: 1, weight: 32.5, reps: 12, completed: true },
-      { setNumber: 2, weight: 32.5, reps: 10, completed: true },
-      { setNumber: 3, weight: 30, reps: 15, completed: true }
+      { setNumber: 1, weight: 32.5, reps: 12 },
+      { setNumber: 2, weight: 32.5, reps: 10 },
+      { setNumber: 3, weight: 30, reps: 15 }
     ],
     createdAt: '2025-07-23T09:30:00Z',
     updatedAt: '2025-07-23T10:00:00Z'
@@ -310,9 +285,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex4',
     exerciseName: 'スクワット',
     sets: [
-      { setNumber: 1, weight: 90, reps: 10, completed: false },
-      { setNumber: 2, weight: 85, reps: 12, completed: false },
-      { setNumber: 3, weight: 80, reps: 15, completed: false }
+      { setNumber: 1, weight: 90, reps: 10 },
+      { setNumber: 2, weight: 85, reps: 12 },
+      { setNumber: 3, weight: 80, reps: 15 }
     ],
     createdAt: '2025-07-20T08:30:00Z',
     updatedAt: '2025-07-20T08:30:00Z'
@@ -324,9 +299,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 77.5, reps: 8, completed: true },
-      { setNumber: 2, weight: 77.5, reps: 6, completed: true },
-      { setNumber: 3, weight: 75, reps: 8, completed: true }
+      { setNumber: 1, weight: 77.5, reps: 8 },
+      { setNumber: 2, weight: 77.5, reps: 6 },
+      { setNumber: 3, weight: 75, reps: 8 }
     ],
     createdAt: '2025-07-17T10:00:00Z',
     updatedAt: '2025-07-17T10:30:00Z'
@@ -337,9 +312,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex10',
     exerciseName: 'トライセップスプレス',
     sets: [
-      { setNumber: 1, weight: 27.5, reps: 12, completed: true },
-      { setNumber: 2, weight: 27.5, reps: 10, completed: true },
-      { setNumber: 3, weight: 25, reps: 15, completed: true }
+      { setNumber: 1, weight: 27.5, reps: 12 },
+      { setNumber: 2, weight: 27.5, reps: 10 },
+      { setNumber: 3, weight: 25, reps: 15 }
     ],
     createdAt: '2025-07-17T10:45:00Z',
     updatedAt: '2025-07-17T11:00:00Z'
@@ -351,9 +326,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 75, reps: 10, completed: true },
-      { setNumber: 2, weight: 75, reps: 8, completed: true },
-      { setNumber: 3, weight: 70, reps: 10, completed: true }
+      { setNumber: 1, weight: 75, reps: 10 },
+      { setNumber: 2, weight: 75, reps: 8 },
+      { setNumber: 3, weight: 70, reps: 10 }
     ],
     createdAt: '2025-07-14T10:00:00Z',
     updatedAt: '2025-07-14T10:30:00Z'
@@ -364,9 +339,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex7',
     exerciseName: 'プルアップ',
     sets: [
-      { setNumber: 1, weight: 0, reps: 8, completed: true },
-      { setNumber: 2, weight: 0, reps: 6, completed: true },
-      { setNumber: 3, weight: 0, reps: 5, completed: true }
+      { setNumber: 1, weight: 0, reps: 8 },
+      { setNumber: 2, weight: 0, reps: 6 },
+      { setNumber: 3, weight: 0, reps: 5 }
     ],
     createdAt: '2025-07-14T09:00:00Z',
     updatedAt: '2025-07-14T09:30:00Z'
@@ -377,9 +352,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex6',
     exerciseName: 'ラテラルレイズ',
     sets: [
-      { setNumber: 1, weight: 10, reps: 15, completed: true },
-      { setNumber: 2, weight: 10, reps: 12, completed: true },
-      { setNumber: 3, weight: 8, reps: 18, completed: true }
+      { setNumber: 1, weight: 10, reps: 15 },
+      { setNumber: 2, weight: 10, reps: 12 },
+      { setNumber: 3, weight: 8, reps: 18 }
     ],
     createdAt: '2025-07-14T09:30:00Z',
     updatedAt: '2025-07-14T10:00:00Z'
@@ -391,9 +366,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex8',
     exerciseName: 'レッグプレス',
     sets: [
-      { setNumber: 1, weight: 120, reps: 12, completed: true },
-      { setNumber: 2, weight: 120, reps: 10, completed: true },
-      { setNumber: 3, weight: 100, reps: 15, completed: true }
+      { setNumber: 1, weight: 120, reps: 12 },
+      { setNumber: 2, weight: 120, reps: 10 },
+      { setNumber: 3, weight: 100, reps: 15 }
     ],
     createdAt: '2025-07-11T08:00:00Z',
     updatedAt: '2025-07-11T08:30:00Z'
