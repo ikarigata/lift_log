@@ -221,10 +221,37 @@ const exercises: Exercise[] = [
 ];
 
 const workoutRecords: WorkoutRecord[] = [
-  // 2025年7月23日 - 胸・肩の日
+  // 2025年7月26日 - 胸・肩の日 (最新)
   {
     id: '1',
     workoutDayId: '1',
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 85, reps: 8, completed: true },
+      { setNumber: 2, weight: 85, reps: 6, completed: true },
+      { setNumber: 3, weight: 80, reps: 8, completed: true }
+    ],
+    createdAt: '2025-07-26T10:00:00Z',
+    updatedAt: '2025-07-26T10:30:00Z'
+  },
+  {
+    id: '2',
+    workoutDayId: '1',
+    exerciseId: 'ex2',
+    exerciseName: 'ショルダープレス',
+    sets: [
+      { setNumber: 1, weight: 42.5, reps: 10, completed: true },
+      { setNumber: 2, weight: 42.5, reps: 8, completed: true },
+      { setNumber: 3, weight: 40, reps: 12, completed: true }
+    ],
+    createdAt: '2025-07-26T10:45:00Z',
+    updatedAt: '2025-07-26T11:00:00Z'
+  },
+  // 2025年7月23日 - 背中・腕の日
+  {
+    id: '3',
+    workoutDayId: '2',
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
@@ -236,8 +263,8 @@ const workoutRecords: WorkoutRecord[] = [
     updatedAt: '2025-07-23T10:30:00Z'
   },
   {
-    id: '2',
-    workoutDayId: '1',
+    id: '4',
+    workoutDayId: '2',
     exerciseId: 'ex2',
     exerciseName: 'ショルダープレス',
     sets: [
@@ -248,36 +275,35 @@ const workoutRecords: WorkoutRecord[] = [
     createdAt: '2025-07-23T10:45:00Z',
     updatedAt: '2025-07-23T11:00:00Z'
   },
-  // 2025年7月19日 - 背中・腕の日
   {
-    id: '3',
+    id: '5',
     workoutDayId: '2',
     exerciseId: 'ex3',
     exerciseName: 'デッドリフト',
     sets: [
-      { setNumber: 1, weight: 100, reps: 5, completed: true },
-      { setNumber: 2, weight: 100, reps: 5, completed: true },
-      { setNumber: 3, weight: 95, reps: 6, completed: true }
+      { setNumber: 1, weight: 105, reps: 5, completed: true },
+      { setNumber: 2, weight: 105, reps: 5, completed: true },
+      { setNumber: 3, weight: 100, reps: 6, completed: true }
     ],
-    createdAt: '2025-07-19T09:00:00Z',
-    updatedAt: '2025-07-19T09:30:00Z'
+    createdAt: '2025-07-23T09:00:00Z',
+    updatedAt: '2025-07-23T09:30:00Z'
   },
   {
-    id: '4',
+    id: '6',
     workoutDayId: '2',
     exerciseId: 'ex9',
     exerciseName: 'バーベルカール',
     sets: [
-      { setNumber: 1, weight: 30, reps: 12, completed: true },
-      { setNumber: 2, weight: 30, reps: 10, completed: true },
-      { setNumber: 3, weight: 25, reps: 15, completed: true }
+      { setNumber: 1, weight: 32.5, reps: 12, completed: true },
+      { setNumber: 2, weight: 32.5, reps: 10, completed: true },
+      { setNumber: 3, weight: 30, reps: 15, completed: true }
     ],
-    createdAt: '2025-07-19T09:30:00Z',
-    updatedAt: '2025-07-19T10:00:00Z'
+    createdAt: '2025-07-23T09:30:00Z',
+    updatedAt: '2025-07-23T10:00:00Z'
   },
-  // 2025年7月15日 - 脚の日
+  // 2025年7月20日 - 脚の日
   {
-    id: '5',
+    id: '7',
     workoutDayId: '3',
     exerciseId: 'ex4',
     exerciseName: 'スクワット',
@@ -286,13 +312,40 @@ const workoutRecords: WorkoutRecord[] = [
       { setNumber: 2, weight: 85, reps: 12, completed: false },
       { setNumber: 3, weight: 80, reps: 15, completed: false }
     ],
-    createdAt: '2025-07-15T08:30:00Z',
-    updatedAt: '2025-07-15T08:30:00Z'
+    createdAt: '2025-07-20T08:30:00Z',
+    updatedAt: '2025-07-20T08:30:00Z'
   },
-  // 2025年7月11日 - 胸・腕の日
+  // 2025年7月17日 - 胸・腕の日  
   {
-    id: '6',
+    id: '8',
     workoutDayId: '4',
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 77.5, reps: 8, completed: true },
+      { setNumber: 2, weight: 77.5, reps: 6, completed: true },
+      { setNumber: 3, weight: 75, reps: 8, completed: true }
+    ],
+    createdAt: '2025-07-17T10:00:00Z',
+    updatedAt: '2025-07-17T10:30:00Z'
+  },
+  {
+    id: '10',
+    workoutDayId: '4',
+    exerciseId: 'ex10',
+    exerciseName: 'トライセップスプレス',
+    sets: [
+      { setNumber: 1, weight: 27.5, reps: 12, completed: true },
+      { setNumber: 2, weight: 27.5, reps: 10, completed: true },
+      { setNumber: 3, weight: 25, reps: 15, completed: true }
+    ],
+    createdAt: '2025-07-17T10:45:00Z',
+    updatedAt: '2025-07-17T11:00:00Z'
+  },
+  // 2025年7月14日 - 背中・肩の日
+  {
+    id: '11',
+    workoutDayId: '5',
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
@@ -300,25 +353,11 @@ const workoutRecords: WorkoutRecord[] = [
       { setNumber: 2, weight: 75, reps: 8, completed: true },
       { setNumber: 3, weight: 70, reps: 10, completed: true }
     ],
-    createdAt: '2025-07-11T10:00:00Z',
-    updatedAt: '2025-07-11T10:30:00Z'
+    createdAt: '2025-07-14T10:00:00Z',
+    updatedAt: '2025-07-14T10:30:00Z'
   },
   {
-    id: '7',
-    workoutDayId: '4',
-    exerciseId: 'ex10',
-    exerciseName: 'トライセップスプレス',
-    sets: [
-      { setNumber: 1, weight: 25, reps: 12, completed: true },
-      { setNumber: 2, weight: 25, reps: 10, completed: true },
-      { setNumber: 3, weight: 20, reps: 15, completed: true }
-    ],
-    createdAt: '2025-07-11T10:45:00Z',
-    updatedAt: '2025-07-11T11:00:00Z'
-  },
-  // 2025年7月7日 - 背中・肩の日
-  {
-    id: '8',
+    id: '12',
     workoutDayId: '5',
     exerciseId: 'ex7',
     exerciseName: 'プルアップ',
@@ -327,11 +366,11 @@ const workoutRecords: WorkoutRecord[] = [
       { setNumber: 2, weight: 0, reps: 6, completed: true },
       { setNumber: 3, weight: 0, reps: 5, completed: true }
     ],
-    createdAt: '2025-07-07T09:00:00Z',
-    updatedAt: '2025-07-07T09:30:00Z'
+    createdAt: '2025-07-14T09:00:00Z',
+    updatedAt: '2025-07-14T09:30:00Z'
   },
   {
-    id: '9',
+    id: '13',
     workoutDayId: '5',
     exerciseId: 'ex6',
     exerciseName: 'ラテラルレイズ',
@@ -340,12 +379,12 @@ const workoutRecords: WorkoutRecord[] = [
       { setNumber: 2, weight: 10, reps: 12, completed: true },
       { setNumber: 3, weight: 8, reps: 18, completed: true }
     ],
-    createdAt: '2025-07-07T09:30:00Z',
-    updatedAt: '2025-07-07T10:00:00Z'
+    createdAt: '2025-07-14T09:30:00Z',
+    updatedAt: '2025-07-14T10:00:00Z'
   },
-  // 2025年7月3日 - 脚・腹筋の日
+  // 2025年7月11日 - 脚・腹筋の日
   {
-    id: '10',
+    id: '14',
     workoutDayId: '6',
     exerciseId: 'ex8',
     exerciseName: 'レッグプレス',
@@ -354,8 +393,8 @@ const workoutRecords: WorkoutRecord[] = [
       { setNumber: 2, weight: 120, reps: 10, completed: true },
       { setNumber: 3, weight: 100, reps: 15, completed: true }
     ],
-    createdAt: '2025-07-03T08:00:00Z',
-    updatedAt: '2025-07-03T08:30:00Z'
+    createdAt: '2025-07-11T08:00:00Z',
+    updatedAt: '2025-07-11T08:30:00Z'
   }
 ];
 

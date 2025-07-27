@@ -72,6 +72,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
           </div>
           {previousRecords
             .filter(record => record.id !== currentRecord?.id)
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .slice(0, 2)
             .reverse()
             .map((record, recordIndex) => (
@@ -121,47 +122,42 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
           {currentSets.map((set, index) => (
             <div
               key={index}
-              className="flex items-center space-x-[10px] bg-surface-container rounded-[10px] p-[10px] mb-[10px]"
+              className="flex items-center justify-between bg-surface-container rounded-[10px] p-[10px] mb-[10px]"
             >
-              <span className="text-content-secondary font-dotgothic text-sm w-[80px] flex-shrink-0">
-                {set.setNumber}セット目
-              </span>
-              
-              <div className="flex items-center space-x-[5px]">
-                <input
-                  type="number"
-                  value={set.weight || ''}
-                  onChange={(e) => updateSet(index, 'weight', parseFloat(e.target.value) || 0)}
-                  placeholder="重量"
-                  className="w-[60px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[5px] py-[2px] text-center border border-gray-400"
-                />
-                <span className="text-content-secondary font-dotgothic text-sm">kg</span>
+              <div className="flex items-center space-x-[10px]">
+                <span className="text-content-secondary font-dotgothic text-sm w-[80px] flex-shrink-0">
+                  {set.setNumber}セット目
+                </span>
+                
+                <div className="flex items-center space-x-[5px]">
+                  <input
+                    type="number"
+                    value={set.weight || ''}
+                    onChange={(e) => updateSet(index, 'weight', parseFloat(e.target.value) || 0)}
+                    placeholder="重量"
+                    className="w-[72px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[5px] py-[2px] text-center border border-gray-400"
+                  />
+                  <span className="text-content-secondary font-dotgothic text-sm">kg</span>
+                </div>
+
+                <span className="text-content-secondary font-dotgothic text-sm">×</span>
+
+                <div className="flex items-center space-x-[5px]">
+                  <input
+                    type="number"
+                    value={set.reps || ''}
+                    onChange={(e) => updateSet(index, 'reps', parseInt(e.target.value) || 0)}
+                    placeholder="回数"
+                    className="w-[60px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[5px] py-[2px] text-center border border-gray-400"
+                  />
+                  <span className="text-content-secondary font-dotgothic text-sm">回</span>
+                </div>
               </div>
-
-              <span className="text-content-secondary font-dotgothic text-sm">×</span>
-
-              <div className="flex items-center space-x-[5px]">
-                <input
-                  type="number"
-                  value={set.reps || ''}
-                  onChange={(e) => updateSet(index, 'reps', parseInt(e.target.value) || 0)}
-                  placeholder="回数"
-                  className="w-[50px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[5px] py-[2px] text-center border border-gray-400"
-                />
-                <span className="text-content-secondary font-dotgothic text-sm">回</span>
-              </div>
-
-              <button
-                onClick={() => updateSet(index, 'completed', !set.completed)}
-                className={`w-4 h-4 rounded-full transition-colors ${
-                  set.completed ? 'bg-green-500' : 'bg-gray-500'
-                }`}
-              />
 
               {currentSets.length > 1 && (
                 <button
                   onClick={() => removeSet(index)}
-                  className="text-red-500 font-dotgothic text-sm hover:opacity-70 transition-opacity ml-[5px]"
+                  className="text-red-500 font-dotgothic text-sm hover:opacity-70 transition-opacity"
                 >
                   ×
                 </button>
