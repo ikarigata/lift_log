@@ -31,6 +31,7 @@ public class JdbcExerciseRepository implements ExerciseRepository {
                     record.get(EXERCISES.USER_ID),
                     record.get(EXERCISES.NAME),
                     record.get(EXERCISES.DESCRIPTION),
+                    record.get(EXERCISES.MUSCLE_GROUP_ID),
                     record.get(EXERCISES.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
                 ));
     }
@@ -45,6 +46,7 @@ public class JdbcExerciseRepository implements ExerciseRepository {
                     record.get(EXERCISES.USER_ID),
                     record.get(EXERCISES.NAME),
                     record.get(EXERCISES.DESCRIPTION),
+                    record.get(EXERCISES.MUSCLE_GROUP_ID),
                     record.get(EXERCISES.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
                 ));
     }
@@ -59,10 +61,11 @@ public class JdbcExerciseRepository implements ExerciseRepository {
                 .set(EXERCISES.USER_ID, exercise.getUserId())
                 .set(EXERCISES.NAME, exercise.getName())
                 .set(EXERCISES.DESCRIPTION, exercise.getDescription())
+                .set(EXERCISES.MUSCLE_GROUP_ID, exercise.getMuscleGroupId())
                 .set(EXERCISES.CREATED_AT, now.toOffsetDateTime())
                 .execute();
 
-        return new Exercise(id, exercise.getUserId(), exercise.getName(), exercise.getDescription(), now);
+        return new Exercise(id, exercise.getUserId(), exercise.getName(), exercise.getDescription(), exercise.getMuscleGroupId(), now);
     }
 
     @Override
@@ -71,6 +74,7 @@ public class JdbcExerciseRepository implements ExerciseRepository {
                 .set(EXERCISES.USER_ID, exercise.getUserId())
                 .set(EXERCISES.NAME, exercise.getName())
                 .set(EXERCISES.DESCRIPTION, exercise.getDescription())
+                .set(EXERCISES.MUSCLE_GROUP_ID, exercise.getMuscleGroupId())
                 .where(EXERCISES.ID.eq(id))
                 .execute();
         

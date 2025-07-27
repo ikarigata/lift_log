@@ -11,18 +11,32 @@ import BottomNavigation from './components/BottomNavigation';
 import type { WorkoutDay, WorkoutRecord, Exercise, WorkoutSet } from './types';
 import { getWorkoutDays, addWorkoutDay } from './api/workouts';
 import { getExercises, addExercise, deleteExercise, getWorkoutRecords, saveWorkoutRecord } from './api/exercises';
+import { isAuthenticated, removeToken } from './utils/auth';
 
 // レイアウトコンポーネント（ボトムナビゲーション付き）
-const Layout = ({ children, onAddWorkout }: { children: React.ReactNode, onAddWorkout: () => void }) => {
+const Layout = ({ children, onAddWorkout, onLogout }: { children: React.ReactNode, onAddWorkout: () => void, onLogout: () => void }) => {
   const location = useLocation();
   const showBottomNav = location.pathname !== '/login';
 
   return (
     <div className="min-h-screen flex flex-col w-full overflow-x-hidden">
+      {/* ヘッダー（ログアウトボタン） */}
+      {showBottomNav && (
+        <div className="bg-surface-secondary p-4 flex justify-between items-center">
+          <h1 className="text-lg font-bold text-content-primary">lift_log</h1>
+          <button
+            onClick={onLogout}
+            className="px-3 py-1 bg-interactive-secondary text-content-secondary text-sm rounded hover:bg-interactive-secondary/80"
+          >
+            ログアウト
+          </button>
+        </div>
+      )}
+      
       <div 
         className={`flex-1 w-full ${showBottomNav ? 'pb-10' : ''}`}
         style={{ 
-          minHeight: showBottomNav ? 'calc(100vh - 2.5rem)' : '100vh',
+          minHeight: showBottomNav ? 'calc(100vh - 5rem)' : '100vh',
           WebkitOverflowScrolling: 'touch' // iOSでのスムーススクロール
         }}
       >
@@ -34,8 +48,8 @@ const Layout = ({ children, onAddWorkout }: { children: React.ReactNode, onAddWo
 };
 
 // 認証状態をチェックするコンポーネント
-const PrivateRoute = ({ element, isAuthenticated }: { element: React.ReactElement, isAuthenticated: boolean }) => {
-  return isAuthenticated ? element : <Navigate to="/login" />;
+const PrivateRoute = ({ element, isAuthenticatedState }: { element: React.ReactElement, isAuthenticatedState: boolean }) => {
+  return isAuthenticatedState ? element : <Navigate to="/login" />;
 };
 
 // ナビゲーション機能を持つコンポーネント
@@ -44,19 +58,16 @@ const AppContent = () => {
   const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [workoutRecords, setWorkoutRecords] = useState<WorkoutRecord[]>([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // 認証状態を管理
+  const [isAuthenticatedState, setIsAuthenticatedState] = useState(false); // 認証状態を管理
 
-  // 認証チェックのロジック（例：トークンをローカルストレージで確認）
+  // 認証チェックのロジック（JWTトークンの有効性を確認）
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      setIsAuthenticated(true);
-    }
+    setIsAuthenticatedState(isAuthenticated());
   }, []);
 
 
   useEffect(() => {
-    if (!isAuthenticated) return; // 認証されていない場合はデータをフェッチしない
+    if (!isAuthenticatedState) return; // 認証されていない場合はデータをフェッチしない
     const fetchData = async () => {
       try {
         const [days, exs, records] = await Promise.all([
@@ -69,10 +80,14 @@ const AppContent = () => {
         setWorkoutRecords(records);
       } catch (error) {
         console.error("Failed to fetch initial data", error);
+        // 認証エラーの場合はログアウト
+        if (error instanceof Error && error.message.includes('Unauthorized')) {
+          handleLogout();
+        }
       }
     };
     fetchData();
-  }, [isAuthenticated]);
+  }, [isAuthenticatedState]);
 
   const handleAddWorkout = async () => {
     try {
@@ -146,19 +161,28 @@ const AppContent = () => {
 
   // ログイン成功時に呼び出される関数
   const handleLoginSuccess = () => {
-    setIsAuthenticated(true);
-    localStorage.setItem('authToken', 'dummy_token'); // ダミーのトークンを保存
+    setIsAuthenticatedState(true);
+  };
+
+  // ログアウト時に呼び出される関数
+  const handleLogout = () => {
+    removeToken();
+    setIsAuthenticatedState(false);
+    setWorkoutDays([]);
+    setExercises([]);
+    setWorkoutRecords([]);
+    navigate('/login');
   };
 
   return (
-    <Layout onAddWorkout={handleAddWorkout}>
+    <Layout onAddWorkout={handleAddWorkout} onLogout={handleLogout}>
       <Routes>
         <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
         <Route
           path="/"
           element={
             <PrivateRoute
-              isAuthenticated={isAuthenticated}
+              isAuthenticatedState={isAuthenticatedState}
               element={
                 <HomePage
                   workoutDays={workoutDays}
@@ -173,7 +197,7 @@ const AppContent = () => {
           path="/workout/:workoutId"
           element={
             <PrivateRoute
-              isAuthenticated={isAuthenticated}
+              isAuthenticatedState={isAuthenticatedState}
               element={
                 <WorkoutDetailPage
                   workoutDays={workoutDays}
@@ -187,7 +211,7 @@ const AppContent = () => {
           path="/workout/:workoutId/exercises"
           element={
             <PrivateRoute
-              isAuthenticated={isAuthenticated}
+              isAuthenticatedState={isAuthenticatedState}
               element={
                 <ExerciseListPage
                   exercises={exercises}
@@ -200,7 +224,7 @@ const AppContent = () => {
           path="/workout/:workoutId/exercise/:exerciseId"
           element={
             <PrivateRoute
-              isAuthenticated={isAuthenticated}
+              isAuthenticatedState={isAuthenticatedState}
               element={
                 <ExerciseInputPage
                   exercises={exercises}
@@ -215,7 +239,7 @@ const AppContent = () => {
           path="/workout/:workoutId/exercise/:exerciseId/edit"
           element={
             <PrivateRoute
-              isAuthenticated={isAuthenticated}
+              isAuthenticatedState={isAuthenticatedState}
               element={
                 <ExerciseInputPage
                   exercises={exercises}
@@ -230,7 +254,7 @@ const AppContent = () => {
           path="/calendar"
           element={
             <PrivateRoute
-              isAuthenticated={isAuthenticated}
+              isAuthenticatedState={isAuthenticatedState}
               element={<CalendarPage />}
             />
           }
@@ -239,7 +263,7 @@ const AppContent = () => {
           path="/exercises"
           element={
             <PrivateRoute
-              isAuthenticated={isAuthenticated}
+              isAuthenticatedState={isAuthenticatedState}
               element={
                 <ExerciseManagementPage
                   exercises={exercises}

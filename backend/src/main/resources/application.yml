@@ -16,3 +16,8 @@ server:
   port: 8080
   servlet:
     context-path: /
+
+# JWT設定
+jwt:
+  secret: mySecretKey1234567890123456789012345678901234567890
+  expiration: 24
