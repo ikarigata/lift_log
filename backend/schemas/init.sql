@@ -57,6 +57,7 @@ CREATE TABLE public.workout_sets (
   id uuid DEFAULT gen_random_uuid() NOT NULL,
   workout_record_id uuid NOT NULL,
   reps integer NOT NULL,
+  sub_reps integer DEFAULT 0,
   weight numeric(10, 2) NOT NULL,
   volume <Virtual column>,
   created_at timestamp(6) WITH TIME ZONE DEFAULT now(),

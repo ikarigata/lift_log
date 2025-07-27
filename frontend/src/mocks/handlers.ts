@@ -203,8 +203,8 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 85, reps: 8 },
-      { setNumber: 2, weight: 85, reps: 6 },
+      { setNumber: 1, weight: 85, reps: 8, subReps: 2 },
+      { setNumber: 2, weight: 85, reps: 6, subReps: 1 },
       { setNumber: 3, weight: 80, reps: 8 }
     ],
     memo: '今日は調子が良く、重量を5kg上げることができた！',
@@ -217,9 +217,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex2',
     exerciseName: 'ショルダープレス',
     sets: [
-      { setNumber: 1, weight: 42.5, reps: 10 },
+      { setNumber: 1, weight: 42.5, reps: 10, subReps: 3 },
       { setNumber: 2, weight: 42.5, reps: 8 },
-      { setNumber: 3, weight: 40, reps: 12 }
+      { setNumber: 3, weight: 40, reps: 12, subReps: 2 }
     ],
     createdAt: '2025-07-26T10:45:00Z',
     updatedAt: '2025-07-26T11:00:00Z'
@@ -258,9 +258,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex3',
     exerciseName: 'デッドリフト',
     sets: [
-      { setNumber: 1, weight: 105, reps: 5 },
+      { setNumber: 1, weight: 105, reps: 5, subReps: 1 },
       { setNumber: 2, weight: 105, reps: 5 },
-      { setNumber: 3, weight: 100, reps: 6 }
+      { setNumber: 3, weight: 100, reps: 6, subReps: 2 }
     ],
     createdAt: '2025-07-23T09:00:00Z',
     updatedAt: '2025-07-23T09:30:00Z'
@@ -285,9 +285,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex4',
     exerciseName: 'スクワット',
     sets: [
-      { setNumber: 1, weight: 90, reps: 10 },
+      { setNumber: 1, weight: 90, reps: 10, subReps: 5 },
       { setNumber: 2, weight: 85, reps: 12 },
-      { setNumber: 3, weight: 80, reps: 15 }
+      { setNumber: 3, weight: 80, reps: 15, subReps: 3 }
     ],
     createdAt: '2025-07-20T08:30:00Z',
     updatedAt: '2025-07-20T08:30:00Z'
