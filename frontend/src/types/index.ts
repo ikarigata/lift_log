@@ -10,6 +10,7 @@ export interface WorkoutSet {
   setNumber: number;
   weight: number;
   reps: number;
+  subReps?: number; // RM計算には含めないがボリューム計算には含める追加レップ数
 }
 
 export interface WorkoutRecord {

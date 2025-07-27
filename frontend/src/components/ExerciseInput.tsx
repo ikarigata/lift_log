@@ -18,7 +18,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
 }) => {
   const [currentSets, setCurrentSets] = useState<WorkoutSet[]>(
     currentRecord ? currentRecord.sets : [
-      { setNumber: 1, weight: 0, reps: 0 }
+      { setNumber: 1, weight: 0, reps: 0, subReps: 0 }
     ]
   );
   const [memo, setMemo] = useState<string>(currentRecord?.memo || '');
@@ -27,7 +27,8 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
     const newSet: WorkoutSet = {
       setNumber: currentSets.length + 1,
       weight: currentSets[currentSets.length - 1]?.weight || 0,
-      reps: currentSets[currentSets.length - 1]?.reps || 0
+      reps: currentSets[currentSets.length - 1]?.reps || 0,
+      subReps: 0
     };
     setCurrentSets([...currentSets, newSet]);
   };
@@ -95,7 +96,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
                       {set.setNumber}セット目
                     </span>
                     <span className="text-content-secondary font-dotgothic text-sm opacity-80">
-                      {set.weight}kg <span className="text-content-secondary">×</span> {set.reps}回
+                      {set.weight}kg <span className="text-content-secondary">×</span> {set.reps}回{set.subReps ? ` (+${set.subReps})` : ''}
                     </span>
                   </div>
                 ))}
@@ -106,7 +107,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
                       総ボリューム
                     </div>
                     <div className="text-surface-primary">
-                      {record.sets.reduce((total, set) => total + (set.weight * set.reps), 0).toLocaleString()}kg
+                      {record.sets.reduce((total, set) => total + (set.weight * (set.reps + (set.subReps || 0))), 0).toLocaleString()}kg
                     </div>
                   </div>
                   <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
@@ -161,33 +162,42 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
               key={index}
               className="flex items-center justify-between bg-surface-container rounded-[10px] p-[10px] mb-[10px]"
             >
-              <div className="flex items-center space-x-[10px]">
-                <span className="text-content-secondary font-dotgothic text-sm w-[80px] flex-shrink-0">
+              <div className="flex items-center space-x-[6px]">
+                <span className="text-content-secondary font-dotgothic text-sm w-[64px] flex-shrink-0">
                   {set.setNumber}セット目
                 </span>
                 
-                <div className="flex items-center space-x-[5px]">
+                <div className="flex items-center space-x-[3px]">
                   <input
                     type="number"
                     value={set.weight || ''}
                     onChange={(e) => updateSet(index, 'weight', parseFloat(e.target.value) || 0)}
                     placeholder="重量"
-                    className="w-[72px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[5px] py-[2px] text-center border border-gray-400"
+                    className="w-[58px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[3px] py-[2px] text-center border border-gray-400"
                   />
                   <span className="text-content-secondary font-dotgothic text-sm">kg</span>
                 </div>
 
                 <span className="text-content-secondary font-dotgothic text-sm">×</span>
 
-                <div className="flex items-center space-x-[5px]">
+                <div className="flex items-center space-x-[2px]">
                   <input
                     type="number"
                     value={set.reps || ''}
                     onChange={(e) => updateSet(index, 'reps', parseInt(e.target.value) || 0)}
                     placeholder="回数"
-                    className="w-[60px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[5px] py-[2px] text-center border border-gray-400"
+                    className="w-[48px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[3px] py-[2px] text-center border border-gray-400"
                   />
                   <span className="text-content-secondary font-dotgothic text-sm">回</span>
+                  <span className="text-content-secondary font-dotgothic text-sm opacity-60">(</span>
+                  <input
+                    type="number"
+                    value={set.subReps || ''}
+                    onChange={(e) => updateSet(index, 'subReps', parseInt(e.target.value) || 0)}
+                    placeholder="0"
+                    className="w-[48px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[3px] py-[2px] text-center border border-gray-400 opacity-60"
+                  />
+                  <span className="text-content-secondary font-dotgothic text-sm opacity-60">回)</span>
                 </div>
               </div>
 
@@ -209,7 +219,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
               総ボリューム
             </div>
             <div className="text-surface-primary">
-              {currentSets.reduce((total, set) => total + (set.weight && set.reps ? set.weight * set.reps : 0), 0).toLocaleString()}kg
+              {currentSets.reduce((total, set) => total + (set.weight && (set.reps + (set.subReps || 0)) ? set.weight * (set.reps + (set.subReps || 0)) : 0), 0).toLocaleString()}kg
             </div>
           </div>
           <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
@@ -230,7 +240,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
           </div>
         </div>
         
-        <div className="bg-surface-secondary rounded-[10px] p-[10px] mt-[10px]">
+        <div className="bg-surface-secondary rounded-[10px] p-0 mt-[10px]">
           <div className="bg-surface-secondary text-interactive-primary rounded-[5px] px-[10px] py-[5px] mb-[10px]">
             <h3 className="text-interactive-primary font-dotgothic text-lg text-left">
               メモ
@@ -240,7 +250,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
             value={memo}
             onChange={(e) => setMemo(e.target.value)}
             placeholder="今日のトレーニングメモを入力..."
-            className="w-full bg-input-bg text-input-text font-dotgothic rounded-[5px] px-[10px] py-[10px] resize-none"
+            className="w-full bg-input-bg text-input-text font-dotgothic rounded-[5px] px-0 py-[10px] resize-none"
             rows={3}
           />
         </div>
