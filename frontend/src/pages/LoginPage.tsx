@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../api/config';
 
 interface LoginPageProps {
   onLoginSuccess: () => void;
@@ -15,7 +16,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     e.preventDefault();
     setError('');
     try {
-      const response = await fetch('/api/v1/login', {
+      const response = await fetch(`${BASE_URL}/v1/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

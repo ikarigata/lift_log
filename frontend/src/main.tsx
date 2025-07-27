@@ -4,9 +4,11 @@ import App from './App.tsx'
 import './index.css'
 
 async function enableMocking() {
-  // 'development'環境（`npm run dev`で起動した場合など）でのみモックを有効にする
-  if (process.env.NODE_ENV !== 'development') {
-    console.log('MSW: Not in development mode, skipping mock setup')
+  // 環境変数でMSWの使用を制御
+  const useMSW = import.meta.env.VITE_USE_MSW === 'true'
+  
+  if (!useMSW) {
+    console.log('MSW: Disabled by environment variable, using real API')
     return
   }
 
