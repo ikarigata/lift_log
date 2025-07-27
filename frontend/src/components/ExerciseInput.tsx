@@ -6,7 +6,7 @@ interface ExerciseInputProps {
   previousRecords: WorkoutRecord[];
   currentRecord?: WorkoutRecord | null;
   onBack: () => void;
-  onSave: (sets: WorkoutSet[]) => void;
+  onSave: (sets: WorkoutSet[], memo?: string) => void;
 }
 
 const ExerciseInput: React.FC<ExerciseInputProps> = ({ 
@@ -21,6 +21,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
       { setNumber: 1, weight: 0, reps: 0, completed: false }
     ]
   );
+  const [memo, setMemo] = useState<string>(currentRecord?.memo || '');
 
   const addSet = () => {
     const newSet: WorkoutSet = {
@@ -47,7 +48,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
   };
 
   const handleSave = () => {
-    onSave(currentSets);
+    onSave(currentSets, memo);
   };
 
   return (
@@ -82,7 +83,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
             >
               <div className="flex items-center justify-between mb-[5px]">
                 <div className="text-content-secondary opacity-60 font-dotgothic text-sm">
-                  {new Date(record.createdAt).toLocaleDateString('ja-JP')}
+                  {new Date(record.createdAt).toLocaleDateString('ja-JP')} ({new Date(record.createdAt).toLocaleDateString('ja-JP', { weekday: 'short' })})
                 </div>
                 <div className="text-content-secondary opacity-40 font-dotgothic text-xs">
                   {recordIndex === 0 ? '前々回' : '前回'}
@@ -99,6 +100,43 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
                     </span>
                   </div>
                 ))}
+                <hr className="border-content-secondary opacity-30 my-2" />
+                <div className="flex gap-1">
+                  <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
+                    <div className="text-surface-primary opacity-80 mb-0.5">
+                      総ボリューム
+                    </div>
+                    <div className="text-surface-primary">
+                      {record.sets.reduce((total, set) => total + (set.completed ? set.weight * set.reps : 0), 0).toLocaleString()}kg
+                    </div>
+                  </div>
+                  <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
+                    <div className="text-surface-primary opacity-80 mb-0.5">
+                      1RM
+                    </div>
+                    <div className="text-surface-primary">
+                      {Math.max(...record.sets.filter(set => set.completed && set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30)))).toLocaleString()}kg
+                    </div>
+                  </div>
+                  <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
+                    <div className="text-surface-primary opacity-80 mb-0.5">
+                      5RM
+                    </div>
+                    <div className="text-surface-primary">
+                      {Math.max(...record.sets.filter(set => set.completed && set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30) * 0.87))).toLocaleString()}kg
+                    </div>
+                  </div>
+                </div>
+                {record.memo && (
+                  <div className="mt-2 pt-2 border-t border-content-secondary border-opacity-20">
+                    <div className="text-content-secondary opacity-60 font-dotgothic text-xs mb-1">
+                      メモ
+                    </div>
+                    <div className="text-content-secondary opacity-80 font-dotgothic text-sm">
+                      {record.memo}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -157,13 +195,55 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
               {currentSets.length > 1 && (
                 <button
                   onClick={() => removeSet(index)}
-                  className="text-red-500 font-dotgothic text-sm hover:opacity-70 transition-opacity"
+                  className="text-interactive-primary font-dotgothic text-sm hover:opacity-70 transition-opacity"
                 >
                   ×
                 </button>
               )}
             </div>
           ))}
+        </div>
+        
+        <div className="flex gap-[10px] mt-[10px]">
+          <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
+            <div className="text-surface-primary opacity-80 mb-0.5">
+              総ボリューム
+            </div>
+            <div className="text-surface-primary">
+              {currentSets.reduce((total, set) => total + (set.weight && set.reps ? set.weight * set.reps : 0), 0).toLocaleString()}kg
+            </div>
+          </div>
+          <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
+            <div className="text-surface-primary opacity-80 mb-0.5">
+              1RM
+            </div>
+            <div className="text-surface-primary">
+              {currentSets.filter(set => set.weight > 0 && set.reps > 0).length > 0 ? Math.max(...currentSets.filter(set => set.weight > 0 && set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30)))).toLocaleString() : '0'}kg
+            </div>
+          </div>
+          <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
+            <div className="text-surface-primary opacity-80 mb-0.5">
+              5RM
+            </div>
+            <div className="text-surface-primary">
+              {currentSets.filter(set => set.weight > 0 && set.reps > 0).length > 0 ? Math.max(...currentSets.filter(set => set.weight > 0 && set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30) * 0.87))).toLocaleString() : '0'}kg
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-surface-secondary rounded-[10px] p-[10px] mt-[10px]">
+          <div className="bg-surface-secondary text-interactive-primary rounded-[5px] px-[10px] py-[5px] mb-[10px]">
+            <h3 className="text-interactive-primary font-dotgothic text-lg text-left">
+              メモ
+            </h3>
+          </div>
+          <textarea
+            value={memo}
+            onChange={(e) => setMemo(e.target.value)}
+            placeholder="今日のトレーニングメモを入力..."
+            className="w-full bg-input-bg text-input-text font-dotgothic rounded-[5px] px-[10px] py-[10px] resize-none"
+            rows={3}
+          />
         </div>
         
         <button 

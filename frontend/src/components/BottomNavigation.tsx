@@ -31,13 +31,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
     {
       id: 'exercises',
       path: '/exercises',
-      icon: '⚡',
-      type: 'navigation' as const,
-    },
-    {
-      id: 'more',
-      path: '/more',
-      icon: '⋯',
+      icon: '⚙',
       type: 'navigation' as const,
     },
   ];
@@ -58,22 +52,21 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-surface-secondary border-none z-50 w-full h-10">
+    <div className="fixed bottom-0 left-0 right-0 bg-interactive-primary border-none z-50 w-full h-10">
       <div className="grid grid-cols-5 items-center h-full w-full mx-auto relative">
         {navigationItems.map((item, index) => {
           const isActive = item.type === 'navigation' && isActivePath(item.path);
           const isAddButton = item.type === 'action' && item.id === 'add-workout';
           
           if (isAddButton) {
-            return <div key={item.id} className="col-start-3" />; // 真ん中のグリッド位置を確保
+            return null; // プラスボタンは別途レンダリング
           }
           
           // グリッドポジションを設定（プラスボタンの位置を除く）
           let colStart = '';
           if (index === 0) colStart = 'col-start-1';
           else if (index === 1) colStart = 'col-start-2';
-          else if (index === 3) colStart = 'col-start-4';
-          else if (index === 4) colStart = 'col-start-5';
+          else if (index === 3) colStart = 'col-start-5';
           
           return (
             <button
@@ -81,8 +74,8 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
               onClick={() => handleItemClick(item)}
               className={`flex items-center justify-center font-dotgothic transition-all border-none touch-manipulation h-full ${colStart} ${
                 isActive
-                  ? 'text-interactive-primary'
-                  : 'text-content-secondary hover:text-interactive-primary active:bg-surface-secondary/10 opacity-70 hover:opacity-100'
+                  ? 'text-surface-primary'
+                  : 'text-surface-primary hover:text-surface-primary active:bg-interactive-primary/10 opacity-70 hover:opacity-100'
               }`}
               style={{ 
                 WebkitTapHighlightColor: 'transparent',
@@ -97,10 +90,10 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
           );
         })}
         
-        {/* プラスボタンを別途レンダリング - 3番目のグリッド位置に配置 */}
+        {/* プラスボタンを別途レンダリング - 2.5列目の位置に配置 */}
         <button
           onClick={() => handleItemClick(navigationItems[2])} // add-workout ボタン
-          className="bg-interactive-primary text-content-inverse rounded-full w-16 h-16 font-bold active:scale-95 transform col-start-3 justify-self-center -top-12 relative flex items-center justify-center font-dotgothic transition-all border-none touch-manipulation z-10"
+          className="bg-interactive-primary text-content-inverse rounded-full w-16 h-16 font-bold active:scale-95 transform absolute left-1/2 -translate-x-1/2 -top-4 flex items-center justify-center font-dotgothic transition-all border-none touch-manipulation z-10"
           style={{ 
             WebkitTapHighlightColor: 'transparent',
             minHeight: '64px',
