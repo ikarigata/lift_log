@@ -44,6 +44,17 @@ public class JdbcMuscleGroupRepository implements MuscleGroupRepository {
     }
 
     @Override
+    public Optional<MuscleGroup> findByName(String name) {
+        return dsl.selectFrom(MUSCLE_GROUPS)
+                .where(MUSCLE_GROUPS.NAME.eq(name))
+                .fetchOptional(record -> new MuscleGroup(
+                    record.get(MUSCLE_GROUPS.ID),
+                    record.get(MUSCLE_GROUPS.NAME),
+                    record.get(MUSCLE_GROUPS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
+    }
+
+    @Override
     public MuscleGroup save(MuscleGroup muscleGroup) {
         if (muscleGroup.getId() == null) {
             return insert(muscleGroup);

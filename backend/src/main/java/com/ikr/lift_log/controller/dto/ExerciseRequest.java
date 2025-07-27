@@ -2,17 +2,15 @@ package com.ikr.lift_log.controller.dto;
 
 public class ExerciseRequest {
     private String name;
-    private String muscleGroupId;
-    private String description;
+    private String muscleGroup;
 
     // コンストラクタ
     public ExerciseRequest() {
     }
 
-    public ExerciseRequest(String name, String muscleGroupId, String description) {
+    public ExerciseRequest(String name, String muscleGroup) {
         this.name = name;
-        this.muscleGroupId = muscleGroupId;
-        this.description = description;
+        this.muscleGroup = muscleGroup;
     }
 
     // ゲッターとセッター
@@ -24,20 +22,11 @@ public class ExerciseRequest {
         this.name = name;
     }
 
-
-    public String getDescription() {
-        return description;
+    public String getMuscleGroup() {
+        return muscleGroup;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getMuscleGroupId() {
-        return muscleGroupId;
-    }
-
-    public void setMuscleGroupId(String muscleGroupId) {
-        this.muscleGroupId = muscleGroupId;
+    public void setMuscleGroup(String muscleGroup) {
+        this.muscleGroup = muscleGroup;
     }
 }
