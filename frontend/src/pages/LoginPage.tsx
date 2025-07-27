@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../api/config';
+import { saveToken } from '../utils/auth';
 
 interface LoginPageProps {
   onLoginSuccess: () => void;
@@ -27,6 +28,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
       if (response.ok) {
         const data = await response.json();
         if (data.token) {
+          // JWTトークンをlocalStorageに保存
+          saveToken(data.token);
           onLoginSuccess();
           navigate('/');
         }

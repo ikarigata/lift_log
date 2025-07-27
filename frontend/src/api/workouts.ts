@@ -1,8 +1,8 @@
 import type { WorkoutDay, WorkoutRecord } from '../types';
-import { BASE_URL } from './config';
+import { BASE_URL, authenticatedFetch } from './config';
 
 export const getWorkoutDays = async (): Promise<WorkoutDay[]> => {
-  const response = await fetch(`${BASE_URL}/workout-days`);
+  const response = await authenticatedFetch(`${BASE_URL}/workout-days`);
   if (!response.ok) {
     throw new Error('Failed to fetch workout days');
   }
@@ -10,11 +10,8 @@ export const getWorkoutDays = async (): Promise<WorkoutDay[]> => {
 };
 
 export const addWorkoutDay = async (workoutDay: Omit<WorkoutDay, 'id' | 'createdAt' | 'updatedAt'>): Promise<WorkoutDay> => {
-  const response = await fetch(`${BASE_URL}/workout-days`, {
+  const response = await authenticatedFetch(`${BASE_URL}/workout-days`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(workoutDay),
   });
   if (!response.ok) {
@@ -25,7 +22,7 @@ export const addWorkoutDay = async (workoutDay: Omit<WorkoutDay, 'id' | 'created
 
 export const getWorkoutDaysByMonth = async (year: number, month: number): Promise<WorkoutDay[]> => {
   const url = `${BASE_URL}/workout-days/calendar?year=${year}&month=${month}`;
-  const response = await fetch(url);
+  const response = await authenticatedFetch(url);
   if (!response.ok) {
     throw new Error('Failed to fetch workout days for calendar');
   }
@@ -33,7 +30,7 @@ export const getWorkoutDaysByMonth = async (year: number, month: number): Promis
 };
 
 export const getWorkoutRecords = async (): Promise<WorkoutRecord[]> => {
-  const response = await fetch(`${BASE_URL}/workout-records`);
+  const response = await authenticatedFetch(`${BASE_URL}/workout-records`);
   if (!response.ok) {
     throw new Error('Failed to fetch workout records');
   }

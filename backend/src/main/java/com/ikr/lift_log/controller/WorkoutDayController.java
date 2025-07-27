@@ -1,6 +1,7 @@
 package com.ikr.lift_log.controller;
 
 import com.ikr.lift_log.domain.model.WorkoutDay;
+import com.ikr.lift_log.security.AuthenticationUtil;
 import com.ikr.lift_log.service.WorkoutDayService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,11 @@ public class WorkoutDayController {
 
     @GetMapping
     public ResponseEntity<List<WorkoutDay>> getWorkoutDays(
-            @RequestParam(required = true) UUID userId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+
+        // 認証されたユーザーIDを取得
+        UUID userId = AuthenticationUtil.requireCurrentUserUUID();
 
         if (fromDate != null && toDate != null) {
             List<WorkoutDay> workoutDays = workoutDayService.getWorkoutDaysByUserIdAndDateRange(userId, fromDate,
@@ -47,6 +50,10 @@ public class WorkoutDayController {
 
     @PostMapping
     public ResponseEntity<WorkoutDay> createWorkoutDay(@RequestBody WorkoutDay workoutDay) {
+        // 認証されたユーザーIDを設定
+        UUID userId = AuthenticationUtil.requireCurrentUserUUID();
+        workoutDay.setUserId(userId);
+        
         WorkoutDay createdWorkoutDay = workoutDayService.createWorkoutDay(workoutDay);
 
         URI location = ServletUriComponentsBuilder
@@ -77,8 +84,10 @@ public class WorkoutDayController {
     @GetMapping("/calendar")
     public ResponseEntity<List<WorkoutDay>> getWorkoutDaysForCalendar(
             @RequestParam int year,
-            @RequestParam int month,
-            @RequestParam(required = true) UUID userId) {
+            @RequestParam int month) {
+
+        // 認証されたユーザーIDを取得
+        UUID userId = AuthenticationUtil.requireCurrentUserUUID();
 
         // month-1 because frontend sends 1-based month, but LocalDate expects 0-based
         LocalDate startDate = LocalDate.of(year, month, 1);

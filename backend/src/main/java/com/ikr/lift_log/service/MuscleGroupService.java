@@ -25,6 +25,10 @@ public class MuscleGroupService {
         return muscleGroupRepository.findById(id);
     }
 
+    public Optional<MuscleGroup> getMuscleGroupByName(String name) {
+        return muscleGroupRepository.findByName(name);
+    }
+
     public MuscleGroup createMuscleGroup(MuscleGroup muscleGroup) {
         return muscleGroupRepository.save(muscleGroup);
     }
