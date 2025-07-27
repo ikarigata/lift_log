@@ -27,3 +27,8 @@ ALTER TABLE workout_records
 ALTER TABLE workout_sets
     ADD CONSTRAINT workout_sets_workout_record_id_fkey
     FOREIGN KEY (workout_record_id) REFERENCES workout_records(id);
+
+-- Exercises foreign keys
+ALTER TABLE exercises
+    ADD CONSTRAINT exercises_user_id_fkey
+    FOREIGN KEY (user_id) REFERENCES users(id);

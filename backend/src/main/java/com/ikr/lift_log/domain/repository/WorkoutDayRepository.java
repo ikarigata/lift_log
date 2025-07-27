@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface WorkoutDayRepository {
-    List<WorkoutDay> findAll();
 
     List<WorkoutDay> findByUserId(UUID userId);
 

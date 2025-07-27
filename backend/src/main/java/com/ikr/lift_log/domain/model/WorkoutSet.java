@@ -8,8 +8,9 @@ public class WorkoutSet {
     private UUID id;
     private UUID workoutRecordId;
     private int reps;
+    private int subReps; // RM計算には含めないがボリューム計算には含める追加レップ数
     private BigDecimal weight;
-    private BigDecimal volume; // 計算フィールド (reps * weight)
+    private BigDecimal volume; // 計算フィールド ((reps + subReps) * weight)
     private ZonedDateTime createdAt;
     private ZonedDateTime updatedAt;
 
@@ -17,11 +18,12 @@ public class WorkoutSet {
     public WorkoutSet() {
     }
 
-    public WorkoutSet(UUID id, UUID workoutRecordId, int reps, BigDecimal weight,
+    public WorkoutSet(UUID id, UUID workoutRecordId, int reps, int subReps, BigDecimal weight,
             ZonedDateTime createdAt, ZonedDateTime updatedAt) {
         this.id = id;
         this.workoutRecordId = workoutRecordId;
         this.reps = reps;
+        this.subReps = subReps;
         this.weight = weight;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -51,6 +53,15 @@ public class WorkoutSet {
 
     public void setReps(int reps) {
         this.reps = reps;
+        calculateVolume();
+    }
+
+    public int getSubReps() {
+        return subReps;
+    }
+
+    public void setSubReps(int subReps) {
+        this.subReps = subReps;
         calculateVolume();
     }
 
@@ -86,7 +97,7 @@ public class WorkoutSet {
     // ヘルパーメソッド
     private void calculateVolume() {
         if (weight != null) {
-            this.volume = weight.multiply(BigDecimal.valueOf(reps));
+            this.volume = weight.multiply(BigDecimal.valueOf(reps + subReps));
         }
     }
 }

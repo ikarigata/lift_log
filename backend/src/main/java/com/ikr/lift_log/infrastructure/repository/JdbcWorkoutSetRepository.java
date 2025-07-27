@@ -30,6 +30,7 @@ public class JdbcWorkoutSetRepository implements WorkoutSetRepository {
                     record.get(WORKOUT_SETS.ID),
                     record.get(WORKOUT_SETS.WORKOUT_RECORD_ID),
                     record.get(WORKOUT_SETS.REPS),
+                    record.get(WORKOUT_SETS.SUB_REPS) != null ? record.get(WORKOUT_SETS.SUB_REPS) : 0,
                     record.get(WORKOUT_SETS.WEIGHT),
                     record.get(WORKOUT_SETS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
                     record.get(WORKOUT_SETS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
@@ -44,6 +45,7 @@ public class JdbcWorkoutSetRepository implements WorkoutSetRepository {
                     record.get(WORKOUT_SETS.ID),
                     record.get(WORKOUT_SETS.WORKOUT_RECORD_ID),
                     record.get(WORKOUT_SETS.REPS),
+                    record.get(WORKOUT_SETS.SUB_REPS) != null ? record.get(WORKOUT_SETS.SUB_REPS) : 0,
                     record.get(WORKOUT_SETS.WEIGHT),
                     record.get(WORKOUT_SETS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
                     record.get(WORKOUT_SETS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
@@ -80,12 +82,13 @@ public class JdbcWorkoutSetRepository implements WorkoutSetRepository {
                 .set(WORKOUT_SETS.ID, id)
                 .set(WORKOUT_SETS.WORKOUT_RECORD_ID, workoutSet.getWorkoutRecordId())
                 .set(WORKOUT_SETS.REPS, workoutSet.getReps())
+                .set(WORKOUT_SETS.SUB_REPS, workoutSet.getSubReps())
                 .set(WORKOUT_SETS.WEIGHT, workoutSet.getWeight())
                 .set(WORKOUT_SETS.CREATED_AT, createdAt.toOffsetDateTime())
                 .set(WORKOUT_SETS.UPDATED_AT, updatedAt.toOffsetDateTime())
                 .execute();
 
-        return new WorkoutSet(id, workoutSet.getWorkoutRecordId(), workoutSet.getReps(),
+        return new WorkoutSet(id, workoutSet.getWorkoutRecordId(), workoutSet.getReps(), workoutSet.getSubReps(),
                 workoutSet.getWeight(), createdAt, updatedAt);
     }
 
@@ -95,6 +98,7 @@ public class JdbcWorkoutSetRepository implements WorkoutSetRepository {
         int rowsAffected = dsl.update(WORKOUT_SETS)
                 .set(WORKOUT_SETS.WORKOUT_RECORD_ID, workoutSet.getWorkoutRecordId())
                 .set(WORKOUT_SETS.REPS, workoutSet.getReps())
+                .set(WORKOUT_SETS.SUB_REPS, workoutSet.getSubReps())
                 .set(WORKOUT_SETS.WEIGHT, workoutSet.getWeight())
                 .set(WORKOUT_SETS.UPDATED_AT, now.toOffsetDateTime())
                 .where(WORKOUT_SETS.ID.eq(workoutSet.getId()))

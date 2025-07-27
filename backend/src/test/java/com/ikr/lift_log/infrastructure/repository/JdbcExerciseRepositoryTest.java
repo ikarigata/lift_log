@@ -8,11 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.ikr.lift_log.jooq.tables.Exercises.EXERCISES;
+import static com.ikr.lift_log.jooq.tables.Users.USERS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -26,25 +27,39 @@ class JdbcExerciseRepositoryTest {
     @Autowired
     private DSLContext dsl;
 
+    private UUID testUserId;
+
     @BeforeEach
     void setUp() {
-        // テスト前にデータをクリア
-        dsl.deleteFrom(EXERCISES).execute();
+        // テスト用ユーザーを作成
+        testUserId = UUID.randomUUID();
+        dsl.insertInto(USERS)
+                .set(USERS.ID, testUserId)
+                .set(USERS.NAME, "Test User")
+                .set(USERS.CREATED_AT, ZonedDateTime.now().toOffsetDateTime())
+                .execute();
     }
 
     @Test
-    void findAll_空のテーブル_空リストを返す() {
+    void findById_存在しないID_空のテーブルで空のOptionalを返す() {
+        // Given
+        UUID nonExistentId = UUID.randomUUID();
+
         // When
-        List<Exercise> exercises = exerciseRepository.findAll();
+        Optional<Exercise> found = exerciseRepository.findById(nonExistentId);
 
         // Then
-        assertThat(exercises).isEmpty();
+        assertThat(found).isEmpty();
     }
 
     @Test
     void save_正常なエクササイズ_保存される() {
+
+        UUID userId = testUserId; // ユーザーIDは必要に応じて設定
+        UUID exerciseId = UUID.randomUUID(); // エクササイズIDは必要に応じて設定
+        ZonedDateTime createdAt = ZonedDateTime.now();
         // Given
-        Exercise exercise = new Exercise(null, "Bench Press", "Chest exercise", null);
+        Exercise exercise = new Exercise(exerciseId, userId, "Bench Press", "Chest exercise", createdAt);
 
         // When
         Exercise savedExercise = exerciseRepository.save(exercise);
@@ -58,10 +73,15 @@ class JdbcExerciseRepositoryTest {
 
     @Test
     void findById_存在するID_エクササイズを返す() {
+
+        UUID userId = testUserId; // ユーザーIDは必要に応じて設定
+        UUID exerciseId = UUID.randomUUID(); // エクササイズIDは必要に応じて設定
+        ZonedDateTime createdAt = ZonedDateTime.now();
         // Given
-        Exercise savedExercise = exerciseRepository.save(
-            new Exercise(null, "Squat", "Leg exercise", null)
-        );
+        Exercise exercise = new Exercise(exerciseId, userId, "Squat", "Leg exercise", createdAt);
+
+        // Given
+        Exercise savedExercise = exerciseRepository.save(exercise);
 
         // When
         Optional<Exercise> found = exerciseRepository.findById(savedExercise.getId());
@@ -85,29 +105,41 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
-    void findAll_複数のエクササイズ_名前順でソートして返す() {
+    void save_複数のエクササイズ_個別に保存できる() {
+        UUID userId = testUserId;
+        UUID exerciseId1 = UUID.randomUUID();
+        UUID exerciseId2 = UUID.randomUUID();
+        ZonedDateTime createdAt = ZonedDateTime.now();
+        
         // Given
-        exerciseRepository.save(new Exercise(null, "Deadlift", "Full body exercise", null));
-        exerciseRepository.save(new Exercise(null, "Bench Press", "Chest exercise", null));
-        exerciseRepository.save(new Exercise(null, "Squat", "Leg exercise", null));
+        Exercise exercise1 = new Exercise(exerciseId1, userId, "Bench Press", "Chest exercise", createdAt);
+        Exercise exercise2 = new Exercise(exerciseId2, userId, "Squat", "Leg exercise", createdAt);
 
         // When
-        List<Exercise> exercises = exerciseRepository.findAll();
+        Exercise savedExercise1 = exerciseRepository.save(exercise1);
+        Exercise savedExercise2 = exerciseRepository.save(exercise2);
 
         // Then
-        assertThat(exercises).hasSize(3);
-        assertThat(exercises.get(0).getName()).isEqualTo("Bench Press");
-        assertThat(exercises.get(1).getName()).isEqualTo("Deadlift");
-        assertThat(exercises.get(2).getName()).isEqualTo("Squat");
+        assertThat(savedExercise1.getName()).isEqualTo("Bench Press");
+        assertThat(savedExercise2.getName()).isEqualTo("Squat");
+        
+        Optional<Exercise> found1 = exerciseRepository.findById(savedExercise1.getId());
+        Optional<Exercise> found2 = exerciseRepository.findById(savedExercise2.getId());
+        
+        assertThat(found1).isPresent();
+        assertThat(found2).isPresent();
     }
 
     @Test
     void update_存在するID_更新される() {
         // Given
+        UUID userId = testUserId;
+        UUID exerciseId = UUID.randomUUID();
+        ZonedDateTime createdAt = ZonedDateTime.now();
+        
         Exercise savedExercise = exerciseRepository.save(
-            new Exercise(null, "Pull Up", "Back exercise", null)
-        );
-        Exercise updateData = new Exercise(null, "Pull Up Modified", "Updated back exercise", null);
+                new Exercise(exerciseId, userId, "Pull Up", "Back exercise", createdAt));
+        Exercise updateData = new Exercise(null, userId, "Pull Up Modified", "Updated back exercise", null);
 
         // When
         Exercise updatedExercise = exerciseRepository.update(savedExercise.getId(), updateData);
@@ -122,20 +154,24 @@ class JdbcExerciseRepositoryTest {
     void update_存在しないID_例外が発生() {
         // Given
         UUID nonExistentId = UUID.randomUUID();
-        Exercise updateData = new Exercise(null, "Test", "Test description", null);
+        UUID userId = testUserId;
+        Exercise updateData = new Exercise(null, userId, "Test", "Test description", null);
 
         // When & Then
         assertThatThrownBy(() -> exerciseRepository.update(nonExistentId, updateData))
-            .isInstanceOf(RuntimeException.class)
-            .hasMessageContaining("Exercise not found with id:");
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Exercise not found with id:");
     }
 
     @Test
     void deleteById_存在するID_削除される() {
         // Given
+        UUID userId = testUserId;
+        UUID exerciseId = UUID.randomUUID();
+        ZonedDateTime createdAt = ZonedDateTime.now();
+        
         Exercise savedExercise = exerciseRepository.save(
-            new Exercise(null, "Push Up", "Bodyweight exercise", null)
-        );
+                new Exercise(exerciseId, userId, "Push Up", "Bodyweight exercise", createdAt));
 
         // When
         exerciseRepository.deleteById(savedExercise.getId());
@@ -152,7 +188,7 @@ class JdbcExerciseRepositoryTest {
 
         // When & Then
         assertThatThrownBy(() -> exerciseRepository.deleteById(nonExistentId))
-            .isInstanceOf(RuntimeException.class)
-            .hasMessageContaining("Exercise not found with id:");
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Exercise not found with id:");
     }
 }

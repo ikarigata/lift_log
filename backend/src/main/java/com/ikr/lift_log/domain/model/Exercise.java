@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public class Exercise {
     private UUID id;
+    private UUID userId;
     private String name;
     private String description;
     private ZonedDateTime createdAt;
@@ -13,8 +14,9 @@ public class Exercise {
     public Exercise() {
     }
 
-    public Exercise(UUID id, String name, String description, ZonedDateTime createdAt) {
+    public Exercise(UUID id, UUID userId, String name, String description, ZonedDateTime createdAt) {
         this.id = id;
+        this.userId = userId;
         this.name = name;
         this.description = description;
         this.createdAt = createdAt;
@@ -27,6 +29,14 @@ public class Exercise {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public String getName() {

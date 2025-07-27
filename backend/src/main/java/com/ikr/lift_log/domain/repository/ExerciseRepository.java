@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.ikr.lift_log.domain.model.Exercise;
 
 public interface ExerciseRepository {
-    List<Exercise> findAll();
+    List<Exercise> findByUserId(UUID userId);
 
     Optional<Exercise> findById(UUID id);
 

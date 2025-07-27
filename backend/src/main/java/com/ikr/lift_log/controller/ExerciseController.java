@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/exercises")
+@RequestMapping("/api/exercises")
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
@@ -21,8 +21,8 @@ public class ExerciseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Exercise>> getAllExercises() {
-        List<Exercise> exercises = exerciseService.getAllExercises();
+    public ResponseEntity<List<Exercise>> getExercisesByUserId(@RequestParam UUID userId) {
+        List<Exercise> exercises = exerciseService.getExercisesByUserId(userId);
         return ResponseEntity.ok(exercises);
     }
 
