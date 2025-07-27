@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface WorkoutRecordRepository {
+
     List<WorkoutRecord> findByWorkoutDayId(UUID workoutDayId);
 
     Optional<WorkoutRecord> findById(UUID id);

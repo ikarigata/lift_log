@@ -23,51 +23,34 @@ public class JdbcWorkoutDayRepository implements WorkoutDayRepository {
     }
 
     @Override
-    public List<WorkoutDay> findAll() {
-        return dsl.selectFrom(WORKOUT_DAYS)
-                .orderBy(WORKOUT_DAYS.DATE.desc())
-                .fetch(record -> new WorkoutDay(
-                    record.get(WORKOUT_DAYS.ID),
-                    record.get(WORKOUT_DAYS.USER_ID),
-                    record.get(WORKOUT_DAYS.DATE),
-                    record.get(WORKOUT_DAYS.TITLE),
-                    record.get(WORKOUT_DAYS.NOTES),
-                    record.get(WORKOUT_DAYS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
-                    record.get(WORKOUT_DAYS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
-                ));
-    }
-
-    @Override
     public List<WorkoutDay> findByUserId(UUID userId) {
         return dsl.selectFrom(WORKOUT_DAYS)
                 .where(WORKOUT_DAYS.USER_ID.eq(userId))
                 .orderBy(WORKOUT_DAYS.DATE.desc())
                 .fetch(record -> new WorkoutDay(
-                    record.get(WORKOUT_DAYS.ID),
-                    record.get(WORKOUT_DAYS.USER_ID),
-                    record.get(WORKOUT_DAYS.DATE),
-                    record.get(WORKOUT_DAYS.TITLE),
-                    record.get(WORKOUT_DAYS.NOTES),
-                    record.get(WORKOUT_DAYS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
-                    record.get(WORKOUT_DAYS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
-                ));
+                        record.get(WORKOUT_DAYS.ID),
+                        record.get(WORKOUT_DAYS.USER_ID),
+                        record.get(WORKOUT_DAYS.DATE),
+                        record.get(WORKOUT_DAYS.TITLE),
+                        record.get(WORKOUT_DAYS.NOTES),
+                        record.get(WORKOUT_DAYS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
+                        record.get(WORKOUT_DAYS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())));
     }
 
     @Override
     public List<WorkoutDay> findByUserIdAndDateBetween(UUID userId, LocalDate fromDate, LocalDate toDate) {
         return dsl.selectFrom(WORKOUT_DAYS)
                 .where(WORKOUT_DAYS.USER_ID.eq(userId)
-                    .and(WORKOUT_DAYS.DATE.between(fromDate, toDate)))
+                        .and(WORKOUT_DAYS.DATE.between(fromDate, toDate)))
                 .orderBy(WORKOUT_DAYS.DATE.desc())
                 .fetch(record -> new WorkoutDay(
-                    record.get(WORKOUT_DAYS.ID),
-                    record.get(WORKOUT_DAYS.USER_ID),
-                    record.get(WORKOUT_DAYS.DATE),
-                    record.get(WORKOUT_DAYS.TITLE),
-                    record.get(WORKOUT_DAYS.NOTES),
-                    record.get(WORKOUT_DAYS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
-                    record.get(WORKOUT_DAYS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
-                ));
+                        record.get(WORKOUT_DAYS.ID),
+                        record.get(WORKOUT_DAYS.USER_ID),
+                        record.get(WORKOUT_DAYS.DATE),
+                        record.get(WORKOUT_DAYS.TITLE),
+                        record.get(WORKOUT_DAYS.NOTES),
+                        record.get(WORKOUT_DAYS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
+                        record.get(WORKOUT_DAYS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())));
     }
 
     @Override
@@ -75,14 +58,13 @@ public class JdbcWorkoutDayRepository implements WorkoutDayRepository {
         return dsl.selectFrom(WORKOUT_DAYS)
                 .where(WORKOUT_DAYS.ID.eq(id))
                 .fetchOptional(record -> new WorkoutDay(
-                    record.get(WORKOUT_DAYS.ID),
-                    record.get(WORKOUT_DAYS.USER_ID),
-                    record.get(WORKOUT_DAYS.DATE),
-                    record.get(WORKOUT_DAYS.TITLE),
-                    record.get(WORKOUT_DAYS.NOTES),
-                    record.get(WORKOUT_DAYS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
-                    record.get(WORKOUT_DAYS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
-                ));
+                        record.get(WORKOUT_DAYS.ID),
+                        record.get(WORKOUT_DAYS.USER_ID),
+                        record.get(WORKOUT_DAYS.DATE),
+                        record.get(WORKOUT_DAYS.TITLE),
+                        record.get(WORKOUT_DAYS.NOTES),
+                        record.get(WORKOUT_DAYS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
+                        record.get(WORKOUT_DAYS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())));
     }
 
     @Override
@@ -99,7 +81,7 @@ public class JdbcWorkoutDayRepository implements WorkoutDayRepository {
         int rowsAffected = dsl.deleteFrom(WORKOUT_DAYS)
                 .where(WORKOUT_DAYS.ID.eq(id))
                 .execute();
-        
+
         if (rowsAffected == 0) {
             throw new RuntimeException("WorkoutDay not found with id: " + id);
         }
@@ -109,7 +91,7 @@ public class JdbcWorkoutDayRepository implements WorkoutDayRepository {
         UUID id = UUID.randomUUID();
         ZonedDateTime now = ZonedDateTime.now();
         LocalDate date = workoutDay.getDate() != null ? workoutDay.getDate() : LocalDate.now();
-        
+
         dsl.insertInto(WORKOUT_DAYS)
                 .set(WORKOUT_DAYS.ID, id)
                 .set(WORKOUT_DAYS.USER_ID, workoutDay.getUserId())
@@ -120,13 +102,13 @@ public class JdbcWorkoutDayRepository implements WorkoutDayRepository {
                 .set(WORKOUT_DAYS.UPDATED_AT, now.toOffsetDateTime())
                 .execute();
 
-        return new WorkoutDay(id, workoutDay.getUserId(), date, workoutDay.getTitle(), 
+        return new WorkoutDay(id, workoutDay.getUserId(), date, workoutDay.getTitle(),
                 workoutDay.getNotes(), now, now);
     }
 
     private WorkoutDay update(WorkoutDay workoutDay) {
         ZonedDateTime now = ZonedDateTime.now();
-        
+
         int rowsAffected = dsl.update(WORKOUT_DAYS)
                 .set(WORKOUT_DAYS.USER_ID, workoutDay.getUserId())
                 .set(WORKOUT_DAYS.DATE, workoutDay.getDate())
@@ -135,7 +117,7 @@ public class JdbcWorkoutDayRepository implements WorkoutDayRepository {
                 .set(WORKOUT_DAYS.UPDATED_AT, now.toOffsetDateTime())
                 .where(WORKOUT_DAYS.ID.eq(workoutDay.getId()))
                 .execute();
-        
+
         if (rowsAffected == 0) {
             throw new RuntimeException("WorkoutDay not found with id: " + workoutDay.getId());
         }

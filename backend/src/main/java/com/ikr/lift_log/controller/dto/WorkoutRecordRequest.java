@@ -3,6 +3,7 @@ package com.ikr.lift_log.controller.dto;
 import java.util.UUID;
 
 public class WorkoutRecordRequest {
+    private UUID workoutDayId;
     private UUID exerciseId;
     private String notes;
 
@@ -10,12 +11,21 @@ public class WorkoutRecordRequest {
     public WorkoutRecordRequest() {
     }
 
-    public WorkoutRecordRequest(UUID exerciseId, String notes) {
+    public WorkoutRecordRequest(UUID workoutDayId, UUID exerciseId, String notes) {
+        this.workoutDayId = workoutDayId;
         this.exerciseId = exerciseId;
         this.notes = notes;
     }
 
     // ゲッターとセッター
+    public UUID getWorkoutDayId() {
+        return workoutDayId;
+    }
+
+    public void setWorkoutDayId(UUID workoutDayId) {
+        this.workoutDayId = workoutDayId;
+    }
+
     public UUID getExerciseId() {
         return exerciseId;
     }

@@ -22,16 +22,19 @@ public class JdbcExerciseRepository implements ExerciseRepository {
     }
 
     @Override
-    public List<Exercise> findAll() {
+    public List<Exercise> findByUserId(UUID userId) {
         return dsl.selectFrom(EXERCISES)
+                .where(EXERCISES.USER_ID.eq(userId))
                 .orderBy(EXERCISES.NAME)
                 .fetch(record -> new Exercise(
                     record.get(EXERCISES.ID),
+                    record.get(EXERCISES.USER_ID),
                     record.get(EXERCISES.NAME),
                     record.get(EXERCISES.DESCRIPTION),
                     record.get(EXERCISES.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
                 ));
     }
+
 
     @Override
     public Optional<Exercise> findById(UUID id) {
@@ -39,6 +42,7 @@ public class JdbcExerciseRepository implements ExerciseRepository {
                 .where(EXERCISES.ID.eq(id))
                 .fetchOptional(record -> new Exercise(
                     record.get(EXERCISES.ID),
+                    record.get(EXERCISES.USER_ID),
                     record.get(EXERCISES.NAME),
                     record.get(EXERCISES.DESCRIPTION),
                     record.get(EXERCISES.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
@@ -52,17 +56,19 @@ public class JdbcExerciseRepository implements ExerciseRepository {
         
         dsl.insertInto(EXERCISES)
                 .set(EXERCISES.ID, id)
+                .set(EXERCISES.USER_ID, exercise.getUserId())
                 .set(EXERCISES.NAME, exercise.getName())
                 .set(EXERCISES.DESCRIPTION, exercise.getDescription())
                 .set(EXERCISES.CREATED_AT, now.toOffsetDateTime())
                 .execute();
 
-        return new Exercise(id, exercise.getName(), exercise.getDescription(), now);
+        return new Exercise(id, exercise.getUserId(), exercise.getName(), exercise.getDescription(), now);
     }
 
     @Override
     public Exercise update(UUID id, Exercise exercise) {
         int rowsAffected = dsl.update(EXERCISES)
+                .set(EXERCISES.USER_ID, exercise.getUserId())
                 .set(EXERCISES.NAME, exercise.getName())
                 .set(EXERCISES.DESCRIPTION, exercise.getDescription())
                 .where(EXERCISES.ID.eq(id))

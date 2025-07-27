@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/workout-days")
+@RequestMapping("/api/workout-days")
 public class WorkoutDayController {
 
     private final WorkoutDayService workoutDayService;
@@ -24,19 +24,16 @@ public class WorkoutDayController {
 
     @GetMapping
     public ResponseEntity<List<WorkoutDay>> getWorkoutDays(
-            @RequestParam(required = false) UUID userId,
+            @RequestParam(required = true) UUID userId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
 
-        if (userId != null && fromDate != null && toDate != null) {
+        if (fromDate != null && toDate != null) {
             List<WorkoutDay> workoutDays = workoutDayService.getWorkoutDaysByUserIdAndDateRange(userId, fromDate,
                     toDate);
             return ResponseEntity.ok(workoutDays);
-        } else if (userId != null) {
-            List<WorkoutDay> workoutDays = workoutDayService.getWorkoutDaysByUserId(userId);
-            return ResponseEntity.ok(workoutDays);
         } else {
-            List<WorkoutDay> workoutDays = workoutDayService.getAllWorkoutDays();
+            List<WorkoutDay> workoutDays = workoutDayService.getWorkoutDaysByUserId(userId);
             return ResponseEntity.ok(workoutDays);
         }
     }
@@ -75,5 +72,20 @@ public class WorkoutDayController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/calendar")
+    public ResponseEntity<List<WorkoutDay>> getWorkoutDaysForCalendar(
+            @RequestParam int year,
+            @RequestParam int month,
+            @RequestParam(required = true) UUID userId) {
+
+        // month-1 because frontend sends 1-based month, but LocalDate expects 0-based
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        List<WorkoutDay> workoutDays = workoutDayService.getWorkoutDaysByUserIdAndDateRange(userId, startDate,
+                endDate);
+        return ResponseEntity.ok(workoutDays);
     }
 }

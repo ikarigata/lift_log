@@ -17,8 +17,8 @@ public class ExerciseService {
         this.exerciseRepository = exerciseRepository;
     }
 
-    public List<Exercise> getAllExercises() {
-        return exerciseRepository.findAll();
+    public List<Exercise> getExercisesByUserId(UUID userId) {
+        return exerciseRepository.findByUserId(userId);
     }
 
     public Optional<Exercise> getExerciseById(UUID id) {

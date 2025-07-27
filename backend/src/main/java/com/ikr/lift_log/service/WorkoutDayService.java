@@ -19,10 +19,6 @@ public class WorkoutDayService {
         this.workoutDayRepository = workoutDayRepository;
     }
 
-    public List<WorkoutDay> getAllWorkoutDays() {
-        return workoutDayRepository.findAll();
-    }
-
     public List<WorkoutDay> getWorkoutDaysByUserId(UUID userId) {
         return workoutDayRepository.findByUserId(userId);
     }

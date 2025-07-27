@@ -35,8 +35,26 @@ public class WorkoutRecordController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PostMapping("/workout-records")
+    public ResponseEntity<WorkoutRecord> createWorkoutRecord(@RequestBody WorkoutRecordRequest request) {
+        WorkoutRecord workoutRecord = new WorkoutRecord();
+        workoutRecord.setWorkoutDayId(request.getWorkoutDayId());
+        workoutRecord.setExerciseId(request.getExerciseId());
+        workoutRecord.setNotes(request.getNotes());
+
+        WorkoutRecord createdRecord = workoutRecordService.createWorkoutRecord(workoutRecord);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/api/workout-records/{id}")
+                .buildAndExpand(createdRecord.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(createdRecord);
+    }
+
     @PostMapping("/workout-days/{workoutDayId}/workout-records")
-    public ResponseEntity<WorkoutRecord> createWorkoutRecord(
+    public ResponseEntity<WorkoutRecord> createWorkoutRecordWithPath(
             @PathVariable UUID workoutDayId,
             @RequestBody WorkoutRecordRequest request) {
 
