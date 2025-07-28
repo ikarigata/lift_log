@@ -6,6 +6,7 @@ import ExerciseListPage from './pages/ExerciseListPage';
 import ExerciseInputPage from './pages/ExerciseInputPage';
 import CalendarPage from './pages/CalendarPage';
 import ExerciseManagementPage from './pages/ExerciseManagementPage';
+import StatisticsPage from './pages/StatisticsPage';
 import LoginPage from './pages/LoginPage';
 import BottomNavigation from './components/BottomNavigation';
 import type { WorkoutDay, WorkoutRecord, Exercise, WorkoutSet } from './types';
@@ -176,6 +177,19 @@ const AppContent = () => {
                   workoutRecords={workoutRecords}
                   exercises={exercises}
                   onLogout={handleLogout}
+                />
+              }
+            />
+          }
+        />
+        <Route
+          path="/statistics"
+          element={
+            <PrivateRoute
+              isAuthenticatedState={isAuthenticatedState}
+              element={
+                <StatisticsPage
+                  exercises={exercises}
                 />
               }
             />
