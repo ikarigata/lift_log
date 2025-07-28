@@ -34,6 +34,12 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
       icon: '⚙',
       type: 'navigation' as const,
     },
+    {
+      id: 'statistics',
+      path: '/statistics',
+      icon: '📈',
+      type: 'navigation' as const,
+    },
   ];
 
   const isActivePath = (path: string) => {
@@ -53,7 +59,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-interactive-primary border-none z-50 w-full h-10">
-      <div className="grid grid-cols-5 items-center h-full w-full mx-auto relative">
+      <div className="grid grid-cols-6 items-center h-full w-full mx-auto relative">
         {navigationItems.map((item, index) => {
           const isActive = item.type === 'navigation' && isActivePath(item.path);
           const isAddButton = item.type === 'action' && item.id === 'add-workout';
@@ -67,6 +73,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
           if (index === 0) colStart = 'col-start-1';
           else if (index === 1) colStart = 'col-start-2';
           else if (index === 3) colStart = 'col-start-5';
+          else if (index === 4) colStart = 'col-start-6';
           
           return (
             <button
