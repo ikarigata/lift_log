@@ -6,11 +6,13 @@ import type { WorkoutDay, WorkoutRecord } from '../types';
 interface WorkoutDetailPageProps {
   workoutDays: WorkoutDay[];
   workoutRecords: WorkoutRecord[];
+  onLogout: () => void;
 }
 
 const WorkoutDetailPage: React.FC<WorkoutDetailPageProps> = ({ 
   workoutDays, 
-  workoutRecords 
+  workoutRecords,
+  onLogout
 }) => {
   const { workoutId } = useParams();
   const navigate = useNavigate();
@@ -47,6 +49,7 @@ const WorkoutDetailPage: React.FC<WorkoutDetailPageProps> = ({
       onBack={handleBack}
       onAddExercise={handleAddExercise}
       onEditExercise={handleEditExercise}
+      onLogout={onLogout}
     />
   );
 };

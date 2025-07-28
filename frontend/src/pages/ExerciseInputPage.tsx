@@ -7,12 +7,14 @@ interface ExerciseInputPageProps {
   exercises: Exercise[];
   workoutRecords: WorkoutRecord[];
   onSaveExercise: (workoutId: string, exerciseId: string, sets: WorkoutSet[], memo?: string, editingRecordId?: string) => void;
+  onLogout: () => void;
 }
 
 const ExerciseInputPage: React.FC<ExerciseInputPageProps> = ({ 
   exercises, 
   workoutRecords, 
-  onSaveExercise 
+  onSaveExercise,
+  onLogout
 }) => {
   const { workoutId, exerciseId } = useParams();
   const navigate = useNavigate();
@@ -46,6 +48,7 @@ const ExerciseInputPage: React.FC<ExerciseInputPageProps> = ({
       currentRecord={editingRecord}
       onBack={handleBack}
       onSave={handleSave}
+      onLogout={onLogout}
     />
   );
 };

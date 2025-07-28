@@ -3,7 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import Calendar from '../components/Calendar';
 import type { WorkoutDay } from '../types';
 
-const CalendarPage: React.FC = () => {
+interface CalendarPageProps {
+  onLogout: () => void;
+}
+
+const CalendarPage: React.FC<CalendarPageProps> = ({ onLogout }) => {
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -18,6 +22,7 @@ const CalendarPage: React.FC = () => {
     <Calendar
       onBack={handleBack}
       onSelectDate={handleSelectDate}
+      onLogout={onLogout}
     />
   );
 };
