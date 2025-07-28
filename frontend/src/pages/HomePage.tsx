@@ -7,9 +7,10 @@ interface HomePageProps {
   workoutDays: WorkoutDay[];
   workoutRecords: WorkoutRecord[];
   exercises: Exercise[];
+  onLogout: () => void;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ workoutDays, workoutRecords, exercises }) => {
+const HomePage: React.FC<HomePageProps> = ({ workoutDays, workoutRecords, exercises, onLogout }) => {
   const navigate = useNavigate();
 
   const handleWorkoutDayClick = (workoutDay: WorkoutDay) => {
@@ -17,14 +18,13 @@ const HomePage: React.FC<HomePageProps> = ({ workoutDays, workoutRecords, exerci
   };
 
   return (
-    <div className="space-y-[10px] bg-surface-primary min-h-screen">
-      <WorkoutDayList 
-        workoutDays={workoutDays.slice(0, 10)}
-        workoutRecords={workoutRecords}
-        exercises={exercises}
-        onWorkoutDayClick={handleWorkoutDayClick}
-      />
-    </div>
+    <WorkoutDayList 
+      workoutDays={workoutDays.slice(0, 10)}
+      workoutRecords={workoutRecords}
+      exercises={exercises}
+      onWorkoutDayClick={handleWorkoutDayClick}
+      onLogout={onLogout}
+    />
   );
 };
 

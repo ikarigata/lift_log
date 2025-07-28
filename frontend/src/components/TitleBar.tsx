@@ -1,14 +1,14 @@
 import React from 'react';
 
 interface TitleBarProps {
-  title: string;
+  title: string | React.ReactNode;
   onLogout: () => void;
 }
 
 const TitleBar: React.FC<TitleBarProps> = ({ title, onLogout }) => {
   return (
-    <div className="flex items-center justify-between w-full h-6 bg-surface-secondary rounded-[10px] px-4 py-[33px]">
-      <div className="text-content-secondary font-dotgothic text-xl">
+    <div className="flex items-center justify-between w-full bg-surface-secondary rounded-[10px] px-4 py-4">
+      <div className="text-content-secondary font-dotgothic text-xl pl-4">
         {title}
       </div>
       <button
