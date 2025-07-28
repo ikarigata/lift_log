@@ -30,3 +30,16 @@ export interface Exercise {
   muscleGroup: string;
   isFavorite?: boolean;
 }
+
+export interface ExerciseProgressItem {
+  date: string;
+  maxWeight: number;
+  totalVolume: number;
+}
+
+export interface ExerciseProgressResponse {
+  userId: string;
+  exerciseId: string;
+  exerciseName: string;
+  progress: ExerciseProgressItem[];
+}
