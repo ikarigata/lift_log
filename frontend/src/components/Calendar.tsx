@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import TitleBar from './TitleBar';
 import type { WorkoutDay, WorkoutRecord } from '../types';
 import { getWorkoutDaysByMonth, getWorkoutRecords } from '../api/workouts';
 
 interface CalendarProps {
   onBack: () => void;
   onSelectDate: (workoutDay: WorkoutDay) => void;
+  onLogout: () => void;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ onBack, onSelectDate }) => {
+const Calendar: React.FC<CalendarProps> = ({ onBack, onSelectDate, onLogout }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([]);
   const [workoutRecords, setWorkoutRecords] = useState<WorkoutRecord[]>([]);
@@ -111,13 +113,7 @@ const Calendar: React.FC<CalendarProps> = ({ onBack, onSelectDate }) => {
   
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <div className="mb-[15px]">
-        <div className="w-full bg-surface-secondary rounded-[10px] px-[15px] py-[10px] text-center mb-[10px]">
-          <h1 className="text-surface-primary font-dotgothic text-xl">
-            Calendar
-          </h1>
-        </div>
-      </div>
+      <TitleBar title="Calendar" onLogout={onLogout} />
 
       <div className="space-y-[10px]">
         {/* Month navigation */}

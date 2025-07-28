@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TitleBar from './TitleBar';
 import type { Exercise, WorkoutRecord, WorkoutSet } from '../types';
 
 interface ExerciseInputProps {
@@ -7,6 +8,7 @@ interface ExerciseInputProps {
   currentRecord?: WorkoutRecord | null;
   onBack: () => void;
   onSave: (sets: WorkoutSet[], memo?: string) => void;
+  onLogout: () => void;
 }
 
 const ExerciseInput: React.FC<ExerciseInputProps> = ({ 
@@ -14,7 +16,8 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
   previousRecords, 
   currentRecord,
   onBack, 
-  onSave 
+  onSave,
+  onLogout
 }) => {
   const [currentSets, setCurrentSets] = useState<WorkoutSet[]>(
     currentRecord ? currentRecord.sets : [
@@ -53,16 +56,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <div className="mb-[15px]">
-        <div className="w-full bg-surface-secondary rounded-[10px] px-[15px] py-[10px] text-center mb-[10px]">
-          <h1 className="text-surface-primary font-dotgothic text-xl">
-            Exercise Input
-          </h1>
-          <p className="text-surface-primary opacity-80 font-dotgothic text-sm">
-            {exercise.name} - {exercise.muscleGroup}
-          </p>
-        </div>
-      </div>
+      <TitleBar title={`${exercise.name} - ${exercise.muscleGroup}`} onLogout={onLogout} />
 
       {previousRecords.filter(record => record.id !== currentRecord?.id).length > 0 && (
         <div className="bg-surface-secondary rounded-[10px] p-[10px] border border-white mb-[20px]">
