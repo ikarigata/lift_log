@@ -15,7 +15,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
   exercise, 
   previousRecords, 
   currentRecord,
-  onBack, 
+  onBack: _onBack, 
   onSave,
   onLogout
 }) => {

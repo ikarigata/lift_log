@@ -11,7 +11,7 @@ interface ExerciseListProps {
 
 const ExerciseList: React.FC<ExerciseListProps> = ({ 
   exercises, 
-  onBack, 
+  onBack: _onBack, 
   onSelectExercise,
   onLogout
 }) => {

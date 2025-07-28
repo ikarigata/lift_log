@@ -35,6 +35,7 @@ export interface ExerciseProgressItem {
   date: string;
   maxWeight: number;
   totalVolume: number;
+  max1RM: number;
 }
 
 export interface ExerciseProgressResponse {

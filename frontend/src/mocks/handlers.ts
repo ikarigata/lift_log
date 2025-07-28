@@ -2,7 +2,7 @@ import { http, HttpResponse } from 'msw'
 import type { WorkoutDay, WorkoutRecord, Exercise } from '../types'
 
 // JWT関連の定数とユーティリティ
-const JWT_SECRET = 'mock-secret-key'
+// const JWT_SECRET = 'mock-secret-key'
 const MOCK_USER_ID = '123e4567-e89b-12d3-a456-426614174000' // UUID形式
 
 // 簡易JWT生成（モック用）
@@ -424,6 +424,324 @@ const workoutRecords: WorkoutRecord[] = [
     ],
     createdAt: '2025-07-11T08:00:00Z',
     updatedAt: '2025-07-11T08:30:00Z'
+  },
+  {
+    id: '15',
+    workoutDayId: '6',
+    exerciseId: 'ex4',
+    exerciseName: 'スクワット',
+    sets: [
+      { setNumber: 1, weight: 85, reps: 12, subReps: 3 },
+      { setNumber: 2, weight: 80, reps: 15 },
+      { setNumber: 3, weight: 75, reps: 18, subReps: 2 }
+    ],
+    createdAt: '2025-07-11T08:30:00Z',
+    updatedAt: '2025-07-11T09:00:00Z'
+  },
+  // 2025年7月08日 - 胸・三頭の日
+  {
+    id: '16',
+    workoutDayId: '7',
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 72.5, reps: 10 },
+      { setNumber: 2, weight: 70, reps: 8 },
+      { setNumber: 3, weight: 67.5, reps: 12 }
+    ],
+    createdAt: '2025-07-08T10:00:00Z',
+    updatedAt: '2025-07-08T10:30:00Z'
+  },
+  {
+    id: '17',
+    workoutDayId: '7',
+    exerciseId: 'ex5',
+    exerciseName: 'インクラインベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 55, reps: 10 },
+      { setNumber: 2, weight: 52.5, reps: 12 },
+      { setNumber: 3, weight: 50, reps: 15 }
+    ],
+    createdAt: '2025-07-08T10:30:00Z',
+    updatedAt: '2025-07-08T11:00:00Z'
+  },
+  // 2025年7月05日 - 背中・二頭の日
+  {
+    id: '18',
+    workoutDayId: '8',
+    exerciseId: 'ex3',
+    exerciseName: 'デッドリフト',
+    sets: [
+      { setNumber: 1, weight: 100, reps: 6 },
+      { setNumber: 2, weight: 95, reps: 8 },
+      { setNumber: 3, weight: 90, reps: 10 }
+    ],
+    createdAt: '2025-07-05T09:00:00Z',
+    updatedAt: '2025-07-05T09:30:00Z'
+  },
+  {
+    id: '19',
+    workoutDayId: '8',
+    exerciseId: 'ex11',
+    exerciseName: 'ラットプルダウン',
+    sets: [
+      { setNumber: 1, weight: 65, reps: 12 },
+      { setNumber: 2, weight: 60, reps: 15 },
+      { setNumber: 3, weight: 55, reps: 18 }
+    ],
+    createdAt: '2025-07-05T09:30:00Z',
+    updatedAt: '2025-07-05T10:00:00Z'
+  },
+  {
+    id: '20',
+    workoutDayId: '8',
+    exerciseId: 'ex9',
+    exerciseName: 'バーベルカール',
+    sets: [
+      { setNumber: 1, weight: 30, reps: 12 },
+      { setNumber: 2, weight: 27.5, reps: 15 },
+      { setNumber: 3, weight: 25, reps: 18 }
+    ],
+    createdAt: '2025-07-05T10:00:00Z',
+    updatedAt: '2025-07-05T10:30:00Z'
+  },
+  // 2025年7月02日 - 脚・肩の日
+  {
+    id: '21',
+    workoutDayId: '9',
+    exerciseId: 'ex4',
+    exerciseName: 'スクワット',
+    sets: [
+      { setNumber: 1, weight: 80, reps: 15 },
+      { setNumber: 2, weight: 75, reps: 18 },
+      { setNumber: 3, weight: 70, reps: 20, subReps: 5 }
+    ],
+    createdAt: '2025-07-02T08:00:00Z',
+    updatedAt: '2025-07-02T08:30:00Z'
+  },
+  {
+    id: '22',
+    workoutDayId: '9',
+    exerciseId: 'ex2',
+    exerciseName: 'ショルダープレス',
+    sets: [
+      { setNumber: 1, weight: 37.5, reps: 12 },
+      { setNumber: 2, weight: 35, reps: 15 },
+      { setNumber: 3, weight: 32.5, reps: 18 }
+    ],
+    createdAt: '2025-07-02T08:30:00Z',
+    updatedAt: '2025-07-02T09:00:00Z'
+  },
+  // 2025年6月29日 - 胸・腹筋の日
+  {
+    id: '23',
+    workoutDayId: '10',
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 70, reps: 10 },
+      { setNumber: 2, weight: 67.5, reps: 12 },
+      { setNumber: 3, weight: 65, reps: 15 }
+    ],
+    createdAt: '2025-06-29T10:00:00Z',
+    updatedAt: '2025-06-29T10:30:00Z'
+  },
+  // 6月の他の記録も追加...
+  {
+    id: '24',
+    workoutDayId: '11',
+    exerciseId: 'ex3',
+    exerciseName: 'デッドリフト',
+    sets: [
+      { setNumber: 1, weight: 95, reps: 6 },
+      { setNumber: 2, weight: 90, reps: 8 },
+      { setNumber: 3, weight: 85, reps: 10 }
+    ],
+    createdAt: '2025-06-26T09:00:00Z',
+    updatedAt: '2025-06-26T09:30:00Z'
+  },
+  {
+    id: '25',
+    workoutDayId: '12',
+    exerciseId: 'ex4',
+    exerciseName: 'スクワット',
+    sets: [
+      { setNumber: 1, weight: 75, reps: 15 },
+      { setNumber: 2, weight: 70, reps: 18 },
+      { setNumber: 3, weight: 65, reps: 20 }
+    ],
+    createdAt: '2025-06-23T08:00:00Z',
+    updatedAt: '2025-06-23T08:30:00Z'
+  },
+  {
+    id: '26',
+    workoutDayId: '13',
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 67.5, reps: 10 },
+      { setNumber: 2, weight: 65, reps: 12 },
+      { setNumber: 3, weight: 62.5, reps: 15 }
+    ],
+    createdAt: '2025-06-20T10:00:00Z',
+    updatedAt: '2025-06-20T10:30:00Z'
+  },
+  {
+    id: '27',
+    workoutDayId: '14',
+    exerciseId: 'ex3',
+    exerciseName: 'デッドリフト',
+    sets: [
+      { setNumber: 1, weight: 90, reps: 6 },
+      { setNumber: 2, weight: 85, reps: 8 },
+      { setNumber: 3, weight: 80, reps: 10 }
+    ],
+    createdAt: '2025-06-17T09:00:00Z',
+    updatedAt: '2025-06-17T09:30:00Z'
+  },
+  {
+    id: '28',
+    workoutDayId: '15',
+    exerciseId: 'ex4',
+    exerciseName: 'スクワット',
+    sets: [
+      { setNumber: 1, weight: 70, reps: 15 },
+      { setNumber: 2, weight: 67.5, reps: 18 },
+      { setNumber: 3, weight: 65, reps: 20 }
+    ],
+    createdAt: '2025-06-14T08:00:00Z',
+    updatedAt: '2025-06-14T08:30:00Z'
+  },
+  // 5月のデータ
+  {
+    id: '29',
+    workoutDayId: '16',
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 65, reps: 10 },
+      { setNumber: 2, weight: 62.5, reps: 12 },
+      { setNumber: 3, weight: 60, reps: 15 }
+    ],
+    createdAt: '2025-06-11T10:00:00Z',
+    updatedAt: '2025-06-11T10:30:00Z'
+  },
+  {
+    id: '30',
+    workoutDayId: '17',
+    exerciseId: 'ex3',
+    exerciseName: 'デッドリフト',
+    sets: [
+      { setNumber: 1, weight: 85, reps: 6 },
+      { setNumber: 2, weight: 80, reps: 8 },
+      { setNumber: 3, weight: 75, reps: 10 }
+    ],
+    createdAt: '2025-06-08T09:00:00Z',
+    updatedAt: '2025-06-08T09:30:00Z'
+  },
+  {
+    id: '31',
+    workoutDayId: '18',
+    exerciseId: 'ex4',
+    exerciseName: 'スクワット',
+    sets: [
+      { setNumber: 1, weight: 67.5, reps: 15 },
+      { setNumber: 2, weight: 65, reps: 18 },
+      { setNumber: 3, weight: 62.5, reps: 20 }
+    ],
+    createdAt: '2025-06-05T08:00:00Z',
+    updatedAt: '2025-06-05T08:30:00Z'
+  },
+  {
+    id: '32',
+    workoutDayId: '19',
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 62.5, reps: 10 },
+      { setNumber: 2, weight: 60, reps: 12 },
+      { setNumber: 3, weight: 57.5, reps: 15 }
+    ],
+    createdAt: '2025-06-02T10:00:00Z',
+    updatedAt: '2025-06-02T10:30:00Z'
+  },
+  {
+    id: '33',
+    workoutDayId: '20',
+    exerciseId: 'ex3',
+    exerciseName: 'デッドリフト',
+    sets: [
+      { setNumber: 1, weight: 80, reps: 6 },
+      { setNumber: 2, weight: 75, reps: 8 },
+      { setNumber: 3, weight: 70, reps: 10 }
+    ],
+    createdAt: '2025-05-30T09:00:00Z',
+    updatedAt: '2025-05-30T09:30:00Z'
+  },
+  {
+    id: '34',
+    workoutDayId: '21',
+    exerciseId: 'ex4',
+    exerciseName: 'スクワット',
+    sets: [
+      { setNumber: 1, weight: 65, reps: 15 },
+      { setNumber: 2, weight: 62.5, reps: 18 },
+      { setNumber: 3, weight: 60, reps: 20 }
+    ],
+    createdAt: '2025-05-27T08:00:00Z',
+    updatedAt: '2025-05-27T08:30:00Z'
+  },
+  {
+    id: '35',
+    workoutDayId: '22',
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 60, reps: 10 },
+      { setNumber: 2, weight: 57.5, reps: 12 },
+      { setNumber: 3, weight: 55, reps: 15 }
+    ],
+    createdAt: '2025-05-24T10:00:00Z',
+    updatedAt: '2025-05-24T10:30:00Z'
+  },
+  {
+    id: '36',
+    workoutDayId: '23',
+    exerciseId: 'ex3',
+    exerciseName: 'デッドリフト',
+    sets: [
+      { setNumber: 1, weight: 75, reps: 6 },
+      { setNumber: 2, weight: 70, reps: 8 },
+      { setNumber: 3, weight: 65, reps: 10 }
+    ],
+    createdAt: '2025-05-21T09:00:00Z',
+    updatedAt: '2025-05-21T09:30:00Z'
+  },
+  {
+    id: '37',
+    workoutDayId: '24',
+    exerciseId: 'ex4',
+    exerciseName: 'スクワット',
+    sets: [
+      { setNumber: 1, weight: 62.5, reps: 15 },
+      { setNumber: 2, weight: 60, reps: 18 },
+      { setNumber: 3, weight: 57.5, reps: 20 }
+    ],
+    createdAt: '2025-05-18T08:00:00Z',
+    updatedAt: '2025-05-18T08:30:00Z'
+  },
+  {
+    id: '38',
+    workoutDayId: '25',
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 57.5, reps: 10 },
+      { setNumber: 2, weight: 55, reps: 12 },
+      { setNumber: 3, weight: 52.5, reps: 15 }
+    ],
+    createdAt: '2025-05-15T10:00:00Z',
+    updatedAt: '2025-05-15T10:30:00Z'
   }
 ];
 
@@ -523,6 +841,84 @@ export const handlers = [
     }
     return new HttpResponse(null, { status: 404 });
   })),
+  // Statistics API
+  http.get('/api/users/:userId/statistics/progress/:exerciseId', requireAuth(({ params }: { params: any }) => {
+    const { exerciseId } = params;
+    const exercise = exercises.find(ex => ex.id === exerciseId);
+    
+    if (!exercise) {
+      return new HttpResponse(JSON.stringify({ message: 'Exercise not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // 該当する種目のワークアウト記録を取得
+    const exerciseRecords = workoutRecords.filter(record => record.exerciseId === exerciseId);
+    
+    // 日付でグループ化し、統計データを計算
+    const progressMap = new Map();
+    
+    exerciseRecords.forEach(record => {
+      const workoutDay = workoutDays.find(day => day.id === record.workoutDayId);
+      if (!workoutDay) return;
+      
+      const date = workoutDay.date;
+      
+      // 1RM計算 (Epley formula: weight * (1 + reps/30))
+      const calculate1RM = (weight: number, reps: number): number => {
+        if (reps === 0) return 0;
+        return Math.round(weight * (1 + reps / 30) * 100) / 100;
+      };
+      
+      // ボリューム計算 (重量 × セット数 × レップ数)
+      let totalVolume = 0;
+      let max1RM = 0;
+      let maxWeight = 0;
+      
+      record.sets.forEach(set => {
+        // ボリューム計算：メインレップ + サブレップも含める
+        const totalReps = set.reps + (set.subReps || 0);
+        totalVolume += set.weight * totalReps;
+        
+        // 最大重量
+        maxWeight = Math.max(maxWeight, set.weight);
+        
+        // 1RM計算：メインレップのみを使用（より正確な1RMのため）
+        const oneRM = calculate1RM(set.weight, set.reps);
+        max1RM = Math.max(max1RM, oneRM);
+      });
+      
+      if (progressMap.has(date)) {
+        const existing = progressMap.get(date);
+        progressMap.set(date, {
+          date,
+          totalVolume: existing.totalVolume + totalVolume,
+          maxWeight: Math.max(existing.maxWeight, maxWeight),
+          max1RM: Math.max(existing.max1RM, max1RM)
+        });
+      } else {
+        progressMap.set(date, {
+          date,
+          totalVolume,
+          maxWeight,
+          max1RM
+        });
+      }
+    });
+    
+    // 日付順にソート
+    const progress = Array.from(progressMap.values())
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+    return HttpResponse.json({
+      userId: MOCK_USER_ID,
+      exerciseId,
+      exerciseName: exercise.name,
+      progress
+    });
+  })),
+
   // Login
   http.post('/api/v1/login', async ({ request }) => {
     try {
