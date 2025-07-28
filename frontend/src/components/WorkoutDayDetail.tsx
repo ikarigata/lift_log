@@ -14,7 +14,7 @@ interface WorkoutDayDetailProps {
 const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({ 
   workoutDay, 
   workoutRecords, 
-  onBack,
+  onBack: _onBack,
   onAddExercise,
   onEditExercise,
   onLogout

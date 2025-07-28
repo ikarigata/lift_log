@@ -13,7 +13,7 @@ interface ExerciseManagementProps {
 
 const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
   exercises,
-  onBack,
+  onBack: _onBack,
   onAddExercise,
   onDeleteExercise,
   onToggleFavorite,

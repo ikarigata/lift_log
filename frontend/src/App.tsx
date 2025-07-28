@@ -15,7 +15,7 @@ import { getExercises, addExercise, deleteExercise, getWorkoutRecords, saveWorko
 import { isAuthenticated, removeToken } from './utils/auth';
 
 // レイアウトコンポーネント（ボトムナビゲーション付き）
-const Layout = ({ children, onAddWorkout, onLogout }: { children: React.ReactNode, onAddWorkout: () => void, onLogout: () => void }) => {
+const Layout = ({ children, onAddWorkout, onLogout: _onLogout }: { children: React.ReactNode, onAddWorkout: () => void, onLogout: () => void }) => {
   const location = useLocation();
   const showBottomNav = location.pathname !== '/login';
 
@@ -190,6 +190,7 @@ const AppContent = () => {
               element={
                 <StatisticsPage
                   exercises={exercises}
+                  onLogout={handleLogout}
                 />
               }
             />

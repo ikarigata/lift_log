@@ -37,6 +37,7 @@ const ExerciseInputPage: React.FC<ExerciseInputPageProps> = ({
   };
 
   const handleSave = (sets: WorkoutSet[], memo?: string) => {
+    if (!workoutId || !exerciseId) return;
     onSaveExercise(workoutId, exerciseId, sets, memo, editingRecord?.id);
     navigate(`/workout/${workoutId}`);
   };

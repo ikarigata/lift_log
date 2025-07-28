@@ -1,5 +1,5 @@
 import React from 'react';
-import SetRecord from './SetRecord';
+// import SetRecord from './SetRecord';
 
 interface CurrentWorkoutBlockProps {
   exerciseName: string;

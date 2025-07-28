@@ -9,7 +9,7 @@ interface CalendarProps {
   onLogout: () => void;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ onBack, onSelectDate, onLogout }) => {
+const Calendar: React.FC<CalendarProps> = ({ onBack: _onBack, onSelectDate, onLogout }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([]);
   const [workoutRecords, setWorkoutRecords] = useState<WorkoutRecord[]>([]);
