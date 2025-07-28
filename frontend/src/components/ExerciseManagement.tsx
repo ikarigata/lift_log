@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TitleBar from './TitleBar';
 import type { Exercise } from '../types';
 
 interface ExerciseManagementProps {
@@ -7,6 +8,7 @@ interface ExerciseManagementProps {
   onAddExercise: (name: string, muscleGroup: string) => void;
   onDeleteExercise: (exerciseId: string) => void;
   onToggleFavorite: (exerciseId: string) => void;
+  onLogout: () => void;
 }
 
 const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
@@ -14,7 +16,8 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
   onBack,
   onAddExercise,
   onDeleteExercise,
-  onToggleFavorite
+  onToggleFavorite,
+  onLogout
 }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newExerciseName, setNewExerciseName] = useState('');
@@ -47,13 +50,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <div className="mb-[15px]">
-        <div className="w-full bg-surface-secondary rounded-[10px] px-[15px] py-[10px] text-center mb-[10px]">
-          <h1 className="text-surface-primary font-dotgothic text-xl">
-            Exercise Management
-          </h1>
-        </div>
-      </div>
+      <TitleBar title="Exercise Management" onLogout={onLogout} />
 
       {/* Add Exercise Button */}
       <button

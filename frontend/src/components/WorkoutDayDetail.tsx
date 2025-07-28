@@ -1,4 +1,5 @@
 import React from 'react';
+import TitleBar from './TitleBar';
 import type { WorkoutDay, WorkoutRecord } from '../types';
 
 interface WorkoutDayDetailProps {
@@ -7,6 +8,7 @@ interface WorkoutDayDetailProps {
   onBack: () => void;
   onAddExercise: () => void;
   onEditExercise: (record: WorkoutRecord) => void;
+  onLogout: () => void;
 }
 
 const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({ 
@@ -14,7 +16,8 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
   workoutRecords, 
   onBack,
   onAddExercise,
-  onEditExercise
+  onEditExercise,
+  onLogout
 }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -27,16 +30,15 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <div className="mb-[15px]">
-        <div className="w-full bg-surface-secondary rounded-[10px] px-[15px] py-[10px] text-center mb-[10px]">
-          <h1 className="text-surface-primary font-dotgothic text-xl">
-            Workout Detail
-          </h1>
-          <p className="text-surface-primary opacity-80 font-dotgothic text-sm">
-            {formatDate(workoutDay.date)}{workoutDay.name && ` - ${workoutDay.name}`}
-          </p>
-        </div>
-      </div>
+      <TitleBar 
+        title={
+          <div>
+            <div>Workout Detail{workoutDay.name && ` - ${workoutDay.name}`}</div>
+            <div className="text-sm opacity-80">{formatDate(workoutDay.date)}</div>
+          </div>
+        } 
+        onLogout={onLogout} 
+      />
 
       <button
         onClick={onAddExercise}

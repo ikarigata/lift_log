@@ -13,28 +13,13 @@ import { getWorkoutDays, addWorkoutDay } from './api/workouts';
 import { getExercises, addExercise, deleteExercise, getWorkoutRecords, saveWorkoutRecord } from './api/exercises';
 import { isAuthenticated, removeToken } from './utils/auth';
 
-import TitleBar from './components/TitleBar';
-
 // レイアウトコンポーネント（ボトムナビゲーション付き）
 const Layout = ({ children, onAddWorkout, onLogout }: { children: React.ReactNode, onAddWorkout: () => void, onLogout: () => void }) => {
   const location = useLocation();
   const showBottomNav = location.pathname !== '/login';
 
-  const getTitle = () => {
-    const path = location.pathname;
-    if (path === '/') return 'History';
-    if (path.startsWith('/workout/')) return 'Workout Detail';
-    if (path.endsWith('/exercises')) return 'Exercise List';
-    if (path.includes('/exercise/')) return 'Exercise Input';
-    if (path === '/calendar') return 'Calendar';
-    if (path === '/exercises') return 'Exercise Management';
-    return 'lift_log';
-  };
-
   return (
-    <div className="min-h-screen flex flex-col w-full overflow-x-hidden px-2 py-4 space-y-[10px] bg-surface-primary">
-      {showBottomNav && <TitleBar title={getTitle()} onLogout={onLogout} />}
-      
+    <div className="min-h-screen flex flex-col w-full overflow-x-hidden">
       <div 
         className={`flex-1 w-full ${showBottomNav ? 'pb-10' : ''}`}
         style={{ 
@@ -190,6 +175,7 @@ const AppContent = () => {
                   workoutDays={workoutDays}
                   workoutRecords={workoutRecords}
                   exercises={exercises}
+                  onLogout={handleLogout}
                 />
               }
             />
@@ -204,6 +190,7 @@ const AppContent = () => {
                 <WorkoutDetailPage
                   workoutDays={workoutDays}
                   workoutRecords={workoutRecords}
+                  onLogout={handleLogout}
                 />
               }
             />
@@ -217,6 +204,7 @@ const AppContent = () => {
               element={
                 <ExerciseListPage
                   exercises={exercises}
+                  onLogout={handleLogout}
                 />
               }
             />
@@ -232,6 +220,7 @@ const AppContent = () => {
                   exercises={exercises}
                   workoutRecords={workoutRecords}
                   onSaveExercise={handleSaveExercise}
+                  onLogout={handleLogout}
                 />
               }
             />
@@ -247,6 +236,7 @@ const AppContent = () => {
                   exercises={exercises}
                   workoutRecords={workoutRecords}
                   onSaveExercise={handleSaveExercise}
+                  onLogout={handleLogout}
                 />
               }
             />
@@ -257,7 +247,7 @@ const AppContent = () => {
           element={
             <PrivateRoute
               isAuthenticatedState={isAuthenticatedState}
-              element={<CalendarPage />}
+              element={<CalendarPage onLogout={handleLogout} />}
             />
           }
         />
@@ -272,6 +262,7 @@ const AppContent = () => {
                   onAddExercise={handleAddNewExercise}
                   onDeleteExercise={handleDeleteExercise}
                   onToggleFavorite={handleToggleFavorite}
+                  onLogout={handleLogout}
                 />
               }
             />
