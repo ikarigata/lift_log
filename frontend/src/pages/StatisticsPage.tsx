@@ -201,10 +201,6 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
 
       <div className="bg-surface-secondary rounded-[10px] p-2 space-y-2">
         <div className="relative" ref={dropdownRef}>
-          <label className="block text-sm font-medium text-content-secondary mb-1 font-dotgothic">
-            トレーニング種目
-          </label>
-          
           {/* アコーディオンボタン */}
           <button
             onClick={toggleDropdown}
