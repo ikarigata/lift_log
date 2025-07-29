@@ -4,7 +4,8 @@ import { Line } from 'react-chartjs-2';
 import { getExerciseProgress } from '../api/statistics';
 import TitleBar from '../components/TitleBar';
 import type { Exercise, ExerciseProgressResponse } from '../types';
-import { isAuthenticated } from '../utils/auth'; // 実際にはAppからユーザー情報を渡すべき
+import { isAuthenticated } from '../utils/auth';
+import { calculateMax1RM } from '../utils/rmCalculator';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -48,27 +49,25 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        // TODO: ユーザーIDを適切に取得する
-        const userId = 'user1'; // 仮
-        const data: ExerciseProgressResponse = await getExerciseProgress(userId, selectedExercise);
+        const data: ExerciseProgressResponse = await getExerciseProgress(selectedExercise);
 
-        const labels = data.progress.map(p => new Date(p.date).toLocaleDateString());
-        const volumeData = data.progress.map(p => p.totalVolume);
-        const maxWeightData = data.progress.map(p => p.maxWeight);
-        const max1RMData = data.progress.map(p => p.max1RM);
+        const labels = data.progressData.map(p => new Date(p.date).toLocaleDateString());
+        const totalVolumeData = data.progressData.map(p => p.totalVolume);
+        const maxWeightData = data.progressData.map(p => p.maxWeight);
+        const oneRMData = data.progressData.map(p => calculateMax1RM(p.sets));
 
         setChartData({
           labels,
           datasets: [
             {
               label: '総ボリューム (kg)',
-              data: volumeData,
+              data: totalVolumeData,
               borderColor: 'rgb(239, 68, 68)', // 赤
               backgroundColor: 'rgba(239, 68, 68, 0.3)',
               yAxisID: 'y_volume',
             },
             {
-              label: '最大重量 (kg)',
+              label: 'Max重量 (kg)',
               data: maxWeightData,
               borderColor: 'rgb(251, 191, 36)', // より明るい黄色
               backgroundColor: 'rgba(251, 191, 36, 0.3)',
@@ -76,7 +75,7 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
             },
             {
               label: '推定1RM (kg)',
-              data: max1RMData,
+              data: oneRMData,
               borderColor: 'rgb(37, 99, 235)', // より暗い青
               backgroundColor: 'rgba(37, 99, 235, 0.3)',
               yAxisID: 'y_weight',

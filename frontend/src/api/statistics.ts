@@ -1,10 +1,9 @@
 import { authenticatedFetch, BASE_URL } from './config';
-import type { ExerciseProgressResponse } from '../types'; // 型は後で定義します
+import type { ExerciseProgressResponse } from '../types';
 
-// ユーザーIDを引数で受け取るように変更（または認証コンテキストから取得）
-export const getExerciseProgress = async (userId: string, exerciseId: string): Promise<ExerciseProgressResponse> => {
+export const getExerciseProgress = async (exerciseId: string): Promise<ExerciseProgressResponse> => {
   try {
-    const response = await authenticatedFetch(`${BASE_URL}/users/${userId}/statistics/progress/${exerciseId}`);
+    const response = await authenticatedFetch(`${BASE_URL}/statistics/progress/${exerciseId}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
