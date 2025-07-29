@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import zoomPlugin from 'chartjs-plugin-zoom';
 import { Line } from 'react-chartjs-2';
 import { getExerciseProgress } from '../api/statistics';
 import TitleBar from '../components/TitleBar';
@@ -7,7 +8,7 @@ import type { Exercise, ExerciseProgressResponse } from '../types';
 import { isAuthenticated } from '../utils/auth';
 import { calculateMax1RM } from '../utils/rmCalculator';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin);
 
 interface StatisticsPageProps {
   exercises: Exercise[];
@@ -56,6 +57,11 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
         const maxWeightData = data.progressData.map(p => p.maxWeight);
         const oneRMData = data.progressData.map(p => calculateMax1RM(p.sets));
 
+        // 初期表示範囲を直近10ポイントに設定
+        const dataLength = labels.length;
+        const initialStartIndex = Math.max(0, dataLength - 10);
+        const initialEndIndex = dataLength - 1;
+
         setChartData({
           labels,
           datasets: [
@@ -103,7 +109,8 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const options = {
+  // チャートオプションを動的に生成
+  const getChartOptions = (dataLength: number) => ({
     responsive: true,
     maintainAspectRatio: false,
     layout: {
@@ -128,9 +135,32 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
       title: {
         display: false, // タイトルを非表示（プルダウンと内容が重複するため）
       },
+      zoom: {
+        limits: {
+          y: {min: 0, max: 'original'},
+          x: {min: 'original', max: 'original'}
+        },
+        pan: {
+          enabled: true,
+          mode: 'x' as const, // 横方向のパンのみ有効
+          modifierKey: null, // キー押下なしでパン可能
+        },
+        zoom: {
+          wheel: {
+            enabled: true,
+            modifierKey: 'ctrl' as const, // Ctrl+ホイールでズーム
+          },
+          pinch: {
+            enabled: true // ピンチでズーム（タッチデバイス）
+          },
+          mode: 'x' as const, // 横方向のズームのみ
+        }
+      }
     },
     scales: {
         x: {
+          min: Math.max(0, dataLength - 10), // 初期表示は直近10ポイント
+          max: dataLength - 1,
           ticks: {
             color: '#FEF3C7', // amber-100 (ベージュ色)
             font: {
@@ -192,7 +222,7 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
           },
         },
       },
-  };
+  });
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
@@ -232,6 +262,13 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
           )}
         </div>
 
+        {/* 操作ヘルプ */}
+        <div className="bg-surface-secondary rounded-[10px] p-2">
+          <p className="text-amber-100 font-dotgothic text-xs text-center">
+            📱 ドラッグで横スクロール | 🖱️ Ctrl+ホイールでズーム | 📌 ピンチでズーム
+          </p>
+        </div>
+
         <div className="relative h-[550px] bg-surface-secondary rounded-[10px] overflow-hidden">
           {isLoading ? (
             <div className="flex justify-center items-center h-full">
@@ -239,7 +276,7 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
             </div>
           ) : (
             <div className="w-full h-full">
-              <Line options={options} data={chartData} />
+              <Line options={getChartOptions(chartData.labels?.length || 0)} data={chartData} />
             </div>
           )}
         </div>

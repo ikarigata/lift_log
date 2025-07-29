@@ -1022,11 +1022,11 @@ export const handlers = [
       }
     });
     
-    // 日付順にソートし、直近10回分のデータのみ取得
+    // 日付順にソートし、直近100回分のデータのみ取得
     const allProgressData = Array.from(progressMap.values())
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     
-    const progressData = allProgressData.slice(-10); // 直近10回分のみ
+    const progressData = allProgressData.slice(-100); // 直近100回分のみ
 
     // 全体統計を計算
     const allSets = exerciseRecords.flatMap(record => record.sets);
