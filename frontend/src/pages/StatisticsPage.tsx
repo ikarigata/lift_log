@@ -21,6 +21,7 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<any>(null);
 
   // 初期表示の種目を選択
   useEffect(() => {
@@ -43,6 +44,53 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
     };
   }, []);
 
+  // カスタム横スクロール処理
+  useEffect(() => {
+    const handleWheel = (event: WheelEvent) => {
+      if (event.shiftKey && chartRef.current) {
+        event.preventDefault();
+        const chart = chartRef.current;
+        const xScale = chart.scales.x;
+        
+        // 現在の表示範囲を取得
+        const currentMin = xScale.min || 0;
+        const currentMax = xScale.max || (chartData.labels?.length - 1) || 0;
+        const viewportSize = currentMax - currentMin;
+        
+        // スクロール量を計算（deltaYを使って横スクロールを実現）
+        const scrollAmount = Math.sign(event.deltaY) * Math.max(1, viewportSize * 0.1);
+        
+        // 新しい範囲を計算
+        let newMin = currentMin + scrollAmount;
+        let newMax = currentMax + scrollAmount;
+        
+        // 範囲制限
+        const dataLength = chartData.labels?.length || 0;
+        if (newMin < 0) {
+          newMin = 0;
+          newMax = viewportSize;
+        }
+        if (newMax >= dataLength) {
+          newMax = dataLength - 1;
+          newMin = Math.max(0, newMax - viewportSize);
+        }
+        
+        // チャートの表示範囲を更新
+        chart.options.scales.x.min = newMin;
+        chart.options.scales.x.max = newMax;
+        chart.update('none');
+      }
+    };
+
+    const chartContainer = chartRef.current?.canvas?.parentElement;
+    if (chartContainer) {
+      chartContainer.addEventListener('wheel', handleWheel, { passive: false });
+      return () => {
+        chartContainer.removeEventListener('wheel', handleWheel);
+      };
+    }
+  }, [chartData]);
+
   // 選択された種目が変わったらデータを再取得
   useEffect(() => {
     if (!selectedExercise || !isAuthenticated()) return;
@@ -56,11 +104,6 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
         const totalVolumeData = data.progressData.map(p => p.totalVolume);
         const maxWeightData = data.progressData.map(p => p.maxWeight);
         const oneRMData = data.progressData.map(p => calculateMax1RM(p.sets));
-
-        // 初期表示範囲を直近10ポイントに設定
-        const dataLength = labels.length;
-        const initialStartIndex = Math.max(0, dataLength - 10);
-        const initialEndIndex = dataLength - 1;
 
         setChartData({
           labels,
@@ -137,36 +180,61 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
       },
       zoom: {
         limits: {
-          y: {min: 0, max: 'original'},
-          x: {min: 'original', max: 'original'}
+          y: {min: 0, max: 'original' as const},
+          x: {min: 0, max: dataLength - 1}
         },
         pan: {
           enabled: true,
-          mode: 'x' as const, // 横方向のパンのみ有効
-          modifierKey: null, // キー押下なしでパン可能
+          mode: 'x' as const,
+          onPanComplete: function(context: any) {
+            // パン完了時のコールバック（デバッグ用）
+            console.log('Pan completed:', context);
+          }
         },
         zoom: {
           wheel: {
             enabled: true,
-            modifierKey: 'ctrl' as const, // Ctrl+ホイールでズーム
+            modifierKey: 'ctrl' as const,
           },
           pinch: {
-            enabled: true // ピンチでズーム（タッチデバイス）
+            enabled: true
           },
-          mode: 'x' as const, // 横方向のズームのみ
+          drag: {
+            enabled: false // パンと競合しないよう無効
+          },
+          mode: 'x' as const,
+          onZoomComplete: function(context: any) {
+            // ズーム完了時のコールバック（デバッグ用）
+            console.log('Zoom completed:', context);
+          }
         }
+      }
+    },
+    onHover: (event: any, elements: any) => {
+      // マウスオーバー時のカーソル変更
+      if (event && event.native && event.native.target) {
+        event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'grab';
+      }
+    },
+    onClick: (event: any) => {
+      // ダブルクリックでズームリセット
+      if (event.native.detail === 2) {
+        const chart = event.chart;
+        chart.resetZoom();
       }
     },
     scales: {
         x: {
+          type: 'category' as const,
           min: Math.max(0, dataLength - 10), // 初期表示は直近10ポイント
-          max: dataLength - 1,
+          max: dataLength > 0 ? dataLength - 1 : 0,
           ticks: {
             color: '#FEF3C7', // amber-100 (ベージュ色)
             font: {
               family: 'DotGothic16',
               size: 10, // 小さくしてスペースを節約
             },
+            maxTicksLimit: 10, // 表示するティック数を制限
           },
           grid: {
             color: '#3B3C3F', // surface-secondary背景に合うグリッド色
@@ -265,7 +333,7 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
         {/* 操作ヘルプ */}
         <div className="bg-surface-secondary rounded-[10px] p-2">
           <p className="text-amber-100 font-dotgothic text-xs text-center">
-            📱 ドラッグで横スクロール | 🖱️ Ctrl+ホイールでズーム | 📌 ピンチでズーム
+            🖱️ Ctrl+ホイールでズーム | 📌 ピンチでズーム | ⬅️➡️ Shift+ホイールで横スクロール | 🔍 ドラッグでパン | ダブルクリックでリセット
           </p>
         </div>
 
@@ -276,7 +344,11 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
             </div>
           ) : (
             <div className="w-full h-full">
-              <Line options={getChartOptions(chartData.labels?.length || 0)} data={chartData} />
+              <Line 
+                ref={chartRef}
+                options={getChartOptions(chartData.labels?.length || 0)} 
+                data={chartData} 
+              />
             </div>
           )}
         </div>
