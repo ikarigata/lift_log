@@ -794,7 +794,7 @@ paths:
       tags:
         - Statistics
       summary: エクササイズ進捗取得
-      description: 指定したエクササイズの進捗データを取得します（認証されたユーザーのデータのみ）
+      description: 指定したエクササイズの直近10回分の進捗データを取得します（認証されたユーザーのデータのみ）
       parameters:
         - name: exerciseId
           in: path

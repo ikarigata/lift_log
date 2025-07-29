@@ -51,7 +51,8 @@ public class StatisticsService {
         Map<LocalDate, List<WorkoutSet>> setsByDate = workoutSets.stream()
                 .collect(Collectors.groupingBy(set -> set.getCreatedAt().toLocalDate()));
 
-        List<ProgressData> progressDataList = setsByDate.entrySet().stream()
+        // 日付順にソートし、直近10回分のデータのみ取得
+        List<ProgressData> allProgressData = setsByDate.entrySet().stream()
                 .map(entry -> {
                     LocalDate date = entry.getKey();
                     List<WorkoutSet> setsOnDate = entry.getValue();
@@ -75,6 +76,11 @@ public class StatisticsService {
                     return new ProgressData(date, totalVolume, maxWeight, setDataList);
                 })
                 .sorted(Comparator.comparing(ProgressData::getDate))
+                .collect(Collectors.toList());
+
+        // 直近10回分のデータのみを取得
+        List<ProgressData> progressDataList = allProgressData.stream()
+                .skip(Math.max(0, allProgressData.size() - 10))
                 .collect(Collectors.toList());
 
         // 統計情報を計算
