@@ -4,8 +4,10 @@ info:
   description: シンプルでスタイリッシュな筋トレ記録アプリのためのRESTful API
   version: 1.0.0
 servers:
-  - url: /api/v1
+  - url: /api
     description: 開発サーバー
+  - url: /api/v1
+    description: 一部のエンドポイント用
 
 paths:
   #-------------------------
@@ -95,21 +97,25 @@ paths:
   #-------------------------
   # トレーニング日API
   #-------------------------
-  /users/{userId}/workout-days:
-    parameters:
-      - name: userId
-        in: path
-        description: ユーザーID
-        required: true
-        schema:
-          type: string
-          format: uuid
-    
+  /workout-days:
     get:
-      summary: ユーザーのトレーニング日一覧取得
-      operationId: getUserWorkoutDays
+      summary: トレーニング日一覧取得
+      operationId: getWorkoutDays
       tags:
         - workout-days
+      parameters:
+        - name: fromDate
+          in: query
+          description: 開始日
+          schema:
+            type: string
+            format: date
+        - name: toDate
+          in: query
+          description: 終了日
+          schema:
+            type: string
+            format: date
       responses:
         '200':
           description: トレーニング日一覧取得成功
@@ -142,8 +148,35 @@ paths:
                 $ref: '#/components/schemas/WorkoutDayResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
+
+  /workout-days/calendar:
+    get:
+      summary: カレンダー用トレーニング日取得
+      operationId: getWorkoutDaysForCalendar
+      tags:
+        - workout-days
+      parameters:
+        - name: year
+          in: query
+          required: true
+          description: 年
+          schema:
+            type: integer
+        - name: month
+          in: query
+          required: true
+          description: 月
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: カレンダー用データ取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutDayResponse'
   
   /workout-days/{id}:
     parameters:
@@ -207,6 +240,43 @@ paths:
   #-------------------------
   # トレーニング実績API
   #-------------------------
+  /workout-records:
+    get:
+      summary: トレーニング実績一覧取得
+      operationId: getAllWorkoutRecords
+      tags:
+        - workout-records
+      responses:
+        '200':
+          description: トレーニング実績一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutRecordResponse'
+    
+    post:
+      summary: トレーニング実績登録
+      operationId: createWorkoutRecord
+      tags:
+        - workout-records
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutRecordRequest'
+      responses:
+        '201':
+          description: トレーニング実績登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutRecordResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
   /workout-days/{workoutDayId}/workout-records:
     parameters:
       - name: workoutDayId
@@ -429,7 +499,61 @@ paths:
           $ref: '#/components/responses/NotFound'
 
   #-------------------------
-  # トレーニング種目API（マスターデータ）
+  # 認証API
+  #-------------------------
+  /login:
+    post:
+      summary: ユーザーログイン
+      operationId: login
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  example: "password123"
+      responses:
+        '200':
+          description: ログイン成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      email:
+                        type: string
+        '401':
+          description: 認証失敗
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  #-------------------------
+  # トレーニング種目API
   #-------------------------
   /exercises:
     get:
@@ -629,6 +753,31 @@ paths:
   #-------------------------
   # 集計/統計API
   #-------------------------
+  /statistics/progress/{exerciseId}:
+    parameters:
+      - name: exerciseId
+        in: path
+        description: トレーニング種目ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: 特定種目の進捗取得（時系列）
+      operationId: getExerciseProgress
+      tags:
+        - statistics
+      responses:
+        '200':
+          description: 種目進捗取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseProgressResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
   /users/{userId}/statistics/volume:
     parameters:
       - name: userId
