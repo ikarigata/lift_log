@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class WorkoutRecordController {
 
     private final WorkoutRecordService workoutRecordService;
@@ -23,7 +23,14 @@ public class WorkoutRecordController {
         this.workoutRecordService = workoutRecordService;
     }
 
-<<<<<<< Updated upstream
+    @GetMapping("/workout-records")
+    public ResponseEntity<List<WorkoutRecord>> getAllWorkoutRecords() {
+        // 認証されたユーザーIDを取得
+        UUID userId = AuthenticationUtil.requireCurrentUserUUID();
+        List<WorkoutRecord> workoutRecords = workoutRecordService.getWorkoutRecordsByUserId(userId);
+        return ResponseEntity.ok(workoutRecords);
+    }
+
     @GetMapping("/workout-days/{workoutDayId}/workout-records")
     public ResponseEntity<List<WorkoutRecord>> getWorkoutRecordsByWorkoutDayId(@PathVariable UUID workoutDayId) {
         List<WorkoutRecord> workoutRecords = workoutRecordService.getWorkoutRecordsByWorkoutDayId(workoutDayId);
@@ -36,17 +43,6 @@ public class WorkoutRecordController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
-=======
-    @GetMapping("/workout-records")
-    public ResponseEntity<List<WorkoutRecord>> getAllWorkoutRecords() {
-        // 認証されたユーザーIDを取得
-        UUID userId = AuthenticationUtil.requireCurrentUserUUID();
-        List<WorkoutRecord> workoutRecords = workoutRecordService.getWorkoutRecordsByUserId(userId);
-        return ResponseEntity.ok(workoutRecords);
-    }
-
->>>>>>> Stashed changes
     @PostMapping("/workout-records")
     public ResponseEntity<WorkoutRecord> createWorkoutRecord(@RequestBody WorkoutRecordRequest request) {
         WorkoutRecord workoutRecord = new WorkoutRecord();
@@ -58,7 +54,7 @@ public class WorkoutRecordController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/api/workout-records/{id}")
+                .path("/api/v1/workout-records/{id}")
                 .buildAndExpand(createdRecord.getId())
                 .toUri();
 
@@ -92,7 +88,7 @@ public class WorkoutRecordController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/api/workout-records/{id}")
+                .path("/api/v1/workout-records/{id}")
                 .buildAndExpand(createdRecord.getId())
                 .toUri();
 

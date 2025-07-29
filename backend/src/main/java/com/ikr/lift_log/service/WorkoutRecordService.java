@@ -18,8 +18,6 @@ public class WorkoutRecordService {
         this.workoutRecordRepository = workoutRecordRepository;
     }
 
-<<<<<<< Updated upstream
-=======
     public List<WorkoutRecord> getAllWorkoutRecords() {
         return workoutRecordRepository.findAll();
     }
@@ -27,8 +25,6 @@ public class WorkoutRecordService {
     public List<WorkoutRecord> getWorkoutRecordsByUserId(UUID userId) {
         return workoutRecordRepository.findByUserId(userId);
     }
-
->>>>>>> Stashed changes
     public List<WorkoutRecord> getWorkoutRecordsByWorkoutDayId(UUID workoutDayId) {
         return workoutRecordRepository.findByWorkoutDayId(workoutDayId);
     }

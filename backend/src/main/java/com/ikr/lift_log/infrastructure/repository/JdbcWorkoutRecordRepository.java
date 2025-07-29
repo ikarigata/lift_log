@@ -23,6 +23,20 @@ public class JdbcWorkoutRecordRepository implements WorkoutRecordRepository {
     }
 
     @Override
+    public List<WorkoutRecord> findAll() {
+        return dsl.selectFrom(WORKOUT_RECORDS)
+                .orderBy(WORKOUT_RECORDS.CREATED_AT)
+                .fetch(record -> new WorkoutRecord(
+                        record.get(WORKOUT_RECORDS.ID),
+                        record.get(WORKOUT_RECORDS.WORKOUT_DAY_ID),
+                        record.get(WORKOUT_RECORDS.EXERCISE_ID),
+                        record.get(WORKOUT_RECORDS.NOTES),
+                        record.get(WORKOUT_RECORDS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
+                        record.get(WORKOUT_RECORDS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
+    }
+
+    @Override
     public List<WorkoutRecord> findByWorkoutDayId(UUID workoutDayId) {
         return dsl.selectFrom(WORKOUT_RECORDS)
                 .where(WORKOUT_RECORDS.WORKOUT_DAY_ID.eq(workoutDayId))
