@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.ikr.lift_log.jooq.tables.WorkoutSets.WORKOUT_SETS;
+import static com.ikr.lift_log.jooq.tables.WorkoutRecords.WORKOUT_RECORDS;
+import static com.ikr.lift_log.jooq.tables.WorkoutDays.WORKOUT_DAYS;
 
 @Repository
 public class JdbcWorkoutSetRepository implements WorkoutSetRepository {
@@ -110,5 +112,25 @@ public class JdbcWorkoutSetRepository implements WorkoutSetRepository {
 
         return findById(workoutSet.getId())
                 .orElseThrow(() -> new RuntimeException("Failed to retrieve updated workout set"));
+    }
+
+    @Override
+    public List<WorkoutSet> getWorkoutSetsByExerciseIdAndUserId(UUID exerciseId, UUID userId) {
+        return dsl.select(WORKOUT_SETS.fields())
+                .from(WORKOUT_SETS)
+                .join(WORKOUT_RECORDS).on(WORKOUT_SETS.WORKOUT_RECORD_ID.eq(WORKOUT_RECORDS.ID))
+                .join(WORKOUT_DAYS).on(WORKOUT_RECORDS.WORKOUT_DAY_ID.eq(WORKOUT_DAYS.ID))
+                .where(WORKOUT_RECORDS.EXERCISE_ID.eq(exerciseId)
+                        .and(WORKOUT_DAYS.USER_ID.eq(userId)))
+                .orderBy(WORKOUT_SETS.CREATED_AT)
+                .fetch(record -> new WorkoutSet(
+                    record.get(WORKOUT_SETS.ID),
+                    record.get(WORKOUT_SETS.WORKOUT_RECORD_ID),
+                    record.get(WORKOUT_SETS.REPS),
+                    record.get(WORKOUT_SETS.SUB_REPS) != null ? record.get(WORKOUT_SETS.SUB_REPS) : 0,
+                    record.get(WORKOUT_SETS.WEIGHT),
+                    record.get(WORKOUT_SETS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
+                    record.get(WORKOUT_SETS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
     }
 }

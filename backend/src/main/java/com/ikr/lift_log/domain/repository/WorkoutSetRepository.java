@@ -14,4 +14,6 @@ public interface WorkoutSetRepository {
     WorkoutSet save(WorkoutSet workoutSet);
 
     void deleteById(UUID id);
+    
+    List<WorkoutSet> getWorkoutSetsByExerciseIdAndUserId(UUID exerciseId, UUID userId);
 }
