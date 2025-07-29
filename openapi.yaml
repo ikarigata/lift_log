@@ -1,0 +1,830 @@
+openapi: 3.0.3
+info:
+  title: Lift Log API
+  description: |
+    Lift Log は筋力トレーニングの記録・管理を行うWebアプリケーションです。
+    このAPIは JWT認証を使用し、すべてのAPIリクエストにはAuthorizationヘッダーが必要です。
+  version: 1.0.0
+  contact:
+    name: Lift Log Support
+    email: support@liftlog.example.com
+
+servers:
+  - url: http://localhost:8080/api
+    description: Development server
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT認証トークン
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ユーザーID
+        name:
+          type: string
+          description: ユーザー名
+        email:
+          type: string
+          format: email
+          description: メールアドレス
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Exercise:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: エクササイズID
+        name:
+          type: string
+          description: エクササイズ名
+        muscleGroup:
+          type: string
+          description: 筋肉グループ名
+        description:
+          type: string
+          nullable: true
+          description: エクササイズの説明
+
+    ExerciseRequest:
+      type: object
+      required:
+        - name
+        - muscleGroup
+      properties:
+        name:
+          type: string
+          description: エクササイズ名
+        muscleGroup:
+          type: string
+          description: 筋肉グループ名
+
+    WorkoutDay:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ワークアウト日ID
+        date:
+          type: string
+          format: date
+          description: ワークアウトを実施した日付
+        name:
+          type: string
+          nullable: true
+          description: ワークアウト名（例：胸の日、背中の日）
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    WorkoutRecord:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ワークアウト記録ID
+        workoutDayId:
+          type: string
+          format: uuid
+          description: ワークアウト日ID
+        exerciseId:
+          type: string
+          format: uuid
+          description: エクササイズID
+        notes:
+          type: string
+          nullable: true
+          description: メモ
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    WorkoutRecordRequest:
+      type: object
+      required:
+        - workoutDayId
+        - exerciseId
+      properties:
+        workoutDayId:
+          type: string
+          format: uuid
+          description: ワークアウト日ID
+        exerciseId:
+          type: string
+          format: uuid
+          description: エクササイズID
+        notes:
+          type: string
+          description: メモ
+
+    WorkoutSet:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: セットID
+        workoutRecordId:
+          type: string
+          format: uuid
+          description: ワークアウト記録ID
+        reps:
+          type: integer
+          description: レップ数
+        subReps:
+          type: integer
+          description: 追加レップ数
+        weight:
+          type: number
+          format: decimal
+          description: 重量(kg)
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    WorkoutSetRequest:
+      type: object
+      required:
+        - reps
+        - weight
+      properties:
+        reps:
+          type: integer
+          description: レップ数
+        weight:
+          type: string
+          description: 重量(kg)
+
+    SetData:
+      type: object
+      properties:
+        weight:
+          type: number
+          format: decimal
+          description: 重量
+        reps:
+          type: integer
+          description: レップ数
+
+    ProgressData:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          description: 日付
+        totalVolume:
+          type: number
+          format: decimal
+          description: その日の総ボリューム（重量×レップ数の合計）
+        maxWeight:
+          type: number
+          format: decimal
+          description: その日の最大重量
+        sets:
+          type: array
+          items:
+            $ref: '#/components/schemas/SetData'
+          description: その日のセットデータ（フロントエンドでの1RM計算用）
+
+    ExerciseProgressResponse:
+      type: object
+      properties:
+        exerciseId:
+          type: string
+          description: エクササイズID
+        exerciseName:
+          type: string
+          description: エクササイズ名
+        muscleGroup:
+          type: string
+          description: 筋肉グループ名
+        progressData:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressData'
+          description: 進捗データ
+        maxWeight:
+          type: number
+          format: decimal
+          description: 全期間での最大重量
+        totalSets:
+          type: integer
+          description: 全期間での総セット数
+        totalReps:
+          type: integer
+          description: 全期間での総レップ数
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: メールアドレス
+        password:
+          type: string
+          description: パスワード
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWTトークン
+        user:
+          $ref: '#/components/schemas/User'
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: エラーメッセージ
+        details:
+          type: array
+          items:
+            type: string
+          description: エラー詳細
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: ユーザーログイン
+      description: メールアドレスとパスワードでログインし、JWTトークンを取得します
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: ログイン成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: 認証失敗
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /exercises:
+    get:
+      tags:
+        - Exercises
+      summary: エクササイズ一覧取得
+      description: 認証されたユーザーのエクササイズ一覧を取得します
+      responses:
+        '200':
+          description: エクササイズ一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exercise'
+        '401':
+          description: 認証失敗
+    post:
+      tags:
+        - Exercises
+      summary: エクササイズ作成
+      description: 新しいエクササイズを作成します
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExerciseRequest'
+      responses:
+        '201':
+          description: エクササイズ作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+        '400':
+          description: リクエストエラー
+        '401':
+          description: 認証失敗
+
+  /exercises/{id}:
+    get:
+      tags:
+        - Exercises
+      summary: エクササイズ詳細取得
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: エクササイズ詳細
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+        '404':
+          description: エクササイズが見つからない
+    put:
+      tags:
+        - Exercises
+      summary: エクササイズ更新
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExerciseRequest'
+      responses:
+        '200':
+          description: エクササイズ更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+        '404':
+          description: エクササイズが見つからない
+    delete:
+      tags:
+        - Exercises
+      summary: エクササイズ削除
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: エクササイズ削除成功
+        '404':
+          description: エクササイズが見つからない
+
+  /workout-days:
+    get:
+      tags:
+        - Workout Days
+      summary: ワークアウト日一覧取得
+      description: 認証されたユーザーのワークアウト日一覧を取得します
+      parameters:
+        - name: fromDate
+          in: query
+          schema:
+            type: string
+            format: date
+          description: 開始日（指定した場合、期間指定で取得）
+        - name: toDate
+          in: query
+          schema:
+            type: string
+            format: date
+          description: 終了日（指定した場合、期間指定で取得）
+      responses:
+        '200':
+          description: ワークアウト日一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutDay'
+    post:
+      tags:
+        - Workout Days
+      summary: ワークアウト日作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutDay'
+      responses:
+        '201':
+          description: ワークアウト日作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutDay'
+
+  /workout-days/{id}:
+    get:
+      tags:
+        - Workout Days
+      summary: ワークアウト日詳細取得
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: ワークアウト日詳細
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutDay'
+        '404':
+          description: ワークアウト日が見つからない
+    put:
+      tags:
+        - Workout Days
+      summary: ワークアウト日更新
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutDay'
+      responses:
+        '200':
+          description: ワークアウト日更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutDay'
+        '404':
+          description: ワークアウト日が見つからない
+    delete:
+      tags:
+        - Workout Days
+      summary: ワークアウト日削除
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: ワークアウト日削除成功
+        '404':
+          description: ワークアウト日が見つからない
+
+  /workout-days/calendar:
+    get:
+      tags:
+        - Workout Days
+      summary: カレンダー用ワークアウト日取得
+      description: 指定した年月のワークアウト日を取得します
+      parameters:
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: 年
+        - name: month
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: 月
+      responses:
+        '200':
+          description: ワークアウト日一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutDay'
+
+  /workout-records:
+    post:
+      tags:
+        - Workout Records
+      summary: ワークアウト記録作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutRecordRequest'
+      responses:
+        '201':
+          description: ワークアウト記録作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutRecord'
+
+  /workout-records/{id}:
+    get:
+      tags:
+        - Workout Records
+      summary: ワークアウト記録詳細取得
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: ワークアウト記録詳細
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutRecord'
+        '404':
+          description: ワークアウト記録が見つからない
+    put:
+      tags:
+        - Workout Records
+      summary: ワークアウト記録更新
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutRecordRequest'
+      responses:
+        '200':
+          description: ワークアウト記録更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutRecord'
+        '404':
+          description: ワークアウト記録が見つからない
+    delete:
+      tags:
+        - Workout Records
+      summary: ワークアウト記録削除
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: ワークアウト記録削除成功
+        '404':
+          description: ワークアウト記録が見つからない
+
+  /workout-days/{workoutDayId}/workout-records:
+    get:
+      tags:
+        - Workout Records
+      summary: ワークアウト日別記録一覧取得
+      parameters:
+        - name: workoutDayId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: ワークアウト記録一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutRecord'
+    post:
+      tags:
+        - Workout Records
+      summary: ワークアウト記録作成（パス指定）
+      parameters:
+        - name: workoutDayId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutRecordRequest'
+      responses:
+        '201':
+          description: ワークアウト記録作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutRecord'
+
+  /workout-records/{workoutRecordId}/workout-sets:
+    get:
+      tags:
+        - Workout Sets
+      summary: ワークアウトセット一覧取得
+      parameters:
+        - name: workoutRecordId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: ワークアウトセット一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutSet'
+    post:
+      tags:
+        - Workout Sets
+      summary: ワークアウトセット作成
+      parameters:
+        - name: workoutRecordId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutSetRequest'
+      responses:
+        '201':
+          description: ワークアウトセット作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutSet'
+
+  /workout-sets/{id}:
+    get:
+      tags:
+        - Workout Sets
+      summary: ワークアウトセット詳細取得
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: ワークアウトセット詳細
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutSet'
+        '404':
+          description: ワークアウトセットが見つからない
+    put:
+      tags:
+        - Workout Sets
+      summary: ワークアウトセット更新
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutSetRequest'
+      responses:
+        '200':
+          description: ワークアウトセット更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutSet'
+        '404':
+          description: ワークアウトセットが見つからない
+    delete:
+      tags:
+        - Workout Sets
+      summary: ワークアウトセット削除
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: ワークアウトセット削除成功
+        '404':
+          description: ワークアウトセットが見つからない
+
+  /statistics/progress/{exerciseId}:
+    get:
+      tags:
+        - Statistics
+      summary: エクササイズ進捗取得
+      description: 指定したエクササイズの進捗データを取得します（認証されたユーザーのデータのみ）
+      parameters:
+        - name: exerciseId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: エクササイズID
+      responses:
+        '200':
+          description: エクササイズ進捗データ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseProgressResponse'
+        '404':
+          description: エクササイズが見つからない
+        '401':
+          description: 認証失敗
+
+tags:
+  - name: Authentication
+    description: 認証関連API
+  - name: Exercises
+    description: エクササイズ管理API
+  - name: Workout Days
+    description: ワークアウト日管理API
+  - name: Workout Records
+    description: ワークアウト記録管理API
+  - name: Workout Sets
+    description: ワークアウトセット管理API
+  - name: Statistics
+    description: 統計・分析API

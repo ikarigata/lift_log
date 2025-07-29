@@ -344,6 +344,126 @@ const workoutRecords: WorkoutRecord[] = [
     createdAt: '2025-07-20T08:30:00Z',
     updatedAt: '2025-07-20T08:30:00Z'
   },
+  // ベンチプレスの過去データ（統計表示用）
+  {
+    id: '100',
+    workoutDayId: '10', // 2025-06-29
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 75, reps: 8 },
+      { setNumber: 2, weight: 75, reps: 6 },
+      { setNumber: 3, weight: 70, reps: 10 }
+    ],
+    memo: 'フォーム重視でやった',
+    createdAt: '2025-06-29T10:00:00Z',
+    updatedAt: '2025-06-29T10:30:00Z'
+  },
+  {
+    id: '101',
+    workoutDayId: '13', // 2025-06-20
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 70, reps: 8 },
+      { setNumber: 2, weight: 70, reps: 8 },
+      { setNumber: 3, weight: 65, reps: 10 }
+    ],
+    createdAt: '2025-06-20T10:00:00Z',
+    updatedAt: '2025-06-20T10:30:00Z'
+  },
+  {
+    id: '102',
+    workoutDayId: '16', // 2025-06-11
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 65, reps: 8 },
+      { setNumber: 2, weight: 65, reps: 8 },
+      { setNumber: 3, weight: 60, reps: 10 }
+    ],
+    createdAt: '2025-06-11T10:00:00Z',
+    updatedAt: '2025-06-11T10:30:00Z'
+  },
+  {
+    id: '103',
+    workoutDayId: '19', // 2025-06-02
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 60, reps: 8 },
+      { setNumber: 2, weight: 60, reps: 8 },
+      { setNumber: 3, weight: 55, reps: 10 }
+    ],
+    createdAt: '2025-06-02T10:00:00Z',
+    updatedAt: '2025-06-02T10:30:00Z'
+  },
+  {
+    id: '104',
+    workoutDayId: '22', // 2025-05-24
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 55, reps: 8 },
+      { setNumber: 2, weight: 55, reps: 8 },
+      { setNumber: 3, weight: 50, reps: 10 }
+    ],
+    createdAt: '2025-05-24T10:00:00Z',
+    updatedAt: '2025-05-24T10:30:00Z'
+  },
+  {
+    id: '105',
+    workoutDayId: '25', // 2025-05-15
+    exerciseId: 'ex1',
+    exerciseName: 'ベンチプレス',
+    sets: [
+      { setNumber: 1, weight: 50, reps: 8 },
+      { setNumber: 2, weight: 50, reps: 8 },
+      { setNumber: 3, weight: 45, reps: 10 }
+    ],
+    createdAt: '2025-05-15T10:00:00Z',
+    updatedAt: '2025-05-15T10:30:00Z'
+  },
+  // スクワットの過去データも追加
+  {
+    id: '106',
+    workoutDayId: '12', // 2025-06-23
+    exerciseId: 'ex4',
+    exerciseName: 'スクワット',
+    sets: [
+      { setNumber: 1, weight: 85, reps: 10 },
+      { setNumber: 2, weight: 80, reps: 12 },
+      { setNumber: 3, weight: 75, reps: 15 }
+    ],
+    createdAt: '2025-06-23T08:30:00Z',
+    updatedAt: '2025-06-23T08:30:00Z'
+  },
+  {
+    id: '107',
+    workoutDayId: '18', // 2025-06-05
+    exerciseId: 'ex4',
+    exerciseName: 'スクワット',
+    sets: [
+      { setNumber: 1, weight: 80, reps: 10 },
+      { setNumber: 2, weight: 75, reps: 12 },
+      { setNumber: 3, weight: 70, reps: 15 }
+    ],
+    createdAt: '2025-06-05T08:30:00Z',
+    updatedAt: '2025-06-05T08:30:00Z'
+  },
+  {
+    id: '108',
+    workoutDayId: '24', // 2025-05-18
+    exerciseId: 'ex4',
+    exerciseName: 'スクワット',
+    sets: [
+      { setNumber: 1, weight: 75, reps: 10 },
+      { setNumber: 2, weight: 70, reps: 12 },
+      { setNumber: 3, weight: 65, reps: 15 }
+    ],
+    createdAt: '2025-05-18T08:30:00Z',
+    updatedAt: '2025-05-18T08:30:00Z'
+  },
   // 2025年7月17日 - 胸・腕の日  
   {
     id: '8',
@@ -842,7 +962,7 @@ export const handlers = [
     return new HttpResponse(null, { status: 404 });
   })),
   // Statistics API
-  http.get('/api/users/:userId/statistics/progress/:exerciseId', requireAuth(({ params }: { params: any }) => {
+  http.get('/api/statistics/progress/:exerciseId', requireAuth(({ params }: { params: any }) => {
     const { exerciseId } = params;
     const exercise = exercises.find(ex => ex.id === exerciseId);
     
@@ -865,28 +985,23 @@ export const handlers = [
       
       const date = workoutDay.date;
       
-      // 1RM計算 (Epley formula: weight * (1 + reps/30))
-      const calculate1RM = (weight: number, reps: number): number => {
-        if (reps === 0) return 0;
-        return Math.round(weight * (1 + reps / 30) * 100) / 100;
-      };
-      
-      // ボリューム計算 (重量 × セット数 × レップ数)
+      // その日の総ボリューム計算（重量 × レップ数の合計）
       let totalVolume = 0;
-      let max1RM = 0;
       let maxWeight = 0;
+      const sets: Array<{ weight: number; reps: number }> = [];
       
       record.sets.forEach(set => {
-        // ボリューム計算：メインレップ + サブレップも含める
-        const totalReps = set.reps + (set.subReps || 0);
-        totalVolume += set.weight * totalReps;
+        // ボリューム計算：メインレップのみを使用（subRepsはボリューム計算用だが1RMには使わない）
+        totalVolume += set.weight * set.reps;
         
         // 最大重量
-        maxWeight = Math.max(maxWeight, set.weight);
+        maxWeight = Math.max(maxWeight, set.weight); 
         
-        // 1RM計算：メインレップのみを使用（より正確な1RMのため）
-        const oneRM = calculate1RM(set.weight, set.reps);
-        max1RM = Math.max(max1RM, oneRM);
+        // フロントエンドでの1RM計算用にセットデータを追加
+        sets.push({
+          weight: set.weight,
+          reps: set.reps
+        });
       });
       
       if (progressMap.has(date)) {
@@ -895,27 +1010,36 @@ export const handlers = [
           date,
           totalVolume: existing.totalVolume + totalVolume,
           maxWeight: Math.max(existing.maxWeight, maxWeight),
-          max1RM: Math.max(existing.max1RM, max1RM)
+          sets: [...existing.sets, ...sets]
         });
       } else {
         progressMap.set(date, {
           date,
           totalVolume,
           maxWeight,
-          max1RM
+          sets
         });
       }
     });
     
     // 日付順にソート
-    const progress = Array.from(progressMap.values())
+    const progressData = Array.from(progressMap.values())
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    // 全体統計を計算
+    const allSets = exerciseRecords.flatMap(record => record.sets);
+    const overallMaxWeight = Math.max(...allSets.map(set => set.weight), 0);
+    const totalSets = allSets.length;
+    const totalReps = allSets.reduce((sum, set) => sum + set.reps, 0);
     
     return HttpResponse.json({
-      userId: MOCK_USER_ID,
       exerciseId,
       exerciseName: exercise.name,
-      progress
+      muscleGroup: exercise.muscleGroup,
+      progressData,
+      maxWeight: overallMaxWeight,
+      totalSets,
+      totalReps
     });
   })),
 

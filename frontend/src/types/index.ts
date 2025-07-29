@@ -31,16 +31,24 @@ export interface Exercise {
   isFavorite?: boolean;
 }
 
-export interface ExerciseProgressItem {
+export interface SetData {
+  weight: number;
+  reps: number;
+}
+
+export interface ProgressData {
   date: string;
-  maxWeight: number;
   totalVolume: number;
-  max1RM: number;
+  maxWeight: number;
+  sets: SetData[];
 }
 
 export interface ExerciseProgressResponse {
-  userId: string;
   exerciseId: string;
   exerciseName: string;
-  progress: ExerciseProgressItem[];
+  muscleGroup: string;
+  progressData: ProgressData[];
+  maxWeight: number;
+  totalSets: number;
+  totalReps: number;
 }
