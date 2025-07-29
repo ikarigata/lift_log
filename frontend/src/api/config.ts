@@ -6,11 +6,11 @@ const getBaseUrl = (): string => {
   
   if (useMSW) {
     // MSW使用時は相対パス（Service Workerがインターセプト）
-    return '/api'
+    return '/api/v1'
   } else {
     // 実API使用時は環境変数から取得（直接APIサーバーに接続）
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
-    return `${apiBaseUrl}/api`
+    return `${apiBaseUrl}/api/v1`
   }
 }
 

@@ -4,10 +4,8 @@ info:
   description: シンプルでスタイリッシュな筋トレ記録アプリのためのRESTful API
   version: 1.0.0
 servers:
-  - url: /api
-    description: 開発サーバー
   - url: /api/v1
-    description: 一部のエンドポイント用
+    description: 開発サーバー
 
 paths:
   #-------------------------
