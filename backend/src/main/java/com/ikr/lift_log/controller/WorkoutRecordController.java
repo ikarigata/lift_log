@@ -3,6 +3,7 @@ package com.ikr.lift_log.controller;
 import com.ikr.lift_log.domain.model.WorkoutRecord;
 import com.ikr.lift_log.service.WorkoutRecordService;
 import com.ikr.lift_log.controller.dto.WorkoutRecordRequest;
+import com.ikr.lift_log.security.AuthenticationUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,6 +23,7 @@ public class WorkoutRecordController {
         this.workoutRecordService = workoutRecordService;
     }
 
+<<<<<<< Updated upstream
     @GetMapping("/workout-days/{workoutDayId}/workout-records")
     public ResponseEntity<List<WorkoutRecord>> getWorkoutRecordsByWorkoutDayId(@PathVariable UUID workoutDayId) {
         List<WorkoutRecord> workoutRecords = workoutRecordService.getWorkoutRecordsByWorkoutDayId(workoutDayId);
@@ -35,6 +37,16 @@ public class WorkoutRecordController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+=======
+    @GetMapping("/workout-records")
+    public ResponseEntity<List<WorkoutRecord>> getAllWorkoutRecords() {
+        // 認証されたユーザーIDを取得
+        UUID userId = AuthenticationUtil.requireCurrentUserUUID();
+        List<WorkoutRecord> workoutRecords = workoutRecordService.getWorkoutRecordsByUserId(userId);
+        return ResponseEntity.ok(workoutRecords);
+    }
+
+>>>>>>> Stashed changes
     @PostMapping("/workout-records")
     public ResponseEntity<WorkoutRecord> createWorkoutRecord(@RequestBody WorkoutRecordRequest request) {
         WorkoutRecord workoutRecord = new WorkoutRecord();
@@ -51,6 +63,19 @@ public class WorkoutRecordController {
                 .toUri();
 
         return ResponseEntity.created(location).body(createdRecord);
+    }
+
+    @GetMapping("/workout-days/{workoutDayId}/workout-records")
+    public ResponseEntity<List<WorkoutRecord>> getWorkoutRecordsByWorkoutDayId(@PathVariable UUID workoutDayId) {
+        List<WorkoutRecord> workoutRecords = workoutRecordService.getWorkoutRecordsByWorkoutDayId(workoutDayId);
+        return ResponseEntity.ok(workoutRecords);
+    }
+
+    @GetMapping("/workout-records/{id}")
+    public ResponseEntity<WorkoutRecord> getWorkoutRecordById(@PathVariable UUID id) {
+        return workoutRecordService.getWorkoutRecordById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/workout-days/{workoutDayId}/workout-records")
