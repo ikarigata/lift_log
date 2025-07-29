@@ -10,6 +10,8 @@ public interface WorkoutRecordRepository {
 
     List<WorkoutRecord> findByWorkoutDayId(UUID workoutDayId);
 
+    List<WorkoutRecord> findByUserId(UUID userId);
+
     Optional<WorkoutRecord> findById(UUID id);
 
     WorkoutRecord save(WorkoutRecord workoutRecord);

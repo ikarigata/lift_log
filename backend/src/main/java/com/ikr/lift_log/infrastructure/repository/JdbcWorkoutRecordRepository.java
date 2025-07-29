@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.ikr.lift_log.jooq.tables.WorkoutRecords.WORKOUT_RECORDS;
+import static com.ikr.lift_log.jooq.tables.WorkoutDays.WORKOUT_DAYS;
 
 @Repository
 public class JdbcWorkoutRecordRepository implements WorkoutRecordRepository {
@@ -26,6 +27,23 @@ public class JdbcWorkoutRecordRepository implements WorkoutRecordRepository {
         return dsl.selectFrom(WORKOUT_RECORDS)
                 .where(WORKOUT_RECORDS.WORKOUT_DAY_ID.eq(workoutDayId))
                 .orderBy(WORKOUT_RECORDS.CREATED_AT)
+                .fetch(record -> new WorkoutRecord(
+                    record.get(WORKOUT_RECORDS.ID),
+                    record.get(WORKOUT_RECORDS.WORKOUT_DAY_ID),
+                    record.get(WORKOUT_RECORDS.EXERCISE_ID),
+                    record.get(WORKOUT_RECORDS.NOTES),
+                    record.get(WORKOUT_RECORDS.CREATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault()),
+                    record.get(WORKOUT_RECORDS.UPDATED_AT).atZoneSameInstant(java.time.ZoneId.systemDefault())
+                ));
+    }
+
+    @Override
+    public List<WorkoutRecord> findByUserId(UUID userId) {
+        return dsl.select(WORKOUT_RECORDS.fields())
+                .from(WORKOUT_RECORDS)
+                .join(WORKOUT_DAYS).on(WORKOUT_RECORDS.WORKOUT_DAY_ID.eq(WORKOUT_DAYS.ID))
+                .where(WORKOUT_DAYS.USER_ID.eq(userId))
+                .orderBy(WORKOUT_RECORDS.CREATED_AT.desc())
                 .fetch(record -> new WorkoutRecord(
                     record.get(WORKOUT_RECORDS.ID),
                     record.get(WORKOUT_RECORDS.WORKOUT_DAY_ID),
