@@ -464,6 +464,180 @@ const workoutRecords: WorkoutRecord[] = [
     createdAt: '2025-05-18T08:30:00Z',
     updatedAt: '2025-05-18T08:30:00Z'
   },
+  // 自動生成されたベンチプレスの過去データ（100回分のテストデータ用）
+  ...(() => {
+    const generateBenchPressData = () => {
+      const records = [];
+      const startDate = new Date('2023-01-01');
+      const endDate = new Date('2025-05-14'); // 既存データの前まで
+      
+      let baseWeight = 40; // 開始重量
+      let recordId = 200; // IDの開始番号
+      let workoutDayId = 100; // ワークアウト日IDの開始番号
+      
+      // 週2回のペースでデータ生成
+      for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 3)) {
+        // 進歩カーブ: 徐々に重量が増加
+        const daysSinceStart = Math.floor((date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+        const weightIncrease = Math.floor(daysSinceStart / 30) * 2.5; // 月に2.5kg増加
+        const currentWeight = Math.min(baseWeight + weightIncrease, 75); // 最大75kgまで
+        
+        // ランダムな変動を追加（±2.5kg）
+        const variation = (Math.random() - 0.5) * 5;
+        const sessionWeight = Math.max(currentWeight + variation, baseWeight);
+        
+        records.push({
+          id: recordId.toString(),
+          workoutDayId: workoutDayId.toString(),
+          exerciseId: 'ex1',
+          exerciseName: 'ベンチプレス',
+          sets: [
+            { setNumber: 1, weight: Math.round(sessionWeight * 10) / 10, reps: 8 },
+            { setNumber: 2, weight: Math.round((sessionWeight - 2.5) * 10) / 10, reps: 8 },
+            { setNumber: 3, weight: Math.round((sessionWeight - 5) * 10) / 10, reps: 10 }
+          ],
+          createdAt: date.toISOString(),
+          updatedAt: date.toISOString()
+        });
+        
+        recordId++;
+        workoutDayId++;
+      }
+      
+      return records;
+    };
+    
+    return generateBenchPressData();
+  })(),
+  // スクワットの自動生成データ
+  ...(() => {
+    const generateSquatData = () => {
+      const records = [];
+      const startDate = new Date('2023-01-01');
+      const endDate = new Date('2025-05-17'); // 既存データの前まで
+      
+      let baseWeight = 50; // 開始重量
+      let recordId = 300; // IDの開始番号
+      let workoutDayId = 200; // ワークアウト日IDの開始番号
+      
+      // 週1回のペースでデータ生成
+      for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 7)) {
+        const daysSinceStart = Math.floor((date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+        const weightIncrease = Math.floor(daysSinceStart / 21) * 5; // 3週間に5kg増加
+        const currentWeight = Math.min(baseWeight + weightIncrease, 85); // 最大85kgまで
+        
+        const variation = (Math.random() - 0.5) * 7.5;
+        const sessionWeight = Math.max(currentWeight + variation, baseWeight);
+        
+        records.push({
+          id: recordId.toString(),
+          workoutDayId: workoutDayId.toString(),
+          exerciseId: 'ex4',
+          exerciseName: 'スクワット',
+          sets: [
+            { setNumber: 1, weight: Math.round(sessionWeight * 10) / 10, reps: 10 },
+            { setNumber: 2, weight: Math.round((sessionWeight - 5) * 10) / 10, reps: 12 },
+            { setNumber: 3, weight: Math.round((sessionWeight - 10) * 10) / 10, reps: 15 }
+          ],
+          createdAt: date.toISOString(),
+          updatedAt: date.toISOString()
+        });
+        
+        recordId++;
+        workoutDayId++;
+      }
+      
+      return records;
+    };
+    
+    return generateSquatData();
+  })(),
+  // デッドリフトの自動生成データ
+  ...(() => {
+    const generateDeadliftData = () => {
+      const records = [];
+      const startDate = new Date('2023-02-01');
+      const endDate = new Date('2025-05-10');
+      
+      let baseWeight = 60; // 開始重量
+      let recordId = 400; // IDの開始番号
+      let workoutDayId = 300; // ワークアウト日IDの開始番号
+      
+      // 週1回のペースでデータ生成
+      for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 7)) {
+        const daysSinceStart = Math.floor((date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+        const weightIncrease = Math.floor(daysSinceStart / 14) * 5; // 2週間に5kg増加
+        const currentWeight = Math.min(baseWeight + weightIncrease, 120); // 最大120kgまで
+        
+        const variation = (Math.random() - 0.5) * 10;
+        const sessionWeight = Math.max(currentWeight + variation, baseWeight);
+        
+        records.push({
+          id: recordId.toString(),
+          workoutDayId: workoutDayId.toString(),
+          exerciseId: 'ex3',
+          exerciseName: 'デッドリフト',
+          sets: [
+            { setNumber: 1, weight: Math.round(sessionWeight * 10) / 10, reps: 5 },
+            { setNumber: 2, weight: Math.round(sessionWeight * 10) / 10, reps: 5 },
+            { setNumber: 3, weight: Math.round((sessionWeight - 10) * 10) / 10, reps: 6 }
+          ],
+          createdAt: date.toISOString(),
+          updatedAt: date.toISOString()
+        });
+        
+        recordId++;
+        workoutDayId++;
+      }
+      
+      return records;
+    };
+    
+    return generateDeadliftData();
+  })(),
+  // ショルダープレスの自動生成データ
+  ...(() => {
+    const generateShoulderPressData = () => {
+      const records = [];
+      const startDate = new Date('2023-01-15');
+      const endDate = new Date('2025-05-12');
+      
+      let baseWeight = 25; // 開始重量
+      let recordId = 500; // IDの開始番号
+      let workoutDayId = 400; // ワークアウト日IDの開始番号
+      
+      // 週2回のペースでデータ生成
+      for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 4)) {
+        const daysSinceStart = Math.floor((date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+        const weightIncrease = Math.floor(daysSinceStart / 45) * 2.5; // 6週間に2.5kg増加
+        const currentWeight = Math.min(baseWeight + weightIncrease, 45); // 最大45kgまで
+        
+        const variation = (Math.random() - 0.5) * 5;
+        const sessionWeight = Math.max(currentWeight + variation, baseWeight);
+        
+        records.push({
+          id: recordId.toString(),
+          workoutDayId: workoutDayId.toString(),
+          exerciseId: 'ex2',
+          exerciseName: 'ショルダープレス',
+          sets: [
+            { setNumber: 1, weight: Math.round(sessionWeight * 10) / 10, reps: 10 },
+            { setNumber: 2, weight: Math.round((sessionWeight - 2.5) * 10) / 10, reps: 8 },
+            { setNumber: 3, weight: Math.round((sessionWeight - 5) * 10) / 10, reps: 12 }
+          ],
+          createdAt: date.toISOString(),
+          updatedAt: date.toISOString()
+        });
+        
+        recordId++;
+        workoutDayId++;
+      }
+      
+      return records;
+    };
+    
+    return generateShoulderPressData();
+  })(),
   // 2025年7月17日 - 胸・腕の日  
   {
     id: '8',
