@@ -29,15 +29,6 @@ export const deleteExercise = async (exerciseId: string): Promise<void> => {
   }
 };
 
-
-export const getWorkoutRecords = async (): Promise<WorkoutRecord[]> => {
-    const response = await authenticatedFetch(`${BASE_URL}/workout-records`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch workout records');
-    }
-    return response.json();
-};
-
 export const saveWorkoutRecord = async (workoutId: string, exerciseId: string, sets: WorkoutSet[], memo?: string, editingRecordId?: string): Promise<WorkoutRecord> => {
     const url = editingRecordId
       ? `${BASE_URL}/workout-records/${editingRecordId}`

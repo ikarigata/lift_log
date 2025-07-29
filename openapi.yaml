@@ -551,6 +551,22 @@ paths:
                   $ref: '#/components/schemas/WorkoutDay'
 
   /workout-records:
+    get:
+      tags:
+        - Workout Records
+      summary: ワークアウト記録一覧取得
+      description: 認証されたユーザーのすべてのワークアウト記録を取得します
+      responses:
+        '200':
+          description: ワークアウト記録一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutRecord'
+        '401':
+          description: 認証失敗
     post:
       tags:
         - Workout Records

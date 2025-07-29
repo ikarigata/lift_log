@@ -22,6 +22,13 @@ public class WorkoutRecordController {
         this.workoutRecordService = workoutRecordService;
     }
 
+    @GetMapping("/workout-records")
+    public ResponseEntity<List<WorkoutRecord>> getAllWorkoutRecords() {
+        // TODO: 認証ユーザーに絞り込む実装を追加する
+        List<WorkoutRecord> workoutRecords = workoutRecordService.getAllWorkoutRecords();
+        return ResponseEntity.ok(workoutRecords);
+    }
+
     @GetMapping("/workout-days/{workoutDayId}/workout-records")
     public ResponseEntity<List<WorkoutRecord>> getWorkoutRecordsByWorkoutDayId(@PathVariable UUID workoutDayId) {
         List<WorkoutRecord> workoutRecords = workoutRecordService.getWorkoutRecordsByWorkoutDayId(workoutDayId);

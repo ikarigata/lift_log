@@ -18,6 +18,10 @@ public class WorkoutRecordService {
         this.workoutRecordRepository = workoutRecordRepository;
     }
 
+    public List<WorkoutRecord> getAllWorkoutRecords() {
+        return workoutRecordRepository.findAll();
+    }
+
     public List<WorkoutRecord> getWorkoutRecordsByWorkoutDayId(UUID workoutDayId) {
         return workoutRecordRepository.findByWorkoutDayId(workoutDayId);
     }
