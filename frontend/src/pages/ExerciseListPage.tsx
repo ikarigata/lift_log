@@ -5,10 +5,10 @@ import type { Exercise } from '../types';
 
 interface ExerciseListPageProps {
   exercises: Exercise[];
-  onLogout: () => void;
+  
 }
 
-const ExerciseListPage: React.FC<ExerciseListPageProps> = ({ exercises, onLogout }) => {
+const ExerciseListPage: React.FC<ExerciseListPageProps> = ({ exercises }) => {
   const { workoutId } = useParams();
   const navigate = useNavigate();
 
@@ -25,7 +25,6 @@ const ExerciseListPage: React.FC<ExerciseListPageProps> = ({ exercises, onLogout
       exercises={exercises}
       onBack={handleBack}
       onSelectExercise={handleSelectExercise}
-      onLogout={onLogout}
     />
   );
 };

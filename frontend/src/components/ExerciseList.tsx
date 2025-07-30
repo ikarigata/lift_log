@@ -6,14 +6,12 @@ interface ExerciseListProps {
   exercises: Exercise[];
   onBack: () => void;
   onSelectExercise: (exercise: Exercise) => void;
-  onLogout: () => void;
 }
 
 const ExerciseList: React.FC<ExerciseListProps> = ({ 
   exercises, 
   onBack: _onBack, 
-  onSelectExercise,
-  onLogout
+  onSelectExercise
 }) => {
   const favoriteExercises = exercises.filter(exercise => exercise.isFavorite);
   
@@ -27,7 +25,7 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <TitleBar title="Exercise Selection" onLogout={onLogout} />
+      <TitleBar title="Exercise Selection" />
 
       <div className="space-y-[15px]">
         {favoriteExercises.length > 0 && (
