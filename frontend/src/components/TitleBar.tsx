@@ -8,7 +8,7 @@ interface TitleBarProps {
 const TitleBar: React.FC<TitleBarProps> = ({ title, onLogout }) => {
   return (
     <div className="flex items-center justify-between w-full bg-surface-secondary rounded-[10px] px-4 py-4">
-      <div className="text-content-secondary font-dotgothic text-xl pl-4">
+      <div className="text-orange-500 font-dotgothic text-xl pl-4">
         {title}
       </div>
       <button
