@@ -10,9 +10,18 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     validate-on-migrate: true
+    clean-disabled: false
+  jpa:
+    hibernate:
+      ddl-auto: none
 
 server:
   port: 8081
+
+# JWT設定
+jwt:
+  secret: testSecretKey1234567890123456789012345678901234567890
+  expiration: 1
 
 logging:
   level:
