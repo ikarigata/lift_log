@@ -11,10 +11,9 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 interface StatisticsPageProps {
   exercises: Exercise[];
-  onLogout: () => void;
 }
 
-const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) => {
+const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
   const [selectedExercise, setSelectedExercise] = useState<string>('');
   const [chartData, setChartData] = useState<any>({ labels: [], datasets: [] });
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -196,7 +195,7 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises, onLogout }) 
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <TitleBar title="Statistics" onLogout={onLogout} />
+      <TitleBar title="Statistics" />
 
       <div className="bg-surface-secondary rounded-[10px] p-2 space-y-2">
         <div className="relative" ref={dropdownRef}>

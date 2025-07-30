@@ -6,10 +6,9 @@ import { getWorkoutDaysByMonth, getWorkoutRecords } from '../api/workouts';
 interface CalendarProps {
   onBack: () => void;
   onSelectDate: (workoutDay: WorkoutDay) => void;
-  onLogout: () => void;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ onBack: _onBack, onSelectDate, onLogout }) => {
+const Calendar: React.FC<CalendarProps> = ({ onBack: _onBack, onSelectDate }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([]);
   const [workoutRecords, setWorkoutRecords] = useState<WorkoutRecord[]>([]);
@@ -113,7 +112,7 @@ const Calendar: React.FC<CalendarProps> = ({ onBack: _onBack, onSelectDate, onLo
   
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <TitleBar title="Calendar" onLogout={onLogout} />
+      <TitleBar title="Calendar" />
 
       <div className="space-y-[10px]">
         {/* Month navigation */}

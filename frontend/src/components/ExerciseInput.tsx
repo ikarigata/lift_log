@@ -8,7 +8,6 @@ interface ExerciseInputProps {
   currentRecord?: WorkoutRecord | null;
   onBack: () => void;
   onSave: (sets: WorkoutSet[], memo?: string) => void;
-  onLogout: () => void;
 }
 
 const ExerciseInput: React.FC<ExerciseInputProps> = ({ 
@@ -16,8 +15,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
   previousRecords, 
   currentRecord,
   onBack: _onBack, 
-  onSave,
-  onLogout
+  onSave
 }) => {
   const [currentSets, setCurrentSets] = useState<WorkoutSet[]>(
     currentRecord ? currentRecord.sets : [
@@ -56,7 +54,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <TitleBar title={`${exercise.name} - ${exercise.muscleGroup}`} onLogout={onLogout} />
+      <TitleBar title={`${exercise.name} - ${exercise.muscleGroup}`} />
 
       {previousRecords.filter(record => record.id !== currentRecord?.id).length > 0 && (
         <div className="bg-surface-secondary rounded-[10px] p-[10px] border border-white mb-[20px]">

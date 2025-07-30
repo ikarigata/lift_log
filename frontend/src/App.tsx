@@ -190,7 +190,6 @@ const AppContent = () => {
               element={
                 <StatisticsPage
                   exercises={exercises}
-                  onLogout={handleLogout}
                 />
               }
             />
@@ -205,7 +204,7 @@ const AppContent = () => {
                 <WorkoutDetailPage
                   workoutDays={workoutDays}
                   workoutRecords={workoutRecords}
-                  onLogout={handleLogout}
+                  
                 />
               }
             />
@@ -219,7 +218,7 @@ const AppContent = () => {
               element={
                 <ExerciseListPage
                   exercises={exercises}
-                  onLogout={handleLogout}
+                  
                 />
               }
             />
@@ -235,7 +234,7 @@ const AppContent = () => {
                   exercises={exercises}
                   workoutRecords={workoutRecords}
                   onSaveExercise={handleSaveExercise}
-                  onLogout={handleLogout}
+                  
                 />
               }
             />
@@ -251,7 +250,7 @@ const AppContent = () => {
                   exercises={exercises}
                   workoutRecords={workoutRecords}
                   onSaveExercise={handleSaveExercise}
-                  onLogout={handleLogout}
+                  
                 />
               }
             />
@@ -262,7 +261,7 @@ const AppContent = () => {
           element={
             <PrivateRoute
               isAuthenticatedState={isAuthenticatedState}
-              element={<CalendarPage onLogout={handleLogout} />}
+              element={<CalendarPage />}
             />
           }
         />
@@ -277,7 +276,7 @@ const AppContent = () => {
                   onAddExercise={handleAddNewExercise}
                   onDeleteExercise={handleDeleteExercise}
                   onToggleFavorite={handleToggleFavorite}
-                  onLogout={handleLogout}
+                  
                 />
               }
             />

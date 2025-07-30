@@ -8,7 +8,6 @@ interface WorkoutDayDetailProps {
   onBack: () => void;
   onAddExercise: () => void;
   onEditExercise: (record: WorkoutRecord) => void;
-  onLogout: () => void;
 }
 
 const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({ 
@@ -16,8 +15,7 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
   workoutRecords, 
   onBack: _onBack,
   onAddExercise,
-  onEditExercise,
-  onLogout
+  onEditExercise
 }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -37,7 +35,6 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
             <div className="text-sm opacity-80">{formatDate(workoutDay.date)}</div>
           </div>
         } 
-        onLogout={onLogout} 
       />
 
       <button

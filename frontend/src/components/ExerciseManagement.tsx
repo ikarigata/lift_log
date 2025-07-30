@@ -8,7 +8,6 @@ interface ExerciseManagementProps {
   onAddExercise: (name: string, muscleGroup: string) => void;
   onDeleteExercise: (exerciseId: string) => void;
   onToggleFavorite: (exerciseId: string) => void;
-  onLogout: () => void;
 }
 
 const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
@@ -16,8 +15,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
   onBack: _onBack,
   onAddExercise,
   onDeleteExercise,
-  onToggleFavorite,
-  onLogout
+  onToggleFavorite
 }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newExerciseName, setNewExerciseName] = useState('');
@@ -50,7 +48,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <TitleBar title="Exercise Management" onLogout={onLogout} />
+      <TitleBar title="Exercise Management" />
 
       {/* Add Exercise Button */}
       <button
