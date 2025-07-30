@@ -1,6 +1,7 @@
 import React from 'react';
 import WorkoutDayItem from './WorkoutDayItem';
 import TitleBar from './TitleBar';
+import LogoutButton from './LogoutButton';
 import type { WorkoutDay, WorkoutRecord, Exercise } from '../types';
 
 interface WorkoutDayListProps {
@@ -14,7 +15,7 @@ interface WorkoutDayListProps {
 const WorkoutDayList: React.FC<WorkoutDayListProps> = ({ workoutDays, workoutRecords, exercises, onWorkoutDayClick, onLogout }) => {
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <TitleBar title="History" onLogout={onLogout} />
+      <TitleBar title="History" />
       
       {workoutDays.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -38,6 +39,8 @@ const WorkoutDayList: React.FC<WorkoutDayListProps> = ({ workoutDays, workoutRec
           ))}
         </div>
       )}
+      
+      <LogoutButton onLogout={onLogout} />
     </div>
   );
 };
