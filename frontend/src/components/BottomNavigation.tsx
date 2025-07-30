@@ -58,7 +58,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-interactive-primary border-none z-50 w-full h-10">
+    <div className="fixed bottom-0 left-0 right-0 bg-interactive-primary border-none z-50 w-full h-16">
       <div className="grid grid-cols-6 items-center h-full w-full mx-auto relative">
         {navigationItems.map((item, index) => {
           const isActive = item.type === 'navigation' && isActivePath(item.path);
@@ -79,7 +79,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
             <button
               key={item.id}
               onClick={() => handleItemClick(item)}
-              className={`flex items-center justify-center font-dotgothic transition-all border-none touch-manipulation h-full ${colStart} ${
+              className={`flex items-center justify-center font-dotgothic transition-all border-none touch-manipulation h-16 -mt-6 ${colStart} ${
                 isActive
                   ? 'text-surface-primary'
                   : 'text-surface-primary hover:text-surface-primary active:bg-interactive-primary/10 opacity-70 hover:opacity-100'
@@ -90,7 +90,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
                 minWidth: '24px'
               }}
             >
-              <span className={`leading-none font-dotgothic text-sm`}>
+              <span className={`leading-none font-dotgothic text-xl`}>
                 {item.icon}
               </span>
             </button>
@@ -100,11 +100,11 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
         {/* プラスボタンを別途レンダリング - 2.5列目の位置に配置 */}
         <button
           onClick={() => handleItemClick(navigationItems[2])} // add-workout ボタン
-          className="bg-interactive-primary text-content-inverse rounded-full w-16 h-16 font-bold active:scale-95 transform absolute left-1/2 -translate-x-1/2 -top-4 flex items-center justify-center font-dotgothic transition-all border-none touch-manipulation z-10"
+          className="bg-interactive-primary text-content-inverse rounded-full w-20 h-20 font-bold active:scale-95 transform absolute left-1/2 -translate-x-1/2 -top-6 flex items-center justify-center font-dotgothic transition-all border-none touch-manipulation z-10"
           style={{ 
             WebkitTapHighlightColor: 'transparent',
-            minHeight: '64px',
-            minWidth: '64px'
+            minHeight: '80px',
+            minWidth: '80px'
           }}
         >
           <span className="leading-none font-dotgothic text-2xl" style={{ marginTop: '-2px' }}>+</span>
