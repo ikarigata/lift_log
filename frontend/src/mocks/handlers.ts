@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import type { WorkoutDay, WorkoutRecord, Exercise } from '../types'
+import { BASE_URL } from '../api/config'
 
 // JWT関連の定数とユーティリティ
 // const JWT_SECRET = 'mock-secret-key'
@@ -867,10 +868,10 @@ const workoutRecords: WorkoutRecord[] = [
 
 export const handlers = [
   // Workout Days
-  http.get('/api/workout-days', requireAuth(() => {
+  http.get(`${BASE_URL}/workout-days`, requireAuth(() => {
     return HttpResponse.json(workoutDays)
   })),
-  http.get('/api/workout-days/calendar', requireAuth(({ request }: { request: Request }) => {
+  http.get(`${BASE_URL}/workout-days/calendar`, requireAuth(({ request }: { request: Request }) => {
     const url = new URL(request.url);
     const year = parseInt(url.searchParams.get('year') || '2025');
     const month = parseInt(url.searchParams.get('month') || '1');
@@ -884,7 +885,7 @@ export const handlers = [
     
     return HttpResponse.json(filteredWorkouts);
   })),
-  http.post('/api/workout-days', requireAuth(async ({ request }: { request: Request }) => {
+  http.post(`${BASE_URL}/workout-days`, requireAuth(async ({ request }: { request: Request }) => {
     const newWorkoutData = await request.json() as Omit<WorkoutDay, 'id' | 'createdAt' | 'updatedAt'>;
     const newWorkout: WorkoutDay = {
       id: Date.now().toString(),
@@ -897,10 +898,10 @@ export const handlers = [
   })),
 
   // Exercises
-  http.get('/api/exercises', requireAuth(() => {
+  http.get(`${BASE_URL}/exercises`, requireAuth(() => {
     return HttpResponse.json(exercises)
   })),
-  http.post('/api/exercises', requireAuth(async ({ request }: { request: Request }) => {
+  http.post(`${BASE_URL}/exercises`, requireAuth(async ({ request }: { request: Request }) => {
     const newExerciseData = await request.json() as Omit<Exercise, 'id'>;
     const newExercise: Exercise = {
       id: `ex${Date.now()}`,
@@ -909,7 +910,7 @@ export const handlers = [
     exercises.push(newExercise);
     return HttpResponse.json(newExercise);
   })),
-  http.delete('/api/exercises/:exerciseId', requireAuth(({ params }: { params: any }) => {
+  http.delete(`${BASE_URL}/exercises/:exerciseId`, requireAuth(({ params }: { params: any }) => {
     const { exerciseId } = params;
     const index = exercises.findIndex(ex => ex.id === exerciseId);
     if (index !== -1) {
@@ -927,10 +928,10 @@ export const handlers = [
   })),
 
   // Workout Records
-  http.get('/api/workout-records', requireAuth(() => {
+  http.get(`${BASE_URL}/workout-records`, requireAuth(() => {
     return HttpResponse.json(workoutRecords)
   })),
-  http.post('/api/workout-records', requireAuth(async ({ request }: { request: Request }) => {
+  http.post(`${BASE_URL}/workout-records`, requireAuth(async ({ request }: { request: Request }) => {
     const data = await request.json() as { workoutDayId: string; exerciseId: string; sets: any[]; memo?: string };
     const exercise = exercises.find(ex => ex.id === data.exerciseId);
     const newRecord: WorkoutRecord = {
@@ -946,7 +947,7 @@ export const handlers = [
     workoutRecords.push(newRecord);
     return HttpResponse.json(newRecord);
   })),
-  http.put('/api/workout-records/:recordId', requireAuth(async ({ params, request }: { params: any; request: Request }) => {
+  http.put(`${BASE_URL}/workout-records/:recordId`, requireAuth(async ({ params, request }: { params: any; request: Request }) => {
     const { recordId } = params;
     const data = await request.json() as { workoutDayId: string; exerciseId: string; sets: any[]; memo?: string };
     const recordIndex = workoutRecords.findIndex(record => record.id === recordId);
@@ -962,7 +963,7 @@ export const handlers = [
     return new HttpResponse(null, { status: 404 });
   })),
   // Statistics API
-  http.get('/api/statistics/progress/:exerciseId', requireAuth(({ params }: { params: any }) => {
+  http.get(`${BASE_URL}/statistics/progress/:exerciseId`, requireAuth(({ params }: { params: any }) => {
     const { exerciseId } = params;
     const exercise = exercises.find(ex => ex.id === exerciseId);
     
@@ -1046,7 +1047,7 @@ export const handlers = [
   })),
 
   // Login
-  http.post('/api/v1/login', async ({ request }) => {
+  http.post(`${BASE_URL}/login`, async ({ request }) => {
     try {
       const { email, password } = await request.json() as any;
       if (email === 'test@example.com' && password === 'password') {
