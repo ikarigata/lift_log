@@ -44,7 +44,7 @@ public class WorkoutSetController {
         WorkoutSet workoutSet = new WorkoutSet();
         workoutSet.setWorkoutRecordId(workoutRecordId);
         workoutSet.setReps(request.getReps());
-        workoutSet.setWeight(new BigDecimal(request.getWeight()));
+        workoutSet.setWeight(request.getWeight());
 
         WorkoutSet createdSet = workoutSetService.createWorkoutSet(workoutSet);
 
@@ -64,7 +64,7 @@ public class WorkoutSetController {
 
         WorkoutSet workoutSet = new WorkoutSet();
         workoutSet.setReps(request.getReps());
-        workoutSet.setWeight(new BigDecimal(request.getWeight()));
+        workoutSet.setWeight(request.getWeight());
 
         return workoutSetService.updateWorkoutSet(id, workoutSet)
                 .map(ResponseEntity::ok)

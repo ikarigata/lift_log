@@ -1,55 +1,37 @@
 package com.ikr.lift_log.controller.dto;
 
-import java.time.LocalDate;
-import java.util.UUID;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class WorkoutDayRequest {
-    private UUID userId;
-    private LocalDate date;
-    private String title;
-    private String notes;
+    @NotBlank
+    private String date;
+    
+    private String name;
 
     // コンストラクタ
     public WorkoutDayRequest() {
     }
 
-    public WorkoutDayRequest(UUID userId, LocalDate date, String title, String notes) {
-        this.userId = userId;
+    public WorkoutDayRequest(String date, String name) {
         this.date = date;
-        this.title = title;
-        this.notes = notes;
+        this.name = name;
     }
 
     // ゲッターとセッター
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -7,6 +7,7 @@ import com.ikr.lift_log.security.JwtTokenProvider;
 import com.ikr.lift_log.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class AuthController {
      * @return ログインレスポンス
      */
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         // データベースでユーザー認証を実行
         Optional<User> userOpt = userService.authenticateUser(
                 loginRequest.getEmail(),

@@ -50,4 +50,11 @@ public class WorkoutSetService {
         }
         return false;
     }
+
+    public void deleteWorkoutSetsByWorkoutRecordId(UUID workoutRecordId) {
+        List<WorkoutSet> sets = workoutSetRepository.findByWorkoutRecordId(workoutRecordId);
+        for (WorkoutSet set : sets) {
+            workoutSetRepository.deleteById(set.getId());
+        }
+    }
 }
