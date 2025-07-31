@@ -4,13 +4,100 @@
 @import 'tailwindcss/utilities';
 
 :root {
+  /* === デフォルトテーマ（オリジナル） === */
+  /* 基本パレット */
+  --color-main: 241 239 223; /* #F1EFDF */
+  --color-sub: 38 39 42;     /* #26272A */
+  --color-accent: 232 96 41;  /* #E86029 */
+  --color-container: 59 60 63;/* #3B3C3F */
+  --color-pure: 255 255 255;  /* #FFFFFF */
+
+  /* 用途別カラー */
+  --color-surface-primary: var(--color-main);
+  --color-surface-secondary: var(--color-sub);
+  --color-surface-container: var(--color-container);
+  --color-content-primary: var(--color-sub);
+  --color-content-secondary: var(--color-main);
+  --color-content-accent: var(--color-accent);
+  --color-content-inverse: var(--color-pure);
+  --color-interactive-primary: var(--color-accent);
+  --color-interactive-secondary: var(--color-container);
+  --color-interactive-surface: var(--color-sub);
+  --color-navigation-bg: var(--color-accent);
+  --color-navigation-text: var(--color-pure);
+  --color-navigation-active: var(--color-pure);
+  --color-navigation-inactive: var(--color-pure);
+  --color-input-bg: var(--color-container);
+  --color-input-text: var(--color-main);
+  --color-input-placeholder: var(--color-main);
+}
+
+[data-theme="cool"] {
+  /* === クールテーマ === */
+  /* 基本パレット */
+  --color-main: 22 26 30;     /* #161a1e */
+  --color-sub: 26 32 38;      /* #1a2026 */
+  --color-accent: 0 255 200;  /* #00FFC8 */
+  --color-container: 34 41 48;/* #222930 */
+  --color-pure: 224 226 228;  /* #e0e2e4 */
+
+  /* 用途別カラー */
+  --color-surface-primary: var(--color-main);
+  --color-surface-secondary: var(--color-sub);
+  --color-surface-container: var(--color-container);
+  --color-content-primary: var(--color-pure);
+  --color-content-secondary: var(--color-pure);
+  --color-content-accent: var(--color-accent);
+  --color-content-inverse: var(--color-main);
+  --color-interactive-primary: var(--color-accent);
+  --color-interactive-secondary: var(--color-container);
+  --color-interactive-surface: var(--color-sub);
+  --color-navigation-bg: var(--color-accent);
+  --color-navigation-text: var(--color-main);
+  --color-navigation-active: var(--color-main);
+  --color-navigation-inactive: var(--color-main);
+  --color-input-bg: var(--color-container);
+  --color-input-text: var(--color-pure);
+  --color-input-placeholder: var(--color-pure);
+}
+
+[data-theme="light"] {
+  /* === ライトテーマ === */
+  /* 基本パレット */
+  --color-main: 255 255 255;  /* #FFFFFF */
+  --color-sub: 242 243 244;   /* #f2f3f4 */
+  --color-accent: 52 152 219; /* #3498DB */
+  --color-container: 234 236 238;/* #eaeced */
+  --color-pure: 44 62 80;     /* #2c3e50 */
+
+  /* 用途別カラー */
+  --color-surface-primary: var(--color-main);
+  --color-surface-secondary: var(--color-sub);
+  --color-surface-container: var(--color-container);
+  --color-content-primary: var(--color-pure);
+  --color-content-secondary: var(--color-pure);
+  --color-content-accent: var(--color-accent);
+  --color-content-inverse: var(--color-main);
+  --color-interactive-primary: var(--color-accent);
+  --color-interactive-secondary: var(--color-container);
+  --color-interactive-surface: var(--color-sub);
+  --color-navigation-bg: var(--color-accent);
+  --color-navigation-text: var(--color-main);
+  --color-navigation-active: var(--color-main);
+  --color-navigation-inactive: var(--color-main);
+  --color-input-bg: var(--color-container);
+  --color-input-text: var(--color-pure);
+  --color-input-placeholder: var(--color-pure);
+}
+
+:root {
   font-family: 'DotGothic16', monospace;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light;
-  color: #26272A;
-  background-color: #F1EFDF;
+  color: rgb(var(--color-content-primary));
+  background-color: rgb(var(--color-surface-primary));
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
