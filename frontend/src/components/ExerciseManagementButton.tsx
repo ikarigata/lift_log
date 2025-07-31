@@ -8,7 +8,7 @@ const ExerciseManagementButton: React.FC<ExerciseManagementButtonProps> = ({ onC
   return (
     <button
       onClick={onClick}
-      className="flex items-center justify-center w-full bg-interactive-secondary hover:bg-interactive-primary/20 rounded-[10px] p-[10px] border-none transition-colors active:scale-95 transform duration-150"
+      className="flex items-center justify-center w-full bg-interactive-secondary rounded-[10px] p-[10px] border-none transition-colors transform duration-150 glitch-on-click glitch-on-hover"
     >
       <div className="flex items-center space-x-[10px]">
         <div className="text-content-secondary font-dotgothic text-lg">
