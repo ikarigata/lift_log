@@ -203,7 +203,7 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
           <button
             onClick={toggleDropdown}
             disabled={isLoading || exercises.length === 0}
-            className="block w-full p-2 bg-orange-500 border border-orange-600 rounded-[10px] text-amber-100 font-dotgothic focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-left flex justify-between items-center"
+            className="block w-full p-2 bg-interactive-primary rounded-[10px] text-content-inverse font-dotgothic focus:ring-2 focus:ring-accent text-left flex justify-between items-center"
           >
             <span>
               {selectedExercise ? exercises.find(ex => ex.id === selectedExercise)?.name : 'トレーニング種目を選択'}
@@ -215,13 +215,13 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
 
           {/* アコーディオンメニュー */}
           {isDropdownOpen && (
-            <div className="absolute top-full left-0 right-0 z-10 mt-1 bg-orange-500 border border-orange-600 rounded-[10px] overflow-hidden shadow-lg">
+            <div className="absolute top-full left-0 right-0 z-10 mt-1 bg-interactive-primary rounded-[10px] overflow-hidden shadow-lg">
               <div className="max-h-48 overflow-y-auto">
                 {exercises.map((exercise) => (
                   <button
                     key={exercise.id}
                     onClick={() => handleExerciseSelect(exercise.id)}
-                    className="block w-full p-2 text-left text-amber-100 font-dotgothic hover:bg-orange-600 transition-colors"
+                    className="block w-full p-2 text-left text-content-inverse font-dotgothic hover:brightness-90 transition-all"
                   >
                     {exercise.name}
                   </button>
