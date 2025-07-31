@@ -13,6 +13,7 @@ import type { WorkoutDay, WorkoutRecord, Exercise, WorkoutSet } from './types';
 import { getWorkoutDays, addWorkoutDay } from './api/workouts';
 import { getExercises, addExercise, deleteExercise, getWorkoutRecords, saveWorkoutRecord } from './api/exercises';
 import { isAuthenticated, removeToken } from './utils/auth';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 // レイアウトコンポーネント（ボトムナビゲーション付き）
 const Layout = ({ children, onAddWorkout, onLogout: _onLogout }: { children: React.ReactNode, onAddWorkout: () => void, onLogout: () => void }) => {
@@ -290,7 +291,9 @@ const AppContent = () => {
 function App() {
   return (
     <Router>
-      <AppContent />
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
     </Router>
   );
 }
