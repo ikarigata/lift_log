@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import TitleBar from './TitleBar';
+import CustomDropdown from './CustomDropdown';
 import type { Exercise } from '../types';
 
 interface ExerciseManagementProps {
@@ -83,16 +84,12 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
 
           <div className="space-y-[5px]">
             <label className="text-content-secondary font-dotgothic text-sm opacity-80">部位</label>
-            <select
+            <CustomDropdown
               value={newMuscleGroup}
-              onChange={(e) => setNewMuscleGroup(e.target.value)}
-              className="w-full bg-input-bg text-input-text font-dotgothic rounded-[5px] px-[5px] py-[8px]"
-            >
-              <option value="">部位を選択</option>
-              {muscleGroups.map(group => (
-                <option key={group} value={group}>{group}</option>
-              ))}
-            </select>
+              onChange={setNewMuscleGroup}
+              options={muscleGroups.map(group => ({ value: group, label: group }))}
+              placeholder="部位を選択"
+            />
           </div>
 
           <div className="flex items-center space-x-[10px]">

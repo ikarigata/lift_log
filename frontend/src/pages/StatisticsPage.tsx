@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { getExerciseProgress } from '../api/statistics';
 import TitleBar from '../components/TitleBar';
+import CustomDropdown from '../components/CustomDropdown';
 import type { Exercise, ExerciseProgressResponse } from '../types';
 import { isAuthenticated } from '../utils/auth';
 import { calculateMax1RM } from '../utils/rmCalculator';
@@ -17,29 +18,13 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
   const [selectedExercise, setSelectedExercise] = useState<string>('');
   const [chartData, setChartData] = useState<any>({ labels: [], datasets: [] });
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // 初期表示の種目を選択
   useEffect(() => {
-    if (exercises.length > 0) {
+    if (exercises.length > 0 && !selectedExercise) {
       setSelectedExercise(exercises[0].id);
     }
-  }, [exercises]);
-
-  // 外部クリックでドロップダウンを閉じる
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  }, [exercises, selectedExercise]);
 
   // 選択された種目が変わったらデータを再取得
   useEffect(() => {
@@ -92,15 +77,6 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
 
     fetchData();
   }, [selectedExercise]);
-
-  const handleExerciseSelect = (exerciseId: string) => {
-    setSelectedExercise(exerciseId);
-    setIsDropdownOpen(false);
-  };
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
 
   const options = {
     responsive: true,
@@ -198,38 +174,12 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
       <TitleBar title="Statistics" />
 
       <div className="bg-surface-secondary rounded-[10px] p-2 space-y-2">
-        <div className="relative" ref={dropdownRef}>
-          {/* アコーディオンボタン */}
-          <button
-            onClick={toggleDropdown}
-            disabled={isLoading || exercises.length === 0}
-            className="block w-full p-2 bg-orange-500 border border-orange-600 rounded-[10px] text-amber-100 font-dotgothic focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-left flex justify-between items-center"
-          >
-            <span>
-              {selectedExercise ? exercises.find(ex => ex.id === selectedExercise)?.name : 'トレーニング種目を選択'}
-            </span>
-            <span className={`transform transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}>
-              ▼
-            </span>
-          </button>
-
-          {/* アコーディオンメニュー */}
-          {isDropdownOpen && (
-            <div className="absolute top-full left-0 right-0 z-10 mt-1 bg-orange-500 border border-orange-600 rounded-[10px] overflow-hidden shadow-lg">
-              <div className="max-h-48 overflow-y-auto">
-                {exercises.map((exercise) => (
-                  <button
-                    key={exercise.id}
-                    onClick={() => handleExerciseSelect(exercise.id)}
-                    className="block w-full p-2 text-left text-amber-100 font-dotgothic hover:bg-orange-600 transition-colors"
-                  >
-                    {exercise.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        <CustomDropdown
+          value={selectedExercise}
+          onChange={setSelectedExercise}
+          options={exercises.map(ex => ({ value: ex.id, label: ex.name }))}
+          placeholder="トレーニング種目を選択"
+        />
 
         <div className="relative h-[550px] bg-surface-secondary rounded-[10px] overflow-hidden">
           {isLoading ? (
