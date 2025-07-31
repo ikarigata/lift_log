@@ -8,10 +8,15 @@ const ThemeSwitcher: React.FC = () => {
     { name: 'default', label: 'Default' },
     { name: 'cool', label: 'Cool' },
     { name: 'light', label: 'Light' },
+    { name: 'pattern-1', label: 'Pattern 1' },
+    { name: 'pattern-2', label: 'Pattern 2' },
+    { name: 'pattern-3', 'label': 'Pattern 3' },
+    { name: 'pattern-4', label: 'Pattern 4' },
+    { name: 'pattern-5', label: 'Pattern 5' },
   ];
 
   const getButtonClass = (buttonTheme: Theme) => {
-    const baseClass = "px-3 py-1 text-sm rounded-full transition-colors";
+    const baseClass = "px-3 py-1 text-sm rounded-lg transition-colors w-full text-center";
     if (buttonTheme === theme) {
       // Active theme button style
       return `${baseClass} bg-interactive-primary text-content-inverse`;
@@ -22,16 +27,18 @@ const ThemeSwitcher: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center space-x-2 p-2 rounded-full bg-surface-secondary">
-      {themes.map((t) => (
-        <button
-          key={t.name}
-          onClick={() => setTheme(t.name)}
-          className={getButtonClass(t.name)}
-        >
-          {t.label}
-        </button>
-      ))}
+    <div className="p-2 rounded-lg bg-surface-secondary">
+      <div className="grid grid-cols-3 gap-2">
+        {themes.map((t) => (
+          <button
+            key={t.name}
+            onClick={() => setTheme(t.name)}
+            className={getButtonClass(t.name)}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
