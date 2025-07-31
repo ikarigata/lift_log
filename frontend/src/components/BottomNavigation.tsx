@@ -81,8 +81,8 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
               onClick={() => handleItemClick(item)}
               className={`flex items-center justify-center font-dotgothic transition-all border-none touch-manipulation h-16 -mt-6 ${colStart} ${
                 isActive
-                  ? 'text-surface-primary'
-                  : 'text-surface-primary hover:text-surface-primary active:bg-interactive-primary/10 opacity-70 hover:opacity-100'
+                  ? 'text-content-primary'
+                  : 'text-content-primary hover:text-content-primary active:bg-interactive-primary/10 opacity-70 hover:opacity-100'
               }`}
               style={{ 
                 WebkitTapHighlightColor: 'transparent',
