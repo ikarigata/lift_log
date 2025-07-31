@@ -2,6 +2,7 @@ import React from 'react';
 import WorkoutDayItem from './WorkoutDayItem';
 import TitleBar from './TitleBar';
 import LogoutButton from './LogoutButton';
+import ThemeSwitcher from './ThemeSwitcher';
 import type { WorkoutDay, WorkoutRecord, Exercise } from '../types';
 
 interface WorkoutDayListProps {
@@ -40,7 +41,12 @@ const WorkoutDayList: React.FC<WorkoutDayListProps> = ({ workoutDays, workoutRec
         </div>
       )}
       
-      <LogoutButton onLogout={onLogout} />
+      <div className="pt-4">
+        <div className="mb-4">
+          <ThemeSwitcher />
+        </div>
+        <LogoutButton onLogout={onLogout} />
+      </div>
     </div>
   );
 };
