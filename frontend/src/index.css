@@ -108,9 +108,9 @@
   --color-interactive-secondary: var(--color-container);
   --color-interactive-surface: var(--color-sub);
   --color-navigation-bg: var(--color-sub); /* Use light blue for bg */
-  --color-navigation-text: 22 26 30; /* Dark text for contrast */
-  --color-navigation-active: 22 26 30; /* Dark text for contrast */
-  --color-navigation-inactive: 22 26 30; /* Dark text for contrast */
+  --color-navigation-text: var(--color-container);
+  --color-navigation-active: var(--color-container);
+  --color-navigation-inactive: var(--color-container);
   --color-input-bg: var(--color-container);
   --color-input-text: 22 26 30; /* Dark text for light container */
   --color-input-placeholder: 22 26 30;
