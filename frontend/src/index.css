@@ -107,7 +107,7 @@
   --color-interactive-primary: var(--color-accent);
   --color-interactive-secondary: var(--color-container);
   --color-interactive-surface: var(--color-sub);
-  --color-navigation-bg: var(--color-accent);
+  --color-navigation-bg: var(--color-sub); /* Use light blue for bg */
   --color-navigation-text: 22 26 30; /* Dark text for contrast */
   --color-navigation-active: 22 26 30; /* Dark text for contrast */
   --color-navigation-inactive: 22 26 30; /* Dark text for contrast */
