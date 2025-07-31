@@ -8,11 +8,11 @@ const ThemeSwitcher: React.FC = () => {
     { name: 'default', label: 'Default' },
     { name: 'cool', label: 'Cool' },
     { name: 'light', label: 'Light' },
-    { name: 'pattern-1', label: 'Pattern 1' },
-    { name: 'pattern-2', label: 'Pattern 2' },
-    { name: 'pattern-3', 'label': 'Pattern 3' },
-    { name: 'pattern-4', label: 'Pattern 4' },
-    { name: 'pattern-5', label: 'Pattern 5' },
+    { name: 'deep-ocean', label: 'Deep Ocean' },
+    { name: 'emerald-coast', label: 'Emerald Coast' },
+    { name: 'dusty-twilight', label: 'Dusty Twilight' },
+    { name: 'sandy-lagoon', label: 'Sandy Lagoon' },
+    { name: 'coral-sunset', label: 'Coral Sunset' },
   ];
 
   const getButtonClass = (buttonTheme: Theme) => {

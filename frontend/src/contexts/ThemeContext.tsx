@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
 // Define the type for theme names
-export type Theme = 'default' | 'cool' | 'light' | 'pattern-1' | 'pattern-2' | 'pattern-3' | 'pattern-4' | 'pattern-5';
+export type Theme = 'default' | 'cool' | 'light' | 'deep-ocean' | 'emerald-coast' | 'dusty-twilight' | 'sandy-lagoon' | 'coral-sunset';
 
 // Define the shape of the context
 interface ThemeContextType {
