@@ -90,32 +90,6 @@
   --color-input-placeholder: var(--color-pure);
 }
 
-[data-theme="deep-ocean"] {
-  --color-main: 46 134 171;     /* #2E86AB */
-  --color-sub: 162 213 242;    /* #A2D5F2 */
-  --color-accent: 22 135 167;   /* #1687A7 */
-  --color-container: 246 245 174;/* #F6F5AE */
-  --color-pure: 240 240 240;      /* #F0F0F0 */
-
-  --color-surface-primary: var(--color-main);
-  --color-surface-secondary: var(--color-sub);
-  --color-surface-container: var(--color-container);
-  --color-content-primary: var(--color-pure);
-  --color-content-secondary: 22 26 30; /* Dark text for light sub background */
-  --color-content-accent: var(--color-accent);
-  --color-content-inverse: 22 26 30; /* Dark text for contrast */
-  --color-interactive-primary: var(--color-accent);
-  --color-interactive-secondary: var(--color-container);
-  --color-interactive-surface: var(--color-sub);
-  --color-navigation-bg: var(--color-sub); /* Use light blue for bg */
-  --color-navigation-text: var(--color-container);
-  --color-navigation-active: var(--color-container);
-  --color-navigation-inactive: var(--color-container);
-  --color-input-bg: var(--color-container);
-  --color-input-text: 22 26 30; /* Dark text for light container */
-  --color-input-placeholder: 22 26 30;
-}
-
 [data-theme="emerald-coast"] {
   --color-main: 38 70 83;      /* #264653 */
   --color-sub: 42 157 143;     /* #2A9D8F */
@@ -166,32 +140,6 @@
   --color-input-bg: var(--color-container);
   --color-input-text: var(--color-main);
   --color-input-placeholder: var(--color-main);
-}
-
-[data-theme="sandy-lagoon"] {
-  --color-main: 0 129 167;     /* #0081A7 */
-  --color-sub: 0 175 185;       /* #00AFB9 */
-  --color-accent: 253 252 220; /* #FDFCDC */
-  --color-container: 254 217 183;/* #FED9B7 */
-  --color-pure: 38 39 42;         /* #26272A - A dark color for text */
-
-  --color-surface-primary: var(--color-main);
-  --color-surface-secondary: var(--color-sub);
-  --color-surface-container: var(--color-container);
-  --color-content-primary: 255 255 255; /* White text on dark blue */
-  --color-content-secondary: var(--color-pure);
-  --color-content-accent: var(--color-pure);
-  --color-content-inverse: var(--color-pure);
-  --color-interactive-primary: var(--color-accent);
-  --color-interactive-secondary: var(--color-container);
-  --color-interactive-surface: var(--color-sub);
-  --color-navigation-bg: var(--color-accent);
-  --color-navigation-text: var(--color-pure);
-  --color-navigation-active: var(--color-pure);
-  --color-navigation-inactive: var(--color-pure);
-  --color-input-bg: var(--color-container);
-  --color-input-text: var(--color-pure);
-  --color-input-placeholder: var(--color-pure);
 }
 
 [data-theme="coral-sunset"] {
