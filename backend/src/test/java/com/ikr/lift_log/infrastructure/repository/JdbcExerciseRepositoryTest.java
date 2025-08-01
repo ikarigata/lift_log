@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
@@ -30,31 +31,12 @@ class JdbcExerciseRepositoryTest {
     @Autowired
     private DSLContext dsl;
 
-    private UUID testUserId;
-    private UUID testMuscleGroupId;
-
-    @BeforeEach
-    void setUp() {
-        // テスト用ユーザーを作成
-        testUserId = UUID.randomUUID();
-        dsl.insertInto(USERS)
-                .set(USERS.ID, testUserId)
-                .set(USERS.NAME, "Test User")
-                .set(USERS.EMAIL, "test@example.com")
-                .set(USERS.PASSWORD_HASH, "hash")
-                .set(USERS.CREATED_AT, ZonedDateTime.now().toOffsetDateTime())
-                .execute();
-
-        // テスト用筋肉グループを作成
-        testMuscleGroupId = UUID.randomUUID();
-        dsl.insertInto(MUSCLE_GROUPS)
-                .set(MUSCLE_GROUPS.ID, testMuscleGroupId)
-                .set(MUSCLE_GROUPS.NAME, "Test Muscle Group")
-                .set(MUSCLE_GROUPS.CREATED_AT, ZonedDateTime.now().toOffsetDateTime())
-                .execute();
-    }
+    // 固定UUIDを使用してテストデータの整合性を保つ
+    private final UUID testUserId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+    private final UUID testMuscleGroupId = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void findById_存在しないID_空のテーブルで空のOptionalを返す() {
         // Given
         UUID nonExistentId = UUID.randomUUID();
@@ -67,6 +49,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void save_正常なエクササイズ_保存される() {
 
         UUID userId = testUserId; // ユーザーIDは必要に応じて設定
@@ -86,6 +69,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void findById_存在するID_エクササイズを返す() {
 
         UUID userId = testUserId; // ユーザーIDは必要に応じて設定
@@ -107,6 +91,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void findById_存在しないID_空のOptionalを返す() {
         // Given
         UUID nonExistentId = UUID.randomUUID();
@@ -119,6 +104,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void save_複数のエクササイズ_個別に保存できる() {
         UUID userId = testUserId;
         UUID exerciseId1 = UUID.randomUUID();
@@ -145,6 +131,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void update_存在するID_更新される() {
         // Given
         UUID userId = testUserId;
@@ -165,6 +152,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void update_存在しないID_例外が発生() {
         // Given
         UUID nonExistentId = UUID.randomUUID();
@@ -178,6 +166,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void deleteById_存在するID_削除される() {
         // Given
         UUID userId = testUserId;
@@ -196,6 +185,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void deleteById_存在しないID_例外が発生() {
         // Given
         UUID nonExistentId = UUID.randomUUID();
