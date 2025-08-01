@@ -154,12 +154,12 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
               key={index}
               className="flex items-center justify-between bg-surface-container rounded-[10px] p-[10px] mb-[10px]"
             >
-              <div className="flex items-center space-x-[6px]">
+              <div className="flex items-center space-x-[8px]">
                 <span className="text-content-secondary font-dotgothic text-sm w-[64px] flex-shrink-0">
                   {set.setNumber}セット目
                 </span>
                 
-                <div className="flex items-center space-x-[3px]">
+                <div className="flex items-center space-x-[4px]">
                   <input
                     type="number"
                     value={set.weight || ''}
@@ -172,7 +172,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
 
                 <span className="text-content-secondary font-dotgothic text-sm">×</span>
 
-                <div className="flex items-center space-x-[2px]">
+                <div className="flex items-center space-x-[4px]">
                   <input
                     type="number"
                     value={set.reps || ''}
