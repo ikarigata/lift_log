@@ -73,11 +73,11 @@ const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, workoutReco
             )}
           </div>
           {totalVolume > 0 && (
-            <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md ml-4">
-              <div className="text-surface-primary opacity-80 mb-0.5">
+            <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md ml-4">
+              <div className="text-content-primary opacity-80 mb-0.5">
                 総ボリューム
               </div>
-              <div className="text-surface-primary">
+              <div className="text-content-primary">
                 {totalVolume.toLocaleString()}kg
               </div>
             </div>
