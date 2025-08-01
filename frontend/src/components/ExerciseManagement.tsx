@@ -54,7 +54,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
       {/* Add Exercise Button */}
       <button
         onClick={() => setShowAddForm(!showAddForm)}
-        className="flex items-center justify-center w-full bg-interactive-primary hover:bg-interactive-primary/80 rounded-[10px] p-[10px] transition-colors active:scale-95 transform duration-150"
+        className="flex items-center justify-center w-full bg-interactive-primary rounded-[10px] p-[10px] transition-colors transform duration-150 glitch-on-click"
       >
         <div className="flex items-center space-x-[10px]">
           <div className="text-content-inverse font-dotgothic text-2xl">
@@ -96,7 +96,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
             <button
               onClick={handleAddExercise}
               disabled={!newExerciseName.trim() || !newMuscleGroup.trim()}
-              className="flex-1 bg-interactive-primary hover:bg-interactive-primary/80 disabled:bg-gray-500 disabled:opacity-50 rounded-[5px] px-[5px] py-[8px] text-content-inverse font-dotgothic text-sm transition-colors"
+              className="flex-1 bg-interactive-primary disabled:bg-gray-500 disabled:opacity-50 rounded-[5px] px-[5px] py-[8px] text-content-inverse font-dotgothic text-sm transition-colors glitch-on-click"
             >
               追加
             </button>
@@ -106,7 +106,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
                 setNewExerciseName('');
                 setNewMuscleGroup('');
               }}
-              className="flex-1 bg-interactive-secondary hover:bg-interactive-secondary/80 rounded-[5px] px-[5px] py-[8px] text-content-secondary font-dotgothic text-sm transition-colors"
+              className="flex-1 bg-interactive-secondary rounded-[5px] px-[5px] py-[8px] text-content-secondary font-dotgothic text-sm transition-colors glitch-on-click"
             >
               キャンセル
             </button>
@@ -140,17 +140,17 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => onToggleFavorite(exercise.id)}
-                      className={`rounded-[5px] px-[8px] py-[4px] font-dotgothic text-sm transition-colors ${
+                      className={`rounded-[5px] px-[8px] py-[4px] font-dotgothic text-sm transition-colors glitch-on-click ${
                         exercise.isFavorite
-                          ? 'bg-surface-secondary text-interactive-primary hover:bg-surface-secondary/80'
-                          : 'bg-surface-secondary text-white hover:bg-surface-secondary/80'
+                          ? 'bg-surface-secondary text-interactive-primary'
+                          : 'bg-surface-secondary text-white'
                       }`}
                     >
                       {exercise.isFavorite ? '★' : '☆'}
                     </button>
                     <button
                       onClick={() => handleDeleteExercise(exercise.id, exercise.name)}
-                      className="bg-interactive-primary hover:bg-interactive-primary/80 rounded-[5px] px-[10px] py-[4px] text-surface-primary font-dotgothic text-sm transition-colors"
+                      className="bg-interactive-primary rounded-[5px] px-[10px] py-[4px] text-surface-primary font-dotgothic text-sm transition-colors glitch-on-click"
                     >
                       ×
                     </button>
