@@ -16,13 +16,13 @@ const ThemeSwitcher: React.FC = () => {
   ];
 
   const getButtonClass = (buttonTheme: Theme) => {
-    const baseClass = "px-3 py-1 text-sm rounded-lg transition-colors w-full text-center";
+    const baseClass = "px-3 py-1 text-sm rounded-lg transition-colors w-full text-center glitch-on-click";
     if (buttonTheme === theme) {
       // Active theme button style
       return `${baseClass} bg-interactive-primary text-content-inverse`;
     } else {
       // Inactive theme button style
-      return `${baseClass} bg-surface-container text-content-secondary hover:bg-interactive-secondary`;
+      return `${baseClass} bg-surface-container text-content-secondary`;
     }
   };
 
