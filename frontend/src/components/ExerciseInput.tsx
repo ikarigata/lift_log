@@ -142,7 +142,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
           </h3>
           <button
             onClick={addSet}
-            className="bg-interactive-primary hover:bg-interactive-primary/80 rounded-[5px] px-[10px] py-[5px] text-surface-primary font-dotgothic text-sm transition-colors"
+            className="bg-interactive-primary rounded-[5px] px-[10px] py-[5px] text-surface-primary font-dotgothic text-sm transition-colors glitch-on-click"
           >
             + セット追加
           </button>
@@ -196,7 +196,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
               {currentSets.length > 1 && (
                 <button
                   onClick={() => removeSet(index)}
-                  className="text-interactive-primary font-dotgothic text-sm hover:opacity-70 transition-opacity"
+                  className="text-interactive-primary font-dotgothic text-sm transition-opacity glitch-on-click"
                 >
                   ×
                 </button>
