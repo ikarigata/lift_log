@@ -7,51 +7,48 @@ export default {
   theme: {
     extend: {
       colors: {
-        // === デザインシステム 5色パレット ===
-        // メインカラー: #F1EFDF (クリーム/ベージュ)
-        // サブカラー: #26272A (ダークグレー/黒)
-        // アクセントカラー: #E86029 (オレンジ)
-        // コンテナカラー: #3B3C3F (グレー)
-        // ホワイト: #FFFFFF
+        // === ライトテーマカラーパレット ===
+        // アクセントカラー: #0D6EFD (青)
         
         // 基本カラーパレット
-        main: '#F1EFDF',        // メインカラー
-        sub: '#26272A',         // サブカラー
-        accent: '#E86029',      // アクセントカラー
-        container: '#3B3C3F',   // コンテナカラー
+        main: '#F8F9FA',        // メイン背景
+        sub: '#212529',         // メインテキスト
+        accent: '#0D6EFD',      // アクセントカラー
+        container: '#E9ECEF',   // コンテナ背景
         pure: '#FFFFFF',        // ピュアホワイト
+        secondary: '#6C757D',   // セカンダリテキスト
 
         // デザインシステム - 用途別色定義
         surface: {
-          primary: '#F1EFDF',     // ベース画面背景（ベージュ）
-          secondary: '#26272A',   // コンポーネント背景（黒め）
-          container: '#3B3C3F',   // 入力欄・内部要素背景
+          primary: '#F8F9FA',     // ベース画面背景
+          secondary: '#FFFFFF',   // コンポーネント背景
+          container: '#E9ECEF',   // 入力欄・内部要素背景
         },
         
         content: {
-          primary: '#26272A',     // メインテキスト (ベース背景上)
-          secondary: '#F1EFDF',   // セカンダリテキスト (黒背景上)
-          accent: '#E86029',      // アクセントテキスト
-          inverse: '#FFFFFF',     // 反転テキスト (オレンジ背景上)
+          primary: '#212529',     // メインテキスト
+          secondary: '#6C757D',   // セカンダリテキスト
+          accent: '#0D6EFD',      // アクセントテキスト
+          inverse: '#FFFFFF',     // 反転テキスト (青背景上)
         },
         
         interactive: {
-          primary: '#E86029',     // プライマリボタン
-          secondary: '#3B3C3F',   // セカンダリボタン
-          surface: '#26272A',     // インタラクティブサーフェス
+          primary: '#0D6EFD',     // プライマリボタン
+          secondary: '#E9ECEF',   // セカンダリボタン
+          surface: '#FFFFFF',     // インタラクティブサーフェス
         },
         
         navigation: {
-          bg: '#E86029',          // ナビゲーション背景
-          text: '#FFFFFF',        // ナビゲーションテキスト
-          active: '#FFFFFF',      // アクティブ状態
-          inactive: 'rgba(255,255,255,0.7)', // 非アクティブ状態
+          bg: '#FFFFFF',          // ナビゲーション背景
+          text: '#6C757D',        // ナビゲーションテキスト
+          active: '#0D6EFD',      // アクティブ状態
+          inactive: '#6C757D',    // 非アクティブ状態
         },
         
         input: {
-          bg: '#3B3C3F',          // 入力欄背景
-          text: '#F1EFDF',        // 入力テキスト
-          placeholder: 'rgba(241,239,223,0.6)', // プレースホルダー
+          bg: '#E9ECEF',          // 入力欄背景
+          text: '#212529',        // 入力テキスト
+          placeholder: 'rgba(108, 117, 125, 0.6)', // プレースホルダー
         },
       },
       fontFamily: {

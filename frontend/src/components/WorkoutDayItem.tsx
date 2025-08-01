@@ -45,17 +45,17 @@ const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, workoutReco
 
   return (
     <div 
-      className="flex items-center justify-between w-full bg-surface-secondary rounded-[10px] p-[10px] border-none hover:bg-surface-container transition-colors cursor-pointer"
+      className="flex items-center justify-between w-full bg-surface-secondary rounded-[10px] p-[10px] border-none hover:bg-surface-container transition-colors cursor-pointer shadow-sm"
       onClick={onClick}
     >
       <div className="flex flex-col flex-1">
-        <div className="text-content-secondary font-dotgothic text-lg text-left">
+        <div className="text-content-primary font-dotgothic text-lg text-left">
           {formatDate(workoutDay.date)}
         </div>
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
+        <div className="flex items-center justify-between mt-1">
+          <div className="flex flex-col items-start">
             {workoutDay.name && (
-              <div className="text-content-secondary opacity-80 font-dotgothic text-sm">
+              <div className="text-content-secondary font-dotgothic text-sm">
                 {workoutDay.name}
               </div>
             )}
@@ -64,7 +64,7 @@ const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, workoutReco
                 {muscleGroups.map((muscleGroup) => (
                   <span
                     key={muscleGroup}
-                    className="bg-surface-container text-content-secondary text-xs font-dotgothic px-2 py-1 rounded-md"
+                    className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md"
                   >
                     {muscleGroup}
                   </span>
@@ -73,18 +73,18 @@ const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, workoutReco
             )}
           </div>
           {totalVolume > 0 && (
-            <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md ml-4">
-              <div className="text-surface-primary opacity-80 mb-0.5">
+            <div className="bg-interactive-primary text-content-inverse text-center text-xs font-dotgothic px-3 py-1 rounded-md ml-2">
+              <div className="opacity-80 mb-0.5">
                 総ボリューム
               </div>
-              <div className="text-surface-primary">
+              <div className="font-bold text-base">
                 {totalVolume.toLocaleString()}kg
               </div>
             </div>
           )}
         </div>
       </div>
-      <div className="flex items-center ml-4">
+      <div className="flex items-center ml-2">
         <div className="text-content-secondary font-dotgothic text-2xl">
           ›
         </div>

@@ -8,9 +8,10 @@
   line-height: 1.5;
   font-weight: 400;
 
+  /* ライトテーマに合わせて更新 */
   color-scheme: light;
-  color: #26272A;
-  background-color: #F1EFDF;
+  color: #212529; /* content-primary */
+  background-color: #F8F9FA; /* surface-primary */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
