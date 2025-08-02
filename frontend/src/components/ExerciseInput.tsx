@@ -95,26 +95,26 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
                 <hr className="border-content-secondary opacity-30 my-2" />
                 <div className="flex gap-1">
                   <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
-                    <div className="text-content-primary opacity-80 mb-0.5">
+                    <div className="text-content-primary opacity-80 mb-0.5" style={{ color: '#FEF3C7' }}>
                       総ボリューム
                     </div>
-                    <div className="text-content-primary">
+                    <div className="text-content-primary" style={{ color: '#FEF3C7' }}>
                       {record.sets.reduce((total, set) => total + (set.weight * (set.reps + (set.subReps || 0))), 0).toLocaleString()}kg
                     </div>
                   </div>
                   <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
-                    <div className="text-content-primary opacity-80 mb-0.5">
+                    <div className="text-content-primary opacity-80 mb-0.5" style={{ color: '#FEF3C7' }}>
                       1RM
                     </div>
-                    <div className="text-content-primary">
+                    <div className="text-content-primary" style={{ color: '#FEF3C7' }}>
                       {record.sets.filter(set => set.reps > 0).length > 0 ? Math.max(...record.sets.filter(set => set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30)))).toLocaleString() : '0'}kg
                     </div>
                   </div>
                   <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
-                    <div className="text-content-primary opacity-80 mb-0.5">
+                    <div className="text-content-primary opacity-80 mb-0.5" style={{ color: '#FEF3C7' }}>
                       5RM
                     </div>
-                    <div className="text-content-primary">
+                    <div className="text-content-primary" style={{ color: '#FEF3C7' }}>
                       {record.sets.filter(set => set.reps > 0).length > 0 ? Math.max(...record.sets.filter(set => set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30) * 0.87))).toLocaleString() : '0'}kg
                     </div>
                   </div>
@@ -207,26 +207,26 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
         
         <div className="flex gap-[10px] mt-[10px]">
           <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
-            <div className="text-content-primary opacity-80 mb-0.5">
+            <div className="text-content-primary opacity-80 mb-0.5" style={{ color: '#FEF3C7' }}>
               総ボリューム
             </div>
-            <div className="text-content-primary">
+            <div className="text-content-primary" style={{ color: '#FEF3C7' }}>
               {currentSets.reduce((total, set) => total + (set.weight && (set.reps + (set.subReps || 0)) ? set.weight * (set.reps + (set.subReps || 0)) : 0), 0).toLocaleString()}kg
             </div>
           </div>
           <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
-            <div className="text-content-primary opacity-80 mb-0.5">
+            <div className="text-content-primary opacity-80 mb-0.5" style={{ color: '#FEF3C7' }}>
               1RM
             </div>
-            <div className="text-content-primary">
+            <div className="text-content-primary" style={{ color: '#FEF3C7' }}>
               {currentSets.filter(set => set.weight > 0 && set.reps > 0).length > 0 ? Math.max(...currentSets.filter(set => set.weight > 0 && set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30)))).toLocaleString() : '0'}kg
             </div>
           </div>
           <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
-            <div className="text-content-primary opacity-80 mb-0.5">
+            <div className="text-content-primary opacity-80 mb-0.5" style={{ color: '#FEF3C7' }}>
               5RM
             </div>
-            <div className="text-content-primary">
+            <div className="text-content-primary" style={{ color: '#FEF3C7' }}>
               {currentSets.filter(set => set.weight > 0 && set.reps > 0).length > 0 ? Math.max(...currentSets.filter(set => set.weight > 0 && set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30) * 0.87))).toLocaleString() : '0'}kg
             </div>
           </div>
