@@ -22,6 +22,7 @@ export default {
           primary: 'rgb(var(--color-surface-primary) / <alpha-value>)',
           secondary: 'rgb(var(--color-surface-secondary) / <alpha-value>)',
           container: 'rgb(var(--color-surface-container) / <alpha-value>)',
+          'primary-contrast': 'rgb(var(--color-surface-primary-contrast) / <alpha-value>)',
         },
         
         content: {

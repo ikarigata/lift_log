@@ -11,13 +11,14 @@
   --color-accent: 232 96 41;  /* #E86029 */
   --color-container: 59 60 63;/* #3B3C3F */
   --color-pure: 255 255 255;  /* #FFFFFF */
+  --color-beige-contrast: 250 248 240; /* #FAF8F0 - より明るいベージュ（コントラスト用） */
 
   /* 用途別カラー */
   --color-surface-primary: var(--color-main);
   --color-surface-secondary: var(--color-sub);
   --color-surface-container: var(--color-container);
   --color-content-primary: var(--color-sub);
-  --color-content-secondary: var(--color-pure);
+  --color-content-secondary: var(--color-main);
   --color-content-accent: var(--color-accent);
   --color-content-inverse: var(--color-pure);
   --color-interactive-primary: var(--color-accent);
@@ -30,6 +31,7 @@
   --color-input-bg: var(--color-container);
   --color-input-text: var(--color-main);
   --color-input-placeholder: var(--color-main);
+  --color-surface-primary-contrast: var(--color-beige-contrast);
 }
 
 [data-theme="cool"] {
@@ -59,6 +61,7 @@
   --color-input-bg: var(--color-container);
   --color-input-text: var(--color-pure);
   --color-input-placeholder: var(--color-pure);
+  --color-surface-primary-contrast: var(--color-main);
 }
 
 [data-theme="light"] {
@@ -88,6 +91,7 @@
   --color-input-bg: var(--color-container);
   --color-input-text: var(--color-pure);
   --color-input-placeholder: var(--color-pure);
+  --color-surface-primary-contrast: 34 38 42;
 }
 
 [data-theme="emerald-coast"] {
@@ -114,6 +118,7 @@
   --color-input-bg: var(--color-container);
   --color-input-text: var(--color-main);
   --color-input-placeholder: var(--color-main);
+  --color-surface-primary-contrast: var(--color-main);
 }
 
 [data-theme="dusty-twilight"] {
@@ -140,6 +145,7 @@
   --color-input-bg: var(--color-container);
   --color-input-text: var(--color-main);
   --color-input-placeholder: var(--color-main);
+  --color-surface-primary-contrast: var(--color-main);
 }
 
 [data-theme="coral-sunset"] {
@@ -166,6 +172,7 @@
   --color-input-bg: var(--color-container);
   --color-input-text: var(--color-main);
   --color-input-placeholder: var(--color-main);
+  --color-surface-primary-contrast: var(--color-main);
 }
 
 
