@@ -29,15 +29,15 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
       type: 'action' as const,
     },
     {
-      id: 'exercises',
-      path: '/exercises',
-      icon: '⚙',
-      type: 'navigation' as const,
-    },
-    {
       id: 'statistics',
       path: '/statistics',
       icon: '📈',
+      type: 'navigation' as const,
+    },
+    {
+      id: 'exercises',
+      path: '/exercises',
+      icon: '⚙',
       type: 'navigation' as const,
     },
   ];
