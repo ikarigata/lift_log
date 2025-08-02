@@ -1073,4 +1073,25 @@ export const handlers = [
       });
     }
   }),
+
+  // Signup
+  http.post(`${BASE_URL}/signup`, async ({ request }) => {
+    const { email } = await request.json() as any;
+
+    // 既存のユーザーかどうかを判定する
+    if (email === 'existing@example.com') {
+      return new HttpResponse(JSON.stringify({ message: 'このメールアドレスは既に使用されています。' }), {
+        status: 409,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+
+    return HttpResponse.json({
+      message: 'User created successfully',
+    }, {
+      status: 201,
+    });
+  }),
 ]
