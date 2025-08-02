@@ -8,10 +8,8 @@ const ThemeSwitcher: React.FC = () => {
     { name: 'default', label: 'Default' },
     { name: 'cool', label: 'Cool' },
     { name: 'light', label: 'Light' },
-    { name: 'deep-ocean', label: 'Deep Ocean' },
     { name: 'emerald-coast', label: 'Emerald Coast' },
     { name: 'dusty-twilight', label: 'Dusty Twilight' },
-    { name: 'sandy-lagoon', label: 'Sandy Lagoon' },
     { name: 'coral-sunset', label: 'Coral Sunset' },
   ];
 
