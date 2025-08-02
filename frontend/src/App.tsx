@@ -8,6 +8,7 @@ import CalendarPage from './pages/CalendarPage';
 import ExerciseManagementPage from './pages/ExerciseManagementPage';
 import StatisticsPage from './pages/StatisticsPage';
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import BottomNavigation from './components/BottomNavigation';
 import type { WorkoutDay, WorkoutRecord, Exercise, WorkoutSet } from './types';
 import { getWorkoutDays, addWorkoutDay } from './api/workouts';
@@ -167,6 +168,7 @@ const AppContent = () => {
     <Layout onAddWorkout={handleAddWorkout} onLogout={handleLogout}>
       <Routes>
         <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route
           path="/"
           element={
