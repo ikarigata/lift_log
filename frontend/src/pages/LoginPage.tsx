@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { BASE_URL } from '../api/config';
 import { saveToken } from '../utils/auth';
 
@@ -72,6 +72,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         >
           ログイン
         </button>
+        <p className="mt-6 text-sm">
+          アカウントをお持ちでないですか？{' '}
+          <Link to="/signup" className="text-interactive-link hover:underline">
+            新規登録
+          </Link>
+        </p>
       </form>
       
       {/* 開発用抜け穴ボタン */}
