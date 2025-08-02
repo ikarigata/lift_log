@@ -66,7 +66,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
               <button
                 key={option.value}
                 onClick={() => handleSelect(option.value)}
-                className="block w-full p-2 text-left text-content-primary font-dotgothic hover:bg-interactive-secondary transition-colors"
+                className="block w-full p-2 text-left text-content-secondary font-dotgothic hover:bg-interactive-secondary transition-colors"
               >
                 {option.label}
               </button>
