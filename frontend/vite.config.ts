@@ -11,7 +11,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: 5173,
     // プロキシなし - MSWまたは直接APIコールを使用
   },
   preview: {

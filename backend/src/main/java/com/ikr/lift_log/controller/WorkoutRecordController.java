@@ -5,6 +5,7 @@ import com.ikr.lift_log.domain.model.WorkoutSet;
 import com.ikr.lift_log.service.WorkoutRecordService;
 import com.ikr.lift_log.service.WorkoutSetService;
 import com.ikr.lift_log.controller.dto.WorkoutRecordRequest;
+import com.ikr.lift_log.controller.dto.WorkoutRecordResponse;
 import com.ikr.lift_log.controller.dto.WorkoutSetRequest;
 import com.ikr.lift_log.security.AuthenticationUtil;
 import org.springframework.http.ResponseEntity;
@@ -30,22 +31,22 @@ public class WorkoutRecordController {
     }
 
     @GetMapping("/workout-records")
-    public ResponseEntity<List<WorkoutRecord>> getAllWorkoutRecords() {
+    public ResponseEntity<List<WorkoutRecordResponse>> getAllWorkoutRecords() {
         // 認証されたユーザーIDを取得
         UUID userId = AuthenticationUtil.requireCurrentUserUUID();
-        List<WorkoutRecord> workoutRecords = workoutRecordService.getWorkoutRecordsByUserId(userId);
+        List<WorkoutRecordResponse> workoutRecords = workoutRecordService.getWorkoutRecordResponsesByUserId(userId);
         return ResponseEntity.ok(workoutRecords);
     }
 
     @GetMapping("/workout-days/{workoutDayId}/workout-records")
-    public ResponseEntity<List<WorkoutRecord>> getWorkoutRecordsByWorkoutDayId(@PathVariable UUID workoutDayId) {
-        List<WorkoutRecord> workoutRecords = workoutRecordService.getWorkoutRecordsByWorkoutDayId(workoutDayId);
+    public ResponseEntity<List<WorkoutRecordResponse>> getWorkoutRecordsByWorkoutDayId(@PathVariable UUID workoutDayId) {
+        List<WorkoutRecordResponse> workoutRecords = workoutRecordService.getWorkoutRecordResponsesByWorkoutDayId(workoutDayId);
         return ResponseEntity.ok(workoutRecords);
     }
 
     @GetMapping("/workout-records/{id}")
-    public ResponseEntity<WorkoutRecord> getWorkoutRecordById(@PathVariable UUID id) {
-        return workoutRecordService.getWorkoutRecordById(id)
+    public ResponseEntity<WorkoutRecordResponse> getWorkoutRecordById(@PathVariable UUID id) {
+        return workoutRecordService.getWorkoutRecordResponseById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
