@@ -58,7 +58,11 @@ RUN echo "#!/bin/bash" > wait-for-db.sh && \
 # - テストをスキップしてビルド時間を短縮
 # - Flyway マイグレーションが自動実行される
 # - jOOQ コード生成が自動実行される
-RUN ./mvnw clean package -DskipTests -B
+# - システムプロパティでデータベース接続を明示的に指定
+RUN ./mvnw clean package -DskipTests -B \
+    -Dspring.datasource.url=${SPRING_DATASOURCE_URL} \
+    -Dspring.datasource.username=${SPRING_DATASOURCE_USERNAME} \
+    -Dspring.datasource.password=${SPRING_DATASOURCE_PASSWORD}
 
 # -----------------------------------------------------------------------------
 # ステージ2: 実行環境
