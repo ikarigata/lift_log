@@ -274,12 +274,6 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
           <h3 className="text-interactive-primary font-dotgothic text-lg text-left">
             今回の記録
           </h3>
-          <button
-            onClick={addSet}
-            className="bg-interactive-primary rounded-[5px] px-[10px] py-[5px] text-surface-primary font-dotgothic text-sm transition-colors glitch-on-click"
-          >
-            + セット追加
-          </button>
         </div>
 
         <div className="space-y-[10px]">
@@ -304,6 +298,14 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
               ))}
             </SortableContext>
           </DndContext>
+        </div>
+        <div className="mt-[10px]">
+          <button
+            onClick={addSet}
+            className="bg-interactive-primary rounded-[5px] px-[10px] py-[5px] text-surface-primary font-dotgothic text-sm transition-colors glitch-on-click"
+          >
+            + セット追加
+          </button>
         </div>
         
         <div className="flex gap-[10px] mt-[10px]">
