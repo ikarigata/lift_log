@@ -52,3 +52,8 @@ export interface ExerciseProgressResponse {
   totalSets: number;
   totalReps: number;
 }
+
+export interface MuscleGroup {
+  id: string;
+  name: string;
+}
