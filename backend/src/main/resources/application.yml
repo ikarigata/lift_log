@@ -2,15 +2,22 @@ spring:
   application:
     name: lift_log
   datasource:
+    # デフォルト設定（開発環境用）
+    # 設計方針: Docker Compose実行時は環境変数で上書きされる
     url: jdbc:postgresql://localhost:5439/lift_log
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
   flyway:
+    # 設計方針: Docker Compose環境では環境変数でtrueに上書きされる
+    # ローカル開発時はfalseのままでjOOQ生成済みクラスを使用
     enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: true
     validate-on-migrate: true
+    # Docker環境での自動マイグレーション設定
+    baseline-version: 0
+    baseline-description: "Initial baseline"
 
 server:
   port: 8080
