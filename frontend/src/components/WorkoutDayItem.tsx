@@ -54,11 +54,6 @@ const WorkoutDayItem: React.FC<WorkoutDayItemProps> = ({ workoutDay, workoutReco
         </div>
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
-            {workoutDay.name && (
-              <div className="text-content-secondary opacity-80 font-dotgothic text-sm">
-                {workoutDay.name}
-              </div>
-            )}
             {muscleGroups.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-1">
                 {muscleGroups.map((muscleGroup) => (
