@@ -25,11 +25,6 @@ services:
   backend:
     build:
       context: ./backend
-      args:
-        # ビルド時に使用するデータベース接続情報
-        - DB_URL=jdbc:postgresql://db:5432/lift_log
-        - DB_USER=postgres
-        - DB_PASS=postgres
     container_name: backend-app
     depends_on:
       db:

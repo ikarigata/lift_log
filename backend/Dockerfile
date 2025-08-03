@@ -12,19 +12,11 @@ COPY mvnw.cmd .
 # アプリケーションのソースコードをコピー
 COPY src ./src
 
-# データベース接続用のビルド引数を定義
-# これらはビルド時にdocker-compose.ymlから渡される
-ARG DB_URL=jdbc:postgresql://db:5432/lift_log
-ARG DB_USER=postgres
-ARG DB_PASS=postgres
+# jOOQの生成されたクラスをコピー（事前に生成済み）
+COPY target/generated-sources/ target/generated-sources/
 
-# Mavenに直接データベースプロパティを渡してアプリケーションをビルド
-# これにより、ビルドプロセス中にapplication.ymlで定義されたプロパティが上書きされる
-# FlywayおよびjOOQプラグインはこれらのプロパティを使用する
-RUN ./mvnw package -DskipTests \
-    -Dspring.datasource.url=${DB_URL} \
-    -Dspring.datasource.username=${DB_USER} \
-    -Dspring.datasource.password=${DB_PASS}
+# アプリケーションをビルド（jOOQクラスが既に存在すると仮定）
+RUN ./mvnw package -DskipTests -Dflyway.skip=true -Djooq.codegen.skip=true
 
 # ステージ2: 最終的なより小さなイメージを作成
 FROM eclipse-temurin:21-jre-jammy
