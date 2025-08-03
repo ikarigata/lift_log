@@ -9,8 +9,7 @@ const getBaseUrl = (): string => {
     return '/api/v1'
   } else {
     // 実API使用時は環境変数から取得（直接APIサーバーに接続）
-    // Docker環境では、VITE_API_BASE_URLが設定されていない場合、相対パス（''）を使用する
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || ''
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
     return `${apiBaseUrl}/api/v1`
   }
 }
