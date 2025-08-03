@@ -188,9 +188,7 @@ const AppContent = () => {
             <PrivateRoute
               isAuthenticatedState={isAuthenticatedState}
               element={
-                <StatisticsPage
-                  exercises={exercises}
-                />
+                <StatisticsPage />
               }
             />
           }
