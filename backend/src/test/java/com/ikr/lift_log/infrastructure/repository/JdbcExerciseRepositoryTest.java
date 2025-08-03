@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import static com.ikr.lift_log.jooq.tables.Exercises.EXERCISES;
 import static com.ikr.lift_log.jooq.tables.Users.USERS;
+import static com.ikr.lift_log.jooq.tables.MuscleGroups.MUSCLE_GROUPS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -28,15 +29,27 @@ class JdbcExerciseRepositoryTest {
     private DSLContext dsl;
 
     private UUID testUserId;
+    private UUID testMuscleGroupId;
 
     @BeforeEach
     void setUp() {
         // テスト用ユーザーを作成
         testUserId = UUID.randomUUID();
+        testMuscleGroupId = UUID.randomUUID();
+        ZonedDateTime now = ZonedDateTime.now();
+        
         dsl.insertInto(USERS)
                 .set(USERS.ID, testUserId)
                 .set(USERS.NAME, "Test User")
-                .set(USERS.CREATED_AT, ZonedDateTime.now().toOffsetDateTime())
+                .set(USERS.EMAIL, "test-" + testUserId + "@example.com")
+                .set(USERS.PASSWORD_HASH, "password")
+                .set(USERS.CREATED_AT, now.toOffsetDateTime())
+                .execute();
+                
+        dsl.insertInto(MUSCLE_GROUPS)
+                .set(MUSCLE_GROUPS.ID, testMuscleGroupId)
+                .set(MUSCLE_GROUPS.NAME, "Test Muscle Group")
+                .set(MUSCLE_GROUPS.CREATED_AT, now.toOffsetDateTime())
                 .execute();
     }
 
@@ -59,7 +72,7 @@ class JdbcExerciseRepositoryTest {
         UUID exerciseId = UUID.randomUUID(); // エクササイズIDは必要に応じて設定
         ZonedDateTime createdAt = ZonedDateTime.now();
         // Given
-        Exercise exercise = new Exercise(exerciseId, userId, "Bench Press", "Chest exercise", createdAt);
+        Exercise exercise = new Exercise(exerciseId, userId, "Bench Press", "Chest exercise", testMuscleGroupId, createdAt);
 
         // When
         Exercise savedExercise = exerciseRepository.save(exercise);
@@ -78,7 +91,7 @@ class JdbcExerciseRepositoryTest {
         UUID exerciseId = UUID.randomUUID(); // エクササイズIDは必要に応じて設定
         ZonedDateTime createdAt = ZonedDateTime.now();
         // Given
-        Exercise exercise = new Exercise(exerciseId, userId, "Squat", "Leg exercise", createdAt);
+        Exercise exercise = new Exercise(exerciseId, userId, "Squat", "Leg exercise", testMuscleGroupId, createdAt);
 
         // Given
         Exercise savedExercise = exerciseRepository.save(exercise);
@@ -112,8 +125,8 @@ class JdbcExerciseRepositoryTest {
         ZonedDateTime createdAt = ZonedDateTime.now();
         
         // Given
-        Exercise exercise1 = new Exercise(exerciseId1, userId, "Bench Press", "Chest exercise", createdAt);
-        Exercise exercise2 = new Exercise(exerciseId2, userId, "Squat", "Leg exercise", createdAt);
+        Exercise exercise1 = new Exercise(exerciseId1, userId, "Bench Press", "Chest exercise", testMuscleGroupId, createdAt);
+        Exercise exercise2 = new Exercise(exerciseId2, userId, "Squat", "Leg exercise", testMuscleGroupId, createdAt);
 
         // When
         Exercise savedExercise1 = exerciseRepository.save(exercise1);
@@ -138,8 +151,8 @@ class JdbcExerciseRepositoryTest {
         ZonedDateTime createdAt = ZonedDateTime.now();
         
         Exercise savedExercise = exerciseRepository.save(
-                new Exercise(exerciseId, userId, "Pull Up", "Back exercise", createdAt));
-        Exercise updateData = new Exercise(null, userId, "Pull Up Modified", "Updated back exercise", null);
+                new Exercise(exerciseId, userId, "Pull Up", "Back exercise", testMuscleGroupId, createdAt));
+        Exercise updateData = new Exercise(null, userId, "Pull Up Modified", "Updated back exercise", testMuscleGroupId, null);
 
         // When
         Exercise updatedExercise = exerciseRepository.update(savedExercise.getId(), updateData);
@@ -155,7 +168,7 @@ class JdbcExerciseRepositoryTest {
         // Given
         UUID nonExistentId = UUID.randomUUID();
         UUID userId = testUserId;
-        Exercise updateData = new Exercise(null, userId, "Test", "Test description", null);
+        Exercise updateData = new Exercise(null, userId, "Test", "Test description", testMuscleGroupId, null);
 
         // When & Then
         assertThatThrownBy(() -> exerciseRepository.update(nonExistentId, updateData))
@@ -171,7 +184,7 @@ class JdbcExerciseRepositoryTest {
         ZonedDateTime createdAt = ZonedDateTime.now();
         
         Exercise savedExercise = exerciseRepository.save(
-                new Exercise(exerciseId, userId, "Push Up", "Bodyweight exercise", createdAt));
+                new Exercise(exerciseId, userId, "Push Up", "Bodyweight exercise", testMuscleGroupId, createdAt));
 
         // When
         exerciseRepository.deleteById(savedExercise.getId());

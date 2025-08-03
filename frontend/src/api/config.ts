@@ -36,7 +36,11 @@ export const authenticatedFetch = async (
 }
 
 // デバッグ用ログ
-console.log(`API Base URL: ${BASE_URL} (MSW: ${import.meta.env.VITE_USE_MSW})`)
+console.log(`API Base URL: ${BASE_URL}`)
+console.log(`VITE_USE_MSW: ${import.meta.env.VITE_USE_MSW}`)
+console.log(`VITE_API_BASE_URL: ${import.meta.env.VITE_API_BASE_URL}`)
+console.log(`import.meta.env.DEV: ${import.meta.env.DEV}`)
+console.log(`import.meta.env.PROD: ${import.meta.env.PROD}`)
 
 // デフォルトエクスポート
 export default { BASE_URL, authenticatedFetch }

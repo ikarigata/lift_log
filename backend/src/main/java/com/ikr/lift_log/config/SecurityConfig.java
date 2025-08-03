@@ -48,8 +48,8 @@ public class SecurityConfig {
                 CorsConfiguration configuration = new CorsConfiguration();
                 configuration.setAllowedOrigins(Arrays.asList(
                                 "http://localhost:3000", // フロントエンド開発サーバー (Vite)
-                                "http://localhost:5173", // フロントエンド開発サーバー (Vite default)
-                                "http://localhost:8080"  // 同一ポートからのリクエスト
+                                "http://localhost:4173", // フロントエンド開発サーバー (Vite default)
+                                "http://localhost:8080" // 同一ポートからのリクエスト
                 ));
                 configuration.setAllowedMethods(Arrays.asList(
                                 "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));

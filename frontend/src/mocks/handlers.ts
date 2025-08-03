@@ -258,7 +258,7 @@ const workoutRecords: WorkoutRecord[] = [
     sets: [
       { setNumber: 1, weight: 85, reps: 8, subReps: 2 },
       { setNumber: 2, weight: 85, reps: 6, subReps: 1 },
-      { setNumber: 3, weight: 80, reps: 8 }
+      { setNumber: 3, weight: 80, reps: 8, subReps: 0 }
     ],
     memo: '今日は調子が良く、重量を5kg上げることができた！',
     createdAt: '2025-07-26T10:00:00Z',
@@ -271,7 +271,7 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseName: 'ショルダープレス',
     sets: [
       { setNumber: 1, weight: 42.5, reps: 10, subReps: 3 },
-      { setNumber: 2, weight: 42.5, reps: 8 },
+      { setNumber: 2, weight: 42.5, reps: 8, subReps: 0 },
       { setNumber: 3, weight: 40, reps: 12, subReps: 2 }
     ],
     createdAt: '2025-07-26T10:45:00Z',
@@ -284,9 +284,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 80, reps: 8 },
-      { setNumber: 2, weight: 80, reps: 6 },
-      { setNumber: 3, weight: 75, reps: 8 }
+      { setNumber: 1, weight: 80, reps: 8, subReps: 0 },
+      { setNumber: 2, weight: 80, reps: 6, subReps: 0 },
+      { setNumber: 3, weight: 75, reps: 8, subReps: 0 }
     ],
     memo: '胸の日だが肩も一緒にやった。少し疲れ気味。',
     createdAt: '2025-07-23T10:00:00Z',
@@ -298,9 +298,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex2',
     exerciseName: 'ショルダープレス',
     sets: [
-      { setNumber: 1, weight: 40, reps: 10 },
-      { setNumber: 2, weight: 40, reps: 8 },
-      { setNumber: 3, weight: 35, reps: 12 }
+      { setNumber: 1, weight: 40, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 40, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 35, reps: 12, subReps: 0 }
     ],
     createdAt: '2025-07-23T10:45:00Z',
     updatedAt: '2025-07-23T11:00:00Z'
@@ -312,7 +312,7 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseName: 'デッドリフト',
     sets: [
       { setNumber: 1, weight: 105, reps: 5, subReps: 1 },
-      { setNumber: 2, weight: 105, reps: 5 },
+      { setNumber: 2, weight: 105, reps: 5, subReps: 0 },
       { setNumber: 3, weight: 100, reps: 6, subReps: 2 }
     ],
     createdAt: '2025-07-23T09:00:00Z',
@@ -324,9 +324,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex9',
     exerciseName: 'バーベルカール',
     sets: [
-      { setNumber: 1, weight: 32.5, reps: 12 },
-      { setNumber: 2, weight: 32.5, reps: 10 },
-      { setNumber: 3, weight: 30, reps: 15 }
+      { setNumber: 1, weight: 32.5, reps: 12, subReps: 0 },
+      { setNumber: 2, weight: 32.5, reps: 10, subReps: 0 },
+      { setNumber: 3, weight: 30, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-07-23T09:30:00Z',
     updatedAt: '2025-07-23T10:00:00Z'
@@ -339,7 +339,7 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseName: 'スクワット',
     sets: [
       { setNumber: 1, weight: 90, reps: 10, subReps: 5 },
-      { setNumber: 2, weight: 85, reps: 12 },
+      { setNumber: 2, weight: 85, reps: 12, subReps: 0 },
       { setNumber: 3, weight: 80, reps: 15, subReps: 3 }
     ],
     createdAt: '2025-07-20T08:30:00Z',
@@ -352,9 +352,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 75, reps: 8 },
-      { setNumber: 2, weight: 75, reps: 6 },
-      { setNumber: 3, weight: 70, reps: 10 }
+      { setNumber: 1, weight: 75, reps: 8, subReps: 0 },
+      { setNumber: 2, weight: 75, reps: 6, subReps: 0 },
+      { setNumber: 3, weight: 70, reps: 10, subReps: 0 }
     ],
     memo: 'フォーム重視でやった',
     createdAt: '2025-06-29T10:00:00Z',
@@ -366,9 +366,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 70, reps: 8 },
-      { setNumber: 2, weight: 70, reps: 8 },
-      { setNumber: 3, weight: 65, reps: 10 }
+      { setNumber: 1, weight: 70, reps: 8, subReps: 0 },
+      { setNumber: 2, weight: 70, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 65, reps: 10, subReps: 0 }
     ],
     createdAt: '2025-06-20T10:00:00Z',
     updatedAt: '2025-06-20T10:30:00Z'
@@ -379,9 +379,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 65, reps: 8 },
-      { setNumber: 2, weight: 65, reps: 8 },
-      { setNumber: 3, weight: 60, reps: 10 }
+      { setNumber: 1, weight: 65, reps: 8, subReps: 0 },
+      { setNumber: 2, weight: 65, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 60, reps: 10, subReps: 0 }
     ],
     createdAt: '2025-06-11T10:00:00Z',
     updatedAt: '2025-06-11T10:30:00Z'
@@ -392,9 +392,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 60, reps: 8 },
-      { setNumber: 2, weight: 60, reps: 8 },
-      { setNumber: 3, weight: 55, reps: 10 }
+      { setNumber: 1, weight: 60, reps: 8, subReps: 0 },
+      { setNumber: 2, weight: 60, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 55, reps: 10, subReps: 0 }
     ],
     createdAt: '2025-06-02T10:00:00Z',
     updatedAt: '2025-06-02T10:30:00Z'
@@ -405,9 +405,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 55, reps: 8 },
-      { setNumber: 2, weight: 55, reps: 8 },
-      { setNumber: 3, weight: 50, reps: 10 }
+      { setNumber: 1, weight: 55, reps: 8, subReps: 0 },
+      { setNumber: 2, weight: 55, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 50, reps: 10, subReps: 0 }
     ],
     createdAt: '2025-05-24T10:00:00Z',
     updatedAt: '2025-05-24T10:30:00Z'
@@ -418,9 +418,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 50, reps: 8 },
-      { setNumber: 2, weight: 50, reps: 8 },
-      { setNumber: 3, weight: 45, reps: 10 }
+      { setNumber: 1, weight: 50, reps: 8, subReps: 0 },
+      { setNumber: 2, weight: 50, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 45, reps: 10, subReps: 0 }
     ],
     createdAt: '2025-05-15T10:00:00Z',
     updatedAt: '2025-05-15T10:30:00Z'
@@ -432,9 +432,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex4',
     exerciseName: 'スクワット',
     sets: [
-      { setNumber: 1, weight: 85, reps: 10 },
-      { setNumber: 2, weight: 80, reps: 12 },
-      { setNumber: 3, weight: 75, reps: 15 }
+      { setNumber: 1, weight: 85, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 80, reps: 12, subReps: 0 },
+      { setNumber: 3, weight: 75, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-06-23T08:30:00Z',
     updatedAt: '2025-06-23T08:30:00Z'
@@ -445,9 +445,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex4',
     exerciseName: 'スクワット',
     sets: [
-      { setNumber: 1, weight: 80, reps: 10 },
-      { setNumber: 2, weight: 75, reps: 12 },
-      { setNumber: 3, weight: 70, reps: 15 }
+      { setNumber: 1, weight: 80, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 75, reps: 12, subReps: 0 },
+      { setNumber: 3, weight: 70, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-06-05T08:30:00Z',
     updatedAt: '2025-06-05T08:30:00Z'
@@ -458,9 +458,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex4',
     exerciseName: 'スクワット',
     sets: [
-      { setNumber: 1, weight: 75, reps: 10 },
-      { setNumber: 2, weight: 70, reps: 12 },
-      { setNumber: 3, weight: 65, reps: 15 }
+      { setNumber: 1, weight: 75, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 70, reps: 12, subReps: 0 },
+      { setNumber: 3, weight: 65, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-05-18T08:30:00Z',
     updatedAt: '2025-05-18T08:30:00Z'
@@ -472,9 +472,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 77.5, reps: 8 },
-      { setNumber: 2, weight: 77.5, reps: 6 },
-      { setNumber: 3, weight: 75, reps: 8 }
+      { setNumber: 1, weight: 77.5, reps: 8, subReps: 0 },
+      { setNumber: 2, weight: 77.5, reps: 6, subReps: 0 },
+      { setNumber: 3, weight: 75, reps: 8, subReps: 0 }
     ],
     createdAt: '2025-07-17T10:00:00Z',
     updatedAt: '2025-07-17T10:30:00Z'
@@ -485,9 +485,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex10',
     exerciseName: 'トライセップスプレス',
     sets: [
-      { setNumber: 1, weight: 27.5, reps: 12 },
-      { setNumber: 2, weight: 27.5, reps: 10 },
-      { setNumber: 3, weight: 25, reps: 15 }
+      { setNumber: 1, weight: 27.5, reps: 12, subReps: 0 },
+      { setNumber: 2, weight: 27.5, reps: 10, subReps: 0 },
+      { setNumber: 3, weight: 25, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-07-17T10:45:00Z',
     updatedAt: '2025-07-17T11:00:00Z'
@@ -499,9 +499,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 75, reps: 10 },
-      { setNumber: 2, weight: 75, reps: 8 },
-      { setNumber: 3, weight: 70, reps: 10 }
+      { setNumber: 1, weight: 75, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 75, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 70, reps: 10, subReps: 0 }
     ],
     createdAt: '2025-07-14T10:00:00Z',
     updatedAt: '2025-07-14T10:30:00Z'
@@ -512,9 +512,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex7',
     exerciseName: 'プルアップ',
     sets: [
-      { setNumber: 1, weight: 0, reps: 8 },
-      { setNumber: 2, weight: 0, reps: 6 },
-      { setNumber: 3, weight: 0, reps: 5 }
+      { setNumber: 1, weight: 0, reps: 8, subReps: 0 },
+      { setNumber: 2, weight: 0, reps: 6, subReps: 0 },
+      { setNumber: 3, weight: 0, reps: 5, subReps: 0 }
     ],
     createdAt: '2025-07-14T09:00:00Z',
     updatedAt: '2025-07-14T09:30:00Z'
@@ -525,9 +525,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex6',
     exerciseName: 'ラテラルレイズ',
     sets: [
-      { setNumber: 1, weight: 10, reps: 15 },
-      { setNumber: 2, weight: 10, reps: 12 },
-      { setNumber: 3, weight: 8, reps: 18 }
+      { setNumber: 1, weight: 10, reps: 15, subReps: 0 },
+      { setNumber: 2, weight: 10, reps: 12, subReps: 0 },
+      { setNumber: 3, weight: 8, reps: 18, subReps: 0 }
     ],
     createdAt: '2025-07-14T09:30:00Z',
     updatedAt: '2025-07-14T10:00:00Z'
@@ -539,9 +539,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex8',
     exerciseName: 'レッグプレス',
     sets: [
-      { setNumber: 1, weight: 120, reps: 12 },
-      { setNumber: 2, weight: 120, reps: 10 },
-      { setNumber: 3, weight: 100, reps: 15 }
+      { setNumber: 1, weight: 120, reps: 12, subReps: 0 },
+      { setNumber: 2, weight: 120, reps: 10, subReps: 0 },
+      { setNumber: 3, weight: 100, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-07-11T08:00:00Z',
     updatedAt: '2025-07-11T08:30:00Z'
@@ -553,7 +553,7 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseName: 'スクワット',
     sets: [
       { setNumber: 1, weight: 85, reps: 12, subReps: 3 },
-      { setNumber: 2, weight: 80, reps: 15 },
+      { setNumber: 2, weight: 80, reps: 15, subReps: 0 },
       { setNumber: 3, weight: 75, reps: 18, subReps: 2 }
     ],
     createdAt: '2025-07-11T08:30:00Z',
@@ -566,9 +566,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 72.5, reps: 10 },
-      { setNumber: 2, weight: 70, reps: 8 },
-      { setNumber: 3, weight: 67.5, reps: 12 }
+      { setNumber: 1, weight: 72.5, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 70, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 67.5, reps: 12, subReps: 0 }
     ],
     createdAt: '2025-07-08T10:00:00Z',
     updatedAt: '2025-07-08T10:30:00Z'
@@ -579,9 +579,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex5',
     exerciseName: 'インクラインベンチプレス',
     sets: [
-      { setNumber: 1, weight: 55, reps: 10 },
-      { setNumber: 2, weight: 52.5, reps: 12 },
-      { setNumber: 3, weight: 50, reps: 15 }
+      { setNumber: 1, weight: 55, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 52.5, reps: 12, subReps: 0 },
+      { setNumber: 3, weight: 50, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-07-08T10:30:00Z',
     updatedAt: '2025-07-08T11:00:00Z'
@@ -593,9 +593,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex3',
     exerciseName: 'デッドリフト',
     sets: [
-      { setNumber: 1, weight: 100, reps: 6 },
-      { setNumber: 2, weight: 95, reps: 8 },
-      { setNumber: 3, weight: 90, reps: 10 }
+      { setNumber: 1, weight: 100, reps: 6, subReps: 0 },
+      { setNumber: 2, weight: 95, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 90, reps: 10, subReps: 0 }
     ],
     createdAt: '2025-07-05T09:00:00Z',
     updatedAt: '2025-07-05T09:30:00Z'
@@ -606,9 +606,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex11',
     exerciseName: 'ラットプルダウン',
     sets: [
-      { setNumber: 1, weight: 65, reps: 12 },
-      { setNumber: 2, weight: 60, reps: 15 },
-      { setNumber: 3, weight: 55, reps: 18 }
+      { setNumber: 1, weight: 65, reps: 12, subReps: 0 },
+      { setNumber: 2, weight: 60, reps: 15, subReps: 0 },
+      { setNumber: 3, weight: 55, reps: 18, subReps: 0 }
     ],
     createdAt: '2025-07-05T09:30:00Z',
     updatedAt: '2025-07-05T10:00:00Z'
@@ -619,9 +619,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex9',
     exerciseName: 'バーベルカール',
     sets: [
-      { setNumber: 1, weight: 30, reps: 12 },
-      { setNumber: 2, weight: 27.5, reps: 15 },
-      { setNumber: 3, weight: 25, reps: 18 }
+      { setNumber: 1, weight: 30, reps: 12, subReps: 0 },
+      { setNumber: 2, weight: 27.5, reps: 15, subReps: 0 },
+      { setNumber: 3, weight: 25, reps: 18, subReps: 0 }
     ],
     createdAt: '2025-07-05T10:00:00Z',
     updatedAt: '2025-07-05T10:30:00Z'
@@ -633,8 +633,8 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex4',
     exerciseName: 'スクワット',
     sets: [
-      { setNumber: 1, weight: 80, reps: 15 },
-      { setNumber: 2, weight: 75, reps: 18 },
+      { setNumber: 1, weight: 80, reps: 15, subReps: 0 },
+      { setNumber: 2, weight: 75, reps: 18, subReps: 0 },
       { setNumber: 3, weight: 70, reps: 20, subReps: 5 }
     ],
     createdAt: '2025-07-02T08:00:00Z',
@@ -646,9 +646,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex2',
     exerciseName: 'ショルダープレス',
     sets: [
-      { setNumber: 1, weight: 37.5, reps: 12 },
-      { setNumber: 2, weight: 35, reps: 15 },
-      { setNumber: 3, weight: 32.5, reps: 18 }
+      { setNumber: 1, weight: 37.5, reps: 12, subReps: 0 },
+      { setNumber: 2, weight: 35, reps: 15, subReps: 0 },
+      { setNumber: 3, weight: 32.5, reps: 18, subReps: 0 }
     ],
     createdAt: '2025-07-02T08:30:00Z',
     updatedAt: '2025-07-02T09:00:00Z'
@@ -660,9 +660,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 70, reps: 10 },
-      { setNumber: 2, weight: 67.5, reps: 12 },
-      { setNumber: 3, weight: 65, reps: 15 }
+      { setNumber: 1, weight: 70, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 67.5, reps: 12, subReps: 0 },
+      { setNumber: 3, weight: 65, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-06-29T10:00:00Z',
     updatedAt: '2025-06-29T10:30:00Z'
@@ -674,9 +674,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex3',
     exerciseName: 'デッドリフト',
     sets: [
-      { setNumber: 1, weight: 95, reps: 6 },
-      { setNumber: 2, weight: 90, reps: 8 },
-      { setNumber: 3, weight: 85, reps: 10 }
+      { setNumber: 1, weight: 95, reps: 6, subReps: 0 },
+      { setNumber: 2, weight: 90, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 85, reps: 10, subReps: 0 }
     ],
     createdAt: '2025-06-26T09:00:00Z',
     updatedAt: '2025-06-26T09:30:00Z'
@@ -687,9 +687,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex4',
     exerciseName: 'スクワット',
     sets: [
-      { setNumber: 1, weight: 75, reps: 15 },
-      { setNumber: 2, weight: 70, reps: 18 },
-      { setNumber: 3, weight: 65, reps: 20 }
+      { setNumber: 1, weight: 75, reps: 15, subReps: 0 },
+      { setNumber: 2, weight: 70, reps: 18, subReps: 0 },
+      { setNumber: 3, weight: 65, reps: 20, subReps: 0 }
     ],
     createdAt: '2025-06-23T08:00:00Z',
     updatedAt: '2025-06-23T08:30:00Z'
@@ -700,9 +700,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 67.5, reps: 10 },
-      { setNumber: 2, weight: 65, reps: 12 },
-      { setNumber: 3, weight: 62.5, reps: 15 }
+      { setNumber: 1, weight: 67.5, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 65, reps: 12, subReps: 0 },
+      { setNumber: 3, weight: 62.5, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-06-20T10:00:00Z',
     updatedAt: '2025-06-20T10:30:00Z'
@@ -713,9 +713,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex3',
     exerciseName: 'デッドリフト',
     sets: [
-      { setNumber: 1, weight: 90, reps: 6 },
-      { setNumber: 2, weight: 85, reps: 8 },
-      { setNumber: 3, weight: 80, reps: 10 }
+      { setNumber: 1, weight: 90, reps: 6, subReps: 0 },
+      { setNumber: 2, weight: 85, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 80, reps: 10, subReps: 0 }
     ],
     createdAt: '2025-06-17T09:00:00Z',
     updatedAt: '2025-06-17T09:30:00Z'
@@ -726,9 +726,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex4',
     exerciseName: 'スクワット',
     sets: [
-      { setNumber: 1, weight: 70, reps: 15 },
-      { setNumber: 2, weight: 67.5, reps: 18 },
-      { setNumber: 3, weight: 65, reps: 20 }
+      { setNumber: 1, weight: 70, reps: 15, subReps: 0 },
+      { setNumber: 2, weight: 67.5, reps: 18, subReps: 0 },
+      { setNumber: 3, weight: 65, reps: 20, subReps: 0 }
     ],
     createdAt: '2025-06-14T08:00:00Z',
     updatedAt: '2025-06-14T08:30:00Z'
@@ -740,9 +740,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 65, reps: 10 },
-      { setNumber: 2, weight: 62.5, reps: 12 },
-      { setNumber: 3, weight: 60, reps: 15 }
+      { setNumber: 1, weight: 65, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 62.5, reps: 12, subReps: 0 },
+      { setNumber: 3, weight: 60, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-06-11T10:00:00Z',
     updatedAt: '2025-06-11T10:30:00Z'
@@ -753,9 +753,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex3',
     exerciseName: 'デッドリフト',
     sets: [
-      { setNumber: 1, weight: 85, reps: 6 },
-      { setNumber: 2, weight: 80, reps: 8 },
-      { setNumber: 3, weight: 75, reps: 10 }
+      { setNumber: 1, weight: 85, reps: 6, subReps: 0 },
+      { setNumber: 2, weight: 80, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 75, reps: 10, subReps: 0 }
     ],
     createdAt: '2025-06-08T09:00:00Z',
     updatedAt: '2025-06-08T09:30:00Z'
@@ -766,9 +766,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex4',
     exerciseName: 'スクワット',
     sets: [
-      { setNumber: 1, weight: 67.5, reps: 15 },
-      { setNumber: 2, weight: 65, reps: 18 },
-      { setNumber: 3, weight: 62.5, reps: 20 }
+      { setNumber: 1, weight: 67.5, reps: 15, subReps: 0 },
+      { setNumber: 2, weight: 65, reps: 18, subReps: 0 },
+      { setNumber: 3, weight: 62.5, reps: 20, subReps: 0 }
     ],
     createdAt: '2025-06-05T08:00:00Z',
     updatedAt: '2025-06-05T08:30:00Z'
@@ -779,9 +779,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 62.5, reps: 10 },
-      { setNumber: 2, weight: 60, reps: 12 },
-      { setNumber: 3, weight: 57.5, reps: 15 }
+      { setNumber: 1, weight: 62.5, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 60, reps: 12, subReps: 0 },
+      { setNumber: 3, weight: 57.5, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-06-02T10:00:00Z',
     updatedAt: '2025-06-02T10:30:00Z'
@@ -792,9 +792,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex3',
     exerciseName: 'デッドリフト',
     sets: [
-      { setNumber: 1, weight: 80, reps: 6 },
-      { setNumber: 2, weight: 75, reps: 8 },
-      { setNumber: 3, weight: 70, reps: 10 }
+      { setNumber: 1, weight: 80, reps: 6, subReps: 0 },
+      { setNumber: 2, weight: 75, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 70, reps: 10, subReps: 0 }
     ],
     createdAt: '2025-05-30T09:00:00Z',
     updatedAt: '2025-05-30T09:30:00Z'
@@ -805,9 +805,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex4',
     exerciseName: 'スクワット',
     sets: [
-      { setNumber: 1, weight: 65, reps: 15 },
-      { setNumber: 2, weight: 62.5, reps: 18 },
-      { setNumber: 3, weight: 60, reps: 20 }
+      { setNumber: 1, weight: 65, reps: 15, subReps: 0 },
+      { setNumber: 2, weight: 62.5, reps: 18, subReps: 0 },
+      { setNumber: 3, weight: 60, reps: 20, subReps: 0 }
     ],
     createdAt: '2025-05-27T08:00:00Z',
     updatedAt: '2025-05-27T08:30:00Z'
@@ -818,9 +818,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 60, reps: 10 },
-      { setNumber: 2, weight: 57.5, reps: 12 },
-      { setNumber: 3, weight: 55, reps: 15 }
+      { setNumber: 1, weight: 60, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 57.5, reps: 12, subReps: 0 },
+      { setNumber: 3, weight: 55, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-05-24T10:00:00Z',
     updatedAt: '2025-05-24T10:30:00Z'
@@ -831,9 +831,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex3',
     exerciseName: 'デッドリフト',
     sets: [
-      { setNumber: 1, weight: 75, reps: 6 },
-      { setNumber: 2, weight: 70, reps: 8 },
-      { setNumber: 3, weight: 65, reps: 10 }
+      { setNumber: 1, weight: 75, reps: 6, subReps: 0 },
+      { setNumber: 2, weight: 70, reps: 8, subReps: 0 },
+      { setNumber: 3, weight: 65, reps: 10, subReps: 0 }
     ],
     createdAt: '2025-05-21T09:00:00Z',
     updatedAt: '2025-05-21T09:30:00Z'
@@ -844,9 +844,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex4',
     exerciseName: 'スクワット',
     sets: [
-      { setNumber: 1, weight: 62.5, reps: 15 },
-      { setNumber: 2, weight: 60, reps: 18 },
-      { setNumber: 3, weight: 57.5, reps: 20 }
+      { setNumber: 1, weight: 62.5, reps: 15, subReps: 0 },
+      { setNumber: 2, weight: 60, reps: 18, subReps: 0 },
+      { setNumber: 3, weight: 57.5, reps: 20, subReps: 0 }
     ],
     createdAt: '2025-05-18T08:00:00Z',
     updatedAt: '2025-05-18T08:30:00Z'
@@ -857,9 +857,9 @@ const workoutRecords: WorkoutRecord[] = [
     exerciseId: 'ex1',
     exerciseName: 'ベンチプレス',
     sets: [
-      { setNumber: 1, weight: 57.5, reps: 10 },
-      { setNumber: 2, weight: 55, reps: 12 },
-      { setNumber: 3, weight: 52.5, reps: 15 }
+      { setNumber: 1, weight: 57.5, reps: 10, subReps: 0 },
+      { setNumber: 2, weight: 55, reps: 12, subReps: 0 },
+      { setNumber: 3, weight: 52.5, reps: 15, subReps: 0 }
     ],
     createdAt: '2025-05-15T10:00:00Z',
     updatedAt: '2025-05-15T10:30:00Z'

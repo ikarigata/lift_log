@@ -45,10 +45,18 @@ export const saveWorkoutRecord = async (workoutId: string, exerciseId: string, s
 
     const method = editingRecordId ? 'PUT' : 'POST';
 
+    // バックエンドが期待する形式に変換
+    const transformedSets = sets.map(set => ({
+        setNumber: set.setNumber,
+        weight: set.weight,
+        reps: set.reps,
+        subReps: set.subReps
+    }));
+
     const body = JSON.stringify({
         workoutDayId: workoutId,
         exerciseId,
-        sets,
+        sets: transformedSets,
         memo,
     });
 
@@ -58,7 +66,9 @@ export const saveWorkoutRecord = async (workoutId: string, exerciseId: string, s
     });
 
     if (!response.ok) {
-        throw new Error('Failed to save workout record');
+        const errorText = await response.text();
+        console.error('API Error:', response.status, errorText);
+        throw new Error(`Failed to save workout record: ${response.status} ${errorText}`);
     }
     return response.json();
 }

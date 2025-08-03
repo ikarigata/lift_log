@@ -19,13 +19,13 @@ public class WorkoutSetRequest {
     private Integer reps;
     
     @Min(0)
-    private Integer subReps;
+    private int subReps;
 
     // コンストラクタ
     public WorkoutSetRequest() {
     }
 
-    public WorkoutSetRequest(Integer setNumber, BigDecimal weight, Integer reps, Integer subReps) {
+    public WorkoutSetRequest(Integer setNumber, BigDecimal weight, Integer reps, int subReps) {
         this.setNumber = setNumber;
         this.weight = weight;
         this.reps = reps;
@@ -57,11 +57,11 @@ public class WorkoutSetRequest {
         this.reps = reps;
     }
 
-    public Integer getSubReps() {
+    public int getSubReps() {
         return subReps;
     }
 
-    public void setSubReps(Integer subReps) {
+    public void setSubReps(int subReps) {
         this.subReps = subReps;
     }
 }

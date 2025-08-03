@@ -49,11 +49,12 @@ public class WorkoutRecordController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
     @PostMapping("/workout-records")
     public ResponseEntity<WorkoutRecord> createWorkoutRecord(@Valid @RequestBody WorkoutRecordRequest request) {
         // 認証されたユーザーIDを取得
         UUID userId = AuthenticationUtil.requireCurrentUserUUID();
-        
+
         WorkoutRecord workoutRecord = new WorkoutRecord();
         workoutRecord.setWorkoutDayId(request.getWorkoutDayId());
         workoutRecord.setExerciseId(request.getExerciseId());
@@ -68,9 +69,7 @@ public class WorkoutRecordController {
                 workoutSet.setWorkoutRecordId(createdRecord.getId());
                 workoutSet.setWeight(setRequest.getWeight());
                 workoutSet.setReps(setRequest.getReps());
-                if (setRequest.getSubReps() != null) {
-                    workoutSet.setSubReps(setRequest.getSubReps());
-                }
+                workoutSet.setSubReps(setRequest.getSubReps());
                 workoutSetService.createWorkoutSet(workoutSet);
             }
         }
@@ -106,9 +105,7 @@ public class WorkoutRecordController {
                 workoutSet.setWorkoutRecordId(createdRecord.getId());
                 workoutSet.setWeight(setRequest.getWeight());
                 workoutSet.setReps(setRequest.getReps());
-                if (setRequest.getSubReps() != null) {
-                    workoutSet.setSubReps(setRequest.getSubReps());
-                }
+                workoutSet.setSubReps(setRequest.getSubReps());
                 workoutSetService.createWorkoutSet(workoutSet);
             }
         }
@@ -127,16 +124,16 @@ public class WorkoutRecordController {
             @PathVariable UUID id,
             @Valid @RequestBody WorkoutRecordRequest request) {
 
-        // 認証されたユーザーIDを取得  
+        // 認証されたユーザーIDを取得
         UUID userId = AuthenticationUtil.requireCurrentUserUUID();
-        
+
         WorkoutRecord workoutRecord = new WorkoutRecord();
         workoutRecord.setExerciseId(request.getExerciseId());
         workoutRecord.setNotes(request.getMemo());
 
         // 既存のセットを削除して新しいセットで置き換え
         workoutSetService.deleteWorkoutSetsByWorkoutRecordId(id);
-        
+
         // 新しいセットを作成
         if (request.getSets() != null && !request.getSets().isEmpty()) {
             for (WorkoutSetRequest setRequest : request.getSets()) {
@@ -144,9 +141,7 @@ public class WorkoutRecordController {
                 workoutSet.setWorkoutRecordId(id);
                 workoutSet.setWeight(setRequest.getWeight());
                 workoutSet.setReps(setRequest.getReps());
-                if (setRequest.getSubReps() != null) {
-                    workoutSet.setSubReps(setRequest.getSubReps());
-                }
+                workoutSet.setSubReps(setRequest.getSubReps());
                 workoutSetService.createWorkoutSet(workoutSet);
             }
         }

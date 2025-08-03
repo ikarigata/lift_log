@@ -6,9 +6,11 @@ import './index.css'
 async function enableMocking() {
   // 環境変数でMSWの使用を制御
   const useMSW = import.meta.env.VITE_USE_MSW === 'true'
+  const isDev = import.meta.env.DEV
   
-  if (!useMSW) {
-    console.log('MSW: Disabled by environment variable, using real API')
+  // development環境でのみMSWを有効にする（previewでは無効）
+  if (!isDev || !useMSW) {
+    console.log('MSW: Disabled (production/preview mode or VITE_USE_MSW=false), using real API')
     return
   }
 
