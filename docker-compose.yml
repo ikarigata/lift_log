@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # PostgreSQLデータベースサービス
+  db:
+    image: postgres:14-alpine
+    container_name: postgres-db
+    environment:
+      - POSTGRES_DB=lift_log
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      # 名前付きボリュームを使用してデータを永続化
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      # データベースが準備完了かを確認
+      test: ["CMD-SHELL", "pg_isready -U postgres -d lift_log"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  # Spring Bootバックエンドサービス
+  backend:
+    build:
+      context: ./backend
+      args:
+        # ビルド時に使用するデータベース接続情報
+        - DB_URL=jdbc:postgresql://db:5432/lift_log
+        - DB_USER=postgres
+        - DB_PASS=postgres
+    container_name: backend-app
+    depends_on:
+      db:
+        # dbサービスがhealthy状態になった後に起動
+        condition: service_healthy
+    environment:
+      # 実行時に使用するデータベース接続情報
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/lift_log
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - JWT_SECRET=aVerySecureAndLongSecretKeyForJwtThatIsAtLeast256BitsLong12345
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+  # Reactフロントエンドサービス
+  frontend:
+    build: ./frontend
+    container_name: frontend-app
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+# データ永続化用の名前付きボリューム
+volumes:
+  postgres-data:
+
+# コンテナ間通信用のネットワーク
+networks:
+  app-network:
+    driver: bridge
