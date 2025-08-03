@@ -866,6 +866,16 @@ const workoutRecords: WorkoutRecord[] = [
   }
 ];
 
+const muscleGroups = [
+  { id: 'mg1', name: '胸' },
+  { id: 'mg2', name: '背中' },
+  { id: 'mg3', name: '肩' },
+  { id: 'mg4', name: '腕' },
+  { id: 'mg5', name: '脚' },
+  { id: 'mg6', name: '腹筋' },
+  { id: 'mg7', name: 'その他' },
+];
+
 export const handlers = [
   // Workout Days
   http.get(`${BASE_URL}/workout-days`, requireAuth(() => {
@@ -895,6 +905,11 @@ export const handlers = [
     };
     workoutDays.unshift(newWorkout);
     return HttpResponse.json(newWorkout);
+  })),
+
+  // Muscle Groups
+  http.get(`${BASE_URL}/muscle-groups`, requireAuth(() => {
+    return HttpResponse.json(muscleGroups)
   })),
 
   // Exercises
