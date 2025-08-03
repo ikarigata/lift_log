@@ -221,7 +221,7 @@ const AppContent = () => {
               element={
                 <ExerciseListPage
                   exercises={exercises}
-                  
+                  workoutRecords={workoutRecords}
                 />
               }
             />
