@@ -25,15 +25,13 @@ services:
   backend:
     build:
       context: ./backend
-      args:
-        # ビルド時に使用するデータベース接続情報
-        - DB_URL=jdbc:postgresql://db:5432/lift_log
-        - DB_USER=postgres
-        - DB_PASS=postgres
+      # 設計方針: 事前生成されたjOOQクラスを使用し、
+      # ビルド時にはデータベース接続を不要とする
     container_name: backend-app
     depends_on:
       db:
         # dbサービスがhealthy状態になった後に起動
+        # 設計意図: 実行時にFlywayマイグレーションのためデータベースが必要
         condition: service_healthy
     environment:
       # 実行時に使用するデータベース接続情報
@@ -41,6 +39,9 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - JWT_SECRET=aVerySecureAndLongSecretKeyForJwtThatIsAtLeast256BitsLong12345
+      # Flyway設定: 実行時にマイグレーションを有効化
+      - SPRING_FLYWAY_ENABLED=true
+      - SPRING_FLYWAY_BASELINE_ON_MIGRATE=true
     ports:
       - "8080:8080"
     networks:
