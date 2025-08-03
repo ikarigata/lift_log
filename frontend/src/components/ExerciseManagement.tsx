@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TitleBar from './TitleBar';
 import CustomDropdown from './CustomDropdown';
-import type { Exercise } from '../types';
+import type { Exercise, MuscleGroup } from '../types';
+import { getMuscleGroups } from '../api/muscleGroups';
 
 interface ExerciseManagementProps {
   exercises: Exercise[];
@@ -21,8 +22,19 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
   const [showAddForm, setShowAddForm] = useState(false);
   const [newExerciseName, setNewExerciseName] = useState('');
   const [newMuscleGroup, setNewMuscleGroup] = useState('');
+  const [muscleGroups, setMuscleGroups] = useState<MuscleGroup[]>([]);
 
-  const muscleGroups = ['胸', '背中', '肩', '腕', '脚', '腹筋', 'その他'];
+  useEffect(() => {
+    const fetchMuscleGroups = async () => {
+      try {
+        const data = await getMuscleGroups();
+        setMuscleGroups(data);
+      } catch (error) {
+        console.error('Failed to fetch muscle groups:', error);
+      }
+    };
+    fetchMuscleGroups();
+  }, []);
 
   const handleAddExercise = () => {
     if (newExerciseName.trim() && newMuscleGroup.trim()) {
@@ -87,7 +99,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
             <CustomDropdown
               value={newMuscleGroup}
               onChange={setNewMuscleGroup}
-              options={muscleGroups.map(group => ({ value: group, label: group }))}
+              options={muscleGroups.map(group => ({ value: group.name, label: group.name }))}
               placeholder="部位を選択"
             />
           </div>
