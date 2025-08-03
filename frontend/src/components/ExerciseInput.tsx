@@ -1,6 +1,23 @@
 import React, { useState } from 'react';
 import TitleBar from './TitleBar';
 import type { Exercise, WorkoutRecord, WorkoutSet } from '../types';
+import {
+  DndContext,
+  closestCenter,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface ExerciseInputProps {
   exercise: Exercise;
@@ -10,7 +27,98 @@ interface ExerciseInputProps {
   onSave: (sets: WorkoutSet[], memo?: string) => void;
 }
 
-const ExerciseInput: React.FC<ExerciseInputProps> = ({ 
+interface SortableSetItemProps {
+  set: WorkoutSet;
+  index: number;
+  currentSets: WorkoutSet[];
+  updateSet: (index: number, field: keyof WorkoutSet, value: number) => void;
+  removeSet: (index: number) => void;
+}
+
+const SortableSetItem: React.FC<SortableSetItemProps> = ({ set, index, currentSets, updateSet, removeSet }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: set.setNumber });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center justify-between bg-surface-container rounded-[10px] p-[10px] mb-[10px]"
+    >
+      <div
+        {...attributes}
+        {...listeners}
+        className="text-content-secondary font-dotgothic text-xl cursor-grab active:cursor-grabbing mr-[10px] touch-manipulation flex-shrink-0 p-1 rounded hover:bg-surface-secondary transition-colors"
+        style={{ touchAction: 'none' }}
+        title="長押しでセットを並び替え"
+      >
+        ⋮
+      </div>
+      
+      <div className="flex items-center space-x-[6px] flex-1">
+        <span className="text-content-secondary font-dotgothic text-sm w-[64px] flex-shrink-0">
+          {set.setNumber}セット目
+        </span>
+        
+        <div className="flex items-center space-x-[3px]">
+          <input
+            type="number"
+            value={set.weight || ''}
+            onChange={(e) => updateSet(index, 'weight', parseFloat(e.target.value) || 0)}
+            placeholder="重量"
+            className="w-[58px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[3px] py-[2px] text-center border border-gray-400"
+          />
+          <span className="text-content-secondary font-dotgothic text-sm">kg</span>
+        </div>
+
+        <span className="text-content-secondary font-dotgothic text-sm">×</span>
+
+        <div className="flex items-center space-x-[2px]">
+          <input
+            type="number"
+            value={set.reps || ''}
+            onChange={(e) => updateSet(index, 'reps', parseInt(e.target.value) || 0)}
+            placeholder="回数"
+            className="w-[48px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[3px] py-[2px] text-center border border-gray-400"
+          />
+          <span className="text-content-secondary font-dotgothic text-sm">回</span>
+          <span className="text-content-secondary font-dotgothic text-sm opacity-60">(</span>
+          <input
+            type="number"
+            value={set.subReps || ''}
+            onChange={(e) => updateSet(index, 'subReps', parseInt(e.target.value) || 0)}
+            placeholder="0"
+            className="w-[48px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[3px] py-[2px] text-center border border-gray-400 opacity-60"
+          />
+          <span className="text-content-secondary font-dotgothic text-sm opacity-60">回)</span>
+        </div>
+      </div>
+
+      {currentSets.length > 1 && (
+        <button
+          onClick={() => removeSet(index)}
+          className="text-interactive-primary font-dotgothic text-sm hover:opacity-70 transition-opacity flex-shrink-0"
+        >
+          ×
+        </button>
+      )}
+    </div>
+  );
+};
+
+const ExerciseInput: React.FC<ExerciseInputProps> = ({
   exercise, 
   previousRecords, 
   currentRecord,
@@ -23,6 +131,32 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
     ]
   );
   const [memo, setMemo] = useState<string>(currentRecord?.memo || '');
+
+  const sensors = useSensors(
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (active.id !== over?.id) {
+      setCurrentSets((sets) => {
+        const oldIndex = sets.findIndex(set => set.setNumber === active.id);
+        const newIndex = sets.findIndex(set => set.setNumber === over?.id);
+        
+        const reorderedSets = arrayMove(sets, oldIndex, newIndex);
+        return reorderedSets.map((set, index) => ({
+          ...set,
+          setNumber: index + 1
+        }));
+      });
+    }
+  };
 
   const addSet = () => {
     const newSet: WorkoutSet = {
@@ -149,60 +283,27 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
         </div>
 
         <div className="space-y-[10px]">
-          {currentSets.map((set, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between bg-surface-container rounded-[10px] p-[10px] mb-[10px]"
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={currentSets.map(set => set.setNumber)}
+              strategy={verticalListSortingStrategy}
             >
-              <div className="flex items-center space-x-[8px]">
-                <span className="text-content-secondary font-dotgothic text-sm w-[64px] flex-shrink-0">
-                  {set.setNumber}セット目
-                </span>
-                
-                <div className="flex items-center space-x-[4px]">
-                  <input
-                    type="number"
-                    value={set.weight || ''}
-                    onChange={(e) => updateSet(index, 'weight', parseFloat(e.target.value) || 0)}
-                    placeholder="重量"
-                    className="w-[58px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[3px] py-[2px] text-center border border-gray-400"
-                  />
-                  <span className="text-content-secondary font-dotgothic text-sm">kg</span>
-                </div>
-
-                <span className="text-content-secondary font-dotgothic text-sm">×</span>
-
-                <div className="flex items-center space-x-[4px]">
-                  <input
-                    type="number"
-                    value={set.reps || ''}
-                    onChange={(e) => updateSet(index, 'reps', parseInt(e.target.value) || 0)}
-                    placeholder="回数"
-                    className="w-[48px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[3px] py-[2px] text-center border border-gray-400"
-                  />
-                  <span className="text-content-secondary font-dotgothic text-sm">回</span>
-                  <span className="text-content-secondary font-dotgothic text-sm opacity-60">(</span>
-                  <input
-                    type="number"
-                    value={set.subReps || ''}
-                    onChange={(e) => updateSet(index, 'subReps', parseInt(e.target.value) || 0)}
-                    placeholder="0"
-                    className="w-[48px] bg-surface-container text-content-secondary font-dotgothic text-sm rounded-[5px] px-[3px] py-[2px] text-center border border-gray-400 opacity-60"
-                  />
-                  <span className="text-content-secondary font-dotgothic text-sm opacity-60">回)</span>
-                </div>
-              </div>
-
-              {currentSets.length > 1 && (
-                <button
-                  onClick={() => removeSet(index)}
-                  className="text-interactive-primary font-dotgothic text-sm transition-opacity glitch-on-click"
-                >
-                  ×
-                </button>
-              )}
-            </div>
-          ))}
+              {currentSets.map((set, index) => (
+                <SortableSetItem
+                  key={set.setNumber}
+                  set={set}
+                  index={index}
+                  currentSets={currentSets}
+                  updateSet={updateSet}
+                  removeSet={removeSet}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
         </div>
         
         <div className="flex gap-[10px] mt-[10px]">
