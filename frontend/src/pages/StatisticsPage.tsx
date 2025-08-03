@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { getExerciseProgress } from '../api/statistics';
+import { getExercises } from '../api/exercises';
 import TitleBar from '../components/TitleBar';
 import type { Exercise, ExerciseProgressResponse } from '../types';
 import { isAuthenticated } from '../utils/auth';
@@ -9,23 +10,29 @@ import { calculateMax1RM } from '../utils/rmCalculator';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-interface StatisticsPageProps {
-  exercises: Exercise[];
-}
-
-const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
+const StatisticsPage: React.FC = () => {
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<string>('');
   const [chartData, setChartData] = useState<any>({ labels: [], datasets: [] });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 初期表示の種目を選択
   useEffect(() => {
-    if (exercises.length > 0) {
-      setSelectedExercise(exercises[0].id);
-    }
-  }, [exercises]);
+    const fetchExercises = async () => {
+      try {
+        const exerciseList = await getExercises();
+        setExercises(exerciseList);
+        if (exerciseList.length > 0) {
+          setSelectedExercise(exerciseList[0].id);
+        }
+      } catch (error) {
+        console.error('Failed to fetch exercises:', error);
+      }
+    };
+
+    fetchExercises();
+  }, []);
 
   // 外部クリックでドロップダウンを閉じる
   useEffect(() => {
@@ -93,13 +100,13 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
     fetchData();
   }, [selectedExercise]);
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   const handleExerciseSelect = (exerciseId: string) => {
     setSelectedExercise(exerciseId);
     setIsDropdownOpen(false);
-  };
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
   };
 
   const options = {
@@ -198,25 +205,25 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
       <TitleBar title="Statistics" />
 
       <div className="bg-surface-secondary rounded-[10px] p-2 space-y-2">
-        <div className="relative" ref={dropdownRef}>
-          {/* アコーディオンボタン */}
-          <button
-            onClick={toggleDropdown}
-            disabled={isLoading || exercises.length === 0}
-            className="block w-full p-2 bg-orange-500 border border-orange-600 rounded-[10px] text-amber-100 font-dotgothic focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-left flex justify-between items-center"
-          >
-            <span>
-              {selectedExercise ? exercises.find(ex => ex.id === selectedExercise)?.name : 'トレーニング種目を選択'}
-            </span>
-            <span className={`transform transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}>
-              ▼
-            </span>
-          </button>
-
-          {/* アコーディオンメニュー */}
-          {isDropdownOpen && (
-            <div className="absolute top-full left-0 right-0 z-10 mt-1 bg-orange-500 border border-orange-600 rounded-[10px] overflow-hidden shadow-lg">
-              <div className="max-h-48 overflow-y-auto">
+        <div className="mb-4">
+          <label className="block text-amber-100 font-dotgothic text-sm font-bold mb-2">
+            トレーニング種目
+          </label>
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={toggleDropdown}
+              disabled={isLoading || exercises.length === 0}
+              className="block w-full p-2 bg-orange-500 border border-orange-600 rounded-[10px] text-amber-100 font-dotgothic focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-left flex justify-between items-center"
+            >
+              <span>
+                {selectedExercise ? exercises.find(ex => ex.id === selectedExercise)?.name : 'トレーニング種目を選択'}
+              </span>
+              <span className={`transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}>
+                ▼
+              </span>
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute z-10 w-full mt-1 bg-orange-500 border border-orange-600 rounded-[10px] shadow-lg max-h-60 overflow-y-auto">
                 {exercises.map((exercise) => (
                   <button
                     key={exercise.id}
@@ -227,8 +234,8 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
                   </button>
                 ))}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         <div className="relative h-[550px] bg-surface-secondary rounded-[10px] overflow-hidden">

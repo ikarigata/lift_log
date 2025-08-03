@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TitleBar from './TitleBar';
-import type { Exercise } from '../types';
+import type { Exercise, MuscleGroup } from '../types';
+import { getMuscleGroups } from '../api/muscleGroups';
 
 interface ExerciseManagementProps {
   exercises: Exercise[];
@@ -20,8 +21,20 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
   const [showAddForm, setShowAddForm] = useState(false);
   const [newExerciseName, setNewExerciseName] = useState('');
   const [newMuscleGroup, setNewMuscleGroup] = useState('');
+  const [muscleGroups, setMuscleGroups] = useState<MuscleGroup[]>([]);
 
-  const muscleGroups = ['胸', '背中', '肩', '腕', '脚', '腹筋', 'その他'];
+  useEffect(() => {
+    const fetchMuscleGroups = async () => {
+      try {
+        const groups = await getMuscleGroups();
+        setMuscleGroups(groups);
+      } catch (error) {
+        console.error('Failed to fetch muscle groups:', error);
+      }
+    };
+
+    fetchMuscleGroups();
+  }, []);
 
   const handleAddExercise = () => {
     if (newExerciseName.trim() && newMuscleGroup.trim()) {
@@ -90,7 +103,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
             >
               <option value="">部位を選択</option>
               {muscleGroups.map(group => (
-                <option key={group} value={group}>{group}</option>
+                <option key={group.id} value={group.name}>{group.name}</option>
               ))}
             </select>
           </div>
