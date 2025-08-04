@@ -43,6 +43,12 @@ export interface ProgressData {
   sets: SetData[];
 }
 
+export interface MuscleGroup {
+  id: string;
+  name: string;
+  createdAt: string;
+}
+
 export interface ExerciseProgressResponse {
   exerciseId: string;
   exerciseName: string;

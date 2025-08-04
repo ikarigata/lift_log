@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { BASE_URL } from '../api/config';
 import { saveToken } from '../utils/auth';
@@ -13,11 +13,17 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // コンポーネントマウント時に古いトークンをクリア
+  useEffect(() => {
+    localStorage.removeItem('lift_log_auth_token');
+    sessionStorage.clear();
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     try {
-      const response = await fetch(`${BASE_URL}/login`, {
+      const response = await fetch(`${BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,6 +43,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         setError('メールアドレスまたはパスワードが正しくありません。');
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError('ログイン処理中にエラーが発生しました。');
     }
   };

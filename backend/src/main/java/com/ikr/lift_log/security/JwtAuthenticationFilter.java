@@ -28,6 +28,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
+        // ログインエンドポイントはJWT検証をスキップ
+        String requestURI = request.getRequestURI();
+        if (requestURI.equals("/api/v1/auth/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authorizationHeader = request.getHeader("Authorization");
         String token = jwtTokenProvider.extractTokenFromHeader(authorizationHeader);
 
