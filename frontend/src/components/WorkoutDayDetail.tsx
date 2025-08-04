@@ -40,6 +40,7 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
       <button
         onClick={onAddExercise}
         className="flex items-center justify-center w-full bg-interactive-primary hover:bg-interactive-primary/80 rounded-[10px] p-[10px] transition-colors active:scale-95 transform duration-150"
+        data-testid="add-exercise-button"
       >
         <div className="flex items-center space-x-[10px]">
           <div className="text-content-inverse font-dotgothic text-2xl">
@@ -51,7 +52,7 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
         </div>
       </button>
 
-      {workoutRecords.length === 0 ? (
+      {!workoutRecords || workoutRecords.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <div className="text-content-primary opacity-60 font-dotgothic text-lg mb-2">
             まだトレーニング記録がありません
@@ -62,8 +63,8 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
         </div>
       ) : (
         <div className="space-y-[10px]">
-          {workoutRecords.map((record) => (
-            <div key={record.id} className="bg-surface-secondary rounded-[10px] p-[10px]">
+          {(workoutRecords || []).map((record) => (
+            <div key={record.id} className="bg-surface-secondary rounded-[10px] p-[10px]" data-testid="workout-record">
               <button
                 onClick={() => onEditExercise(record)}
                 className="w-full hover:bg-surface-container transition-colors text-left rounded-[5px] p-[5px] -m-[5px]"
