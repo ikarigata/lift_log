@@ -52,13 +52,23 @@ public class UserService {
      * @return 認証成功した場合はUser、失敗した場合は空のOptional
      */
     public Optional<User> authenticateUser(String email, String password) {
+        System.out.println("Authenticating user with email: " + email);
         Optional<User> userOpt = userRepository.findByEmail(email);
         
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            if (passwordEncoder.matches(password, user.getPasswordHash())) {
+            System.out.println("User found in database: " + user.getEmail());
+            System.out.println("Stored password hash: " + user.getPasswordHash());
+            System.out.println("Provided password: " + password);
+            
+            boolean passwordMatches = passwordEncoder.matches(password, user.getPasswordHash());
+            System.out.println("Password matches: " + passwordMatches);
+            
+            if (passwordMatches) {
                 return Optional.of(user);
             }
+        } else {
+            System.out.println("No user found with email: " + email);
         }
         
         return Optional.empty();
