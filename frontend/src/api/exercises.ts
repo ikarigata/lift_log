@@ -29,6 +29,11 @@ export const deleteExercise = async (exerciseId: string): Promise<void> => {
   }
 };
 
+export const getExercisesByMuscleGroup = async (muscleGroupName: string): Promise<Exercise[]> => {
+  const allExercises = await getExercises();
+  return allExercises.filter(exercise => exercise.muscleGroup === muscleGroupName);
+};
+
 
 export const getWorkoutRecords = async (): Promise<WorkoutRecord[]> => {
     const response = await authenticatedFetch(`${BASE_URL}/workout-records`);

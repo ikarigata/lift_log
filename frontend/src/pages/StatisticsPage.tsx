@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { getExerciseProgress } from '../api/statistics';
+import { getExercises } from '../api/exercises';
 import TitleBar from '../components/TitleBar';
 import CustomDropdown from '../components/CustomDropdown';
 import type { Exercise, ExerciseProgressResponse } from '../types';
@@ -10,16 +11,12 @@ import { calculateMax1RM } from '../utils/rmCalculator';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-interface StatisticsPageProps {
-  exercises: Exercise[];
-}
-
-const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
+const StatisticsPage: React.FC = () => {
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<string>('');
   const [chartData, setChartData] = useState<any>({ labels: [], datasets: [] });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // 初期表示の種目を選択
   useEffect(() => {
     if (exercises.length > 0 && !selectedExercise) {
       setSelectedExercise(exercises[0].id);
@@ -77,6 +74,16 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
 
     fetchData();
   }, [selectedExercise]);
+
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleExerciseSelect = (exerciseId: string) => {
+    setSelectedExercise(exerciseId);
+    setIsDropdownOpen(false);
+  };
 
   const options = {
     responsive: true,
@@ -180,6 +187,7 @@ const StatisticsPage: React.FC<StatisticsPageProps> = ({ exercises }) => {
           options={exercises.map(ex => ({ value: ex.id, label: ex.name }))}
           placeholder="トレーニング種目を選択"
         />
+
 
         <div className="relative h-[550px] bg-surface-secondary rounded-[10px] overflow-hidden">
           {isLoading ? (
