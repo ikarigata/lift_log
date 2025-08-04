@@ -28,6 +28,6 @@ public class Users extends TableImpl<org.jooq.Record> {
     }
     
     private Users(org.jooq.Name alias, Table<org.jooq.Record> aliased) {
-        super(alias, null, aliased, null, (org.jooq.Field<?>[]) null);
+        super(alias, null, aliased, (org.jooq.Field<?>[]) null, "");
     }
 }
