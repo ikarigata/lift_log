@@ -1,17 +1,21 @@
 package com.ikr.lift_log.controller;
 
 import com.ikr.lift_log.domain.model.WorkoutDay;
+import com.ikr.lift_log.controller.dto.WorkoutDayRequest;
+import com.ikr.lift_log.controller.dto.WorkoutDayResponse;
 import com.ikr.lift_log.security.AuthenticationUtil;
 import com.ikr.lift_log.service.WorkoutDayService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import jakarta.validation.Valid;
 
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/workout-days")
@@ -24,7 +28,7 @@ public class WorkoutDayController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WorkoutDay>> getWorkoutDays(
+    public ResponseEntity<List<WorkoutDayResponse>> getWorkoutDays(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
 
@@ -34,25 +38,36 @@ public class WorkoutDayController {
         if (fromDate != null && toDate != null) {
             List<WorkoutDay> workoutDays = workoutDayService.getWorkoutDaysByUserIdAndDateRange(userId, fromDate,
                     toDate);
-            return ResponseEntity.ok(workoutDays);
+            List<WorkoutDayResponse> responses = workoutDays.stream()
+                    .map(this::convertToResponse)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(responses);
         } else {
             List<WorkoutDay> workoutDays = workoutDayService.getWorkoutDaysByUserId(userId);
-            return ResponseEntity.ok(workoutDays);
+            List<WorkoutDayResponse> responses = workoutDays.stream()
+                    .map(this::convertToResponse)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(responses);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WorkoutDay> getWorkoutDayById(@PathVariable UUID id) {
+    public ResponseEntity<WorkoutDayResponse> getWorkoutDayById(@PathVariable UUID id) {
         return workoutDayService.getWorkoutDayById(id)
+                .map(this::convertToResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<WorkoutDay> createWorkoutDay(@RequestBody WorkoutDay workoutDay) {
+    public ResponseEntity<WorkoutDayResponse> createWorkoutDay(@Valid @RequestBody WorkoutDayRequest request) {
         // 認証されたユーザーIDを設定
         UUID userId = AuthenticationUtil.requireCurrentUserUUID();
+        
+        WorkoutDay workoutDay = new WorkoutDay();
         workoutDay.setUserId(userId);
+        workoutDay.setDate(LocalDate.parse(request.getDate()));
+        workoutDay.setTitle(request.getName()); // フロントエンドのnameをバックエンドのtitleにマッピング
         
         WorkoutDay createdWorkoutDay = workoutDayService.createWorkoutDay(workoutDay);
 
@@ -62,12 +77,17 @@ public class WorkoutDayController {
                 .buildAndExpand(createdWorkoutDay.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(createdWorkoutDay);
+        return ResponseEntity.created(location).body(convertToResponse(createdWorkoutDay));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WorkoutDay> updateWorkoutDay(@PathVariable UUID id, @RequestBody WorkoutDay workoutDay) {
+    public ResponseEntity<WorkoutDayResponse> updateWorkoutDay(@PathVariable UUID id, @Valid @RequestBody WorkoutDayRequest request) {
+        WorkoutDay workoutDay = new WorkoutDay();
+        workoutDay.setDate(LocalDate.parse(request.getDate()));
+        workoutDay.setTitle(request.getName()); // フロントエンドのnameをバックエンドのtitleにマッピング
+        
         return workoutDayService.updateWorkoutDay(id, workoutDay)
+                .map(this::convertToResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -82,7 +102,7 @@ public class WorkoutDayController {
     }
 
     @GetMapping("/calendar")
-    public ResponseEntity<List<WorkoutDay>> getWorkoutDaysForCalendar(
+    public ResponseEntity<List<WorkoutDayResponse>> getWorkoutDaysForCalendar(
             @RequestParam int year,
             @RequestParam int month) {
 
@@ -95,6 +115,19 @@ public class WorkoutDayController {
 
         List<WorkoutDay> workoutDays = workoutDayService.getWorkoutDaysByUserIdAndDateRange(userId, startDate,
                 endDate);
-        return ResponseEntity.ok(workoutDays);
+        List<WorkoutDayResponse> responses = workoutDays.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responses);
+    }
+
+    private WorkoutDayResponse convertToResponse(WorkoutDay workoutDay) {
+        return new WorkoutDayResponse(
+                workoutDay.getId(),
+                workoutDay.getDate().toString(),
+                workoutDay.getTitle(), // バックエンドのtitleをフロントエンドのnameにマッピング
+                workoutDay.getCreatedAt(),
+                workoutDay.getUpdatedAt()
+        );
     }
 }

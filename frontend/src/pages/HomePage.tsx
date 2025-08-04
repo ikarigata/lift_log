@@ -18,7 +18,7 @@ const HomePage: React.FC<HomePageProps> = ({ workoutDays, workoutRecords, exerci
   };
 
   return (
-    <WorkoutDayList 
+    <WorkoutDayList
       workoutDays={workoutDays.slice(0, 10)}
       workoutRecords={workoutRecords}
       exercises={exercises}

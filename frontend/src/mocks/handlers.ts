@@ -866,6 +866,16 @@ const workoutRecords: WorkoutRecord[] = [
   }
 ];
 
+const muscleGroups = [
+  { id: 'mg1', name: '胸' },
+  { id: 'mg2', name: '背中' },
+  { id: 'mg3', name: '肩' },
+  { id: 'mg4', name: '腕' },
+  { id: 'mg5', name: '脚' },
+  { id: 'mg6', name: '腹筋' },
+  { id: 'mg7', name: 'その他' },
+];
+
 export const handlers = [
   // Workout Days
   http.get(`${BASE_URL}/workout-days`, requireAuth(() => {
@@ -895,6 +905,11 @@ export const handlers = [
     };
     workoutDays.unshift(newWorkout);
     return HttpResponse.json(newWorkout);
+  })),
+
+  // Muscle Groups
+  http.get(`${BASE_URL}/muscle-groups`, requireAuth(() => {
+    return HttpResponse.json(muscleGroups)
   })),
 
   // Exercises
@@ -1072,5 +1087,26 @@ export const handlers = [
         },
       });
     }
+  }),
+
+  // Signup
+  http.post(`${BASE_URL}/signup`, async ({ request }) => {
+    const { email } = await request.json() as any;
+
+    // 既存のユーザーかどうかを判定する
+    if (email === 'existing@example.com') {
+      return new HttpResponse(JSON.stringify({ message: 'このメールアドレスは既に使用されています。' }), {
+        status: 409,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+
+    return HttpResponse.json({
+      message: 'User created successfully',
+    }, {
+      status: 201,
+    });
   }),
 ]

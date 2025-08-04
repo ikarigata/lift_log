@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
@@ -13,11 +15,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.ikr.lift_log.jooq.tables.Exercises.EXERCISES;
+import static com.ikr.lift_log.jooq.tables.MuscleGroups.MUSCLE_GROUPS;
 import static com.ikr.lift_log.jooq.tables.Users.USERS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @Transactional
 class JdbcExerciseRepositoryTest {
 
@@ -27,20 +31,12 @@ class JdbcExerciseRepositoryTest {
     @Autowired
     private DSLContext dsl;
 
-    private UUID testUserId;
-
-    @BeforeEach
-    void setUp() {
-        // テスト用ユーザーを作成
-        testUserId = UUID.randomUUID();
-        dsl.insertInto(USERS)
-                .set(USERS.ID, testUserId)
-                .set(USERS.NAME, "Test User")
-                .set(USERS.CREATED_AT, ZonedDateTime.now().toOffsetDateTime())
-                .execute();
-    }
+    // 固定UUIDを使用してテストデータの整合性を保つ
+    private final UUID testUserId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+    private final UUID testMuscleGroupId = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void findById_存在しないID_空のテーブルで空のOptionalを返す() {
         // Given
         UUID nonExistentId = UUID.randomUUID();
@@ -53,13 +49,14 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void save_正常なエクササイズ_保存される() {
 
         UUID userId = testUserId; // ユーザーIDは必要に応じて設定
         UUID exerciseId = UUID.randomUUID(); // エクササイズIDは必要に応じて設定
         ZonedDateTime createdAt = ZonedDateTime.now();
         // Given
-        Exercise exercise = new Exercise(exerciseId, userId, "Bench Press", "Chest exercise", createdAt);
+        Exercise exercise = new Exercise(exerciseId, userId, "Bench Press", "Chest exercise", testMuscleGroupId, createdAt);
 
         // When
         Exercise savedExercise = exerciseRepository.save(exercise);
@@ -72,13 +69,14 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void findById_存在するID_エクササイズを返す() {
 
         UUID userId = testUserId; // ユーザーIDは必要に応じて設定
         UUID exerciseId = UUID.randomUUID(); // エクササイズIDは必要に応じて設定
         ZonedDateTime createdAt = ZonedDateTime.now();
         // Given
-        Exercise exercise = new Exercise(exerciseId, userId, "Squat", "Leg exercise", createdAt);
+        Exercise exercise = new Exercise(exerciseId, userId, "Squat", "Leg exercise", testMuscleGroupId, createdAt);
 
         // Given
         Exercise savedExercise = exerciseRepository.save(exercise);
@@ -93,6 +91,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void findById_存在しないID_空のOptionalを返す() {
         // Given
         UUID nonExistentId = UUID.randomUUID();
@@ -105,6 +104,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void save_複数のエクササイズ_個別に保存できる() {
         UUID userId = testUserId;
         UUID exerciseId1 = UUID.randomUUID();
@@ -112,8 +112,8 @@ class JdbcExerciseRepositoryTest {
         ZonedDateTime createdAt = ZonedDateTime.now();
         
         // Given
-        Exercise exercise1 = new Exercise(exerciseId1, userId, "Bench Press", "Chest exercise", createdAt);
-        Exercise exercise2 = new Exercise(exerciseId2, userId, "Squat", "Leg exercise", createdAt);
+        Exercise exercise1 = new Exercise(exerciseId1, userId, "Bench Press", "Chest exercise", testMuscleGroupId, createdAt);
+        Exercise exercise2 = new Exercise(exerciseId2, userId, "Squat", "Leg exercise", testMuscleGroupId, createdAt);
 
         // When
         Exercise savedExercise1 = exerciseRepository.save(exercise1);
@@ -131,6 +131,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void update_存在するID_更新される() {
         // Given
         UUID userId = testUserId;
@@ -138,8 +139,8 @@ class JdbcExerciseRepositoryTest {
         ZonedDateTime createdAt = ZonedDateTime.now();
         
         Exercise savedExercise = exerciseRepository.save(
-                new Exercise(exerciseId, userId, "Pull Up", "Back exercise", createdAt));
-        Exercise updateData = new Exercise(null, userId, "Pull Up Modified", "Updated back exercise", null);
+                new Exercise(exerciseId, userId, "Pull Up", "Back exercise", testMuscleGroupId, createdAt));
+        Exercise updateData = new Exercise(null, userId, "Pull Up Modified", "Updated back exercise", testMuscleGroupId, null);
 
         // When
         Exercise updatedExercise = exerciseRepository.update(savedExercise.getId(), updateData);
@@ -151,11 +152,12 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void update_存在しないID_例外が発生() {
         // Given
         UUID nonExistentId = UUID.randomUUID();
         UUID userId = testUserId;
-        Exercise updateData = new Exercise(null, userId, "Test", "Test description", null);
+        Exercise updateData = new Exercise(null, userId, "Test", "Test description", testMuscleGroupId, null);
 
         // When & Then
         assertThatThrownBy(() -> exerciseRepository.update(nonExistentId, updateData))
@@ -164,6 +166,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void deleteById_存在するID_削除される() {
         // Given
         UUID userId = testUserId;
@@ -171,7 +174,7 @@ class JdbcExerciseRepositoryTest {
         ZonedDateTime createdAt = ZonedDateTime.now();
         
         Exercise savedExercise = exerciseRepository.save(
-                new Exercise(exerciseId, userId, "Push Up", "Bodyweight exercise", createdAt));
+                new Exercise(exerciseId, userId, "Push Up", "Bodyweight exercise", testMuscleGroupId, createdAt));
 
         // When
         exerciseRepository.deleteById(savedExercise.getId());
@@ -182,6 +185,7 @@ class JdbcExerciseRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:cleanup-test-data.sql", "classpath:test-data-setup.sql"})
     void deleteById_存在しないID_例外が発生() {
         // Given
         UUID nonExistentId = UUID.randomUUID();

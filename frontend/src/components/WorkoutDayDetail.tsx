@@ -31,7 +31,7 @@ const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({
       <TitleBar 
         title={
           <div>
-            <div>Workout Detail{workoutDay.name && ` - ${workoutDay.name}`}</div>
+            <div>Workout Detail</div>
             <div className="text-sm opacity-80">{formatDate(workoutDay.date)}</div>
           </div>
         } 

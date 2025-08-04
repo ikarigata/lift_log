@@ -60,6 +60,7 @@ const SortableSetItem: React.FC<SortableSetItemProps> = ({ set, index, currentSe
       <div
         {...attributes}
         {...listeners}
+
         className="text-content-secondary font-dotgothic text-lg cursor-grab active:cursor-grabbing mr-[10px] touch-manipulation flex-shrink-0"
         style={{ touchAction: 'none' }}
       >
@@ -121,7 +122,7 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
   exercise, 
   previousRecords, 
   currentRecord,
-  onBack: _onBack, 
+  onBack,
   onSave
 }) => {
   const [currentSets, setCurrentSets] = useState<WorkoutSet[]>(
@@ -187,7 +188,16 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
 
   return (
     <div className="w-full px-2 py-4 space-y-[10px] bg-surface-primary min-h-screen">
-      <TitleBar title={`${exercise.name} - ${exercise.muscleGroup}`} />
+      <div className="relative flex items-center justify-center">
+        <button
+          onClick={onBack}
+          className="absolute left-0 text-content-accent font-dotgothic text-2xl px-4 py-2 hover:opacity-70 transition-opacity"
+          aria-label="戻る"
+        >
+          &lt;
+        </button>
+        <TitleBar title={`${exercise.name} - ${exercise.muscleGroup}`} />
+      </div>
 
       {previousRecords.filter(record => record.id !== currentRecord?.id).length > 0 && (
         <div className="bg-surface-secondary rounded-[10px] p-[10px] border border-white mb-[20px]">
@@ -227,27 +237,27 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
                 ))}
                 <hr className="border-content-secondary opacity-30 my-2" />
                 <div className="flex gap-1">
-                  <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
-                    <div className="text-surface-primary opacity-80 mb-0.5">
+                  <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
+                    <div className="text-content-primary opacity-80 mb-0.5">
                       総ボリューム
                     </div>
-                    <div className="text-surface-primary">
+                    <div className="text-content-primary">
                       {record.sets.reduce((total, set) => total + (set.weight * (set.reps + (set.subReps || 0))), 0).toLocaleString()}kg
                     </div>
                   </div>
-                  <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
-                    <div className="text-surface-primary opacity-80 mb-0.5">
+                  <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
+                    <div className="text-content-primary opacity-80 mb-0.5">
                       1RM
                     </div>
-                    <div className="text-surface-primary">
+                    <div className="text-content-primary">
                       {record.sets.filter(set => set.reps > 0).length > 0 ? Math.max(...record.sets.filter(set => set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30)))).toLocaleString() : '0'}kg
                     </div>
                   </div>
-                  <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
-                    <div className="text-surface-primary opacity-80 mb-0.5">
+                  <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
+                    <div className="text-content-primary opacity-80 mb-0.5">
                       5RM
                     </div>
-                    <div className="text-surface-primary">
+                    <div className="text-content-primary">
                       {record.sets.filter(set => set.reps > 0).length > 0 ? Math.max(...record.sets.filter(set => set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30) * 0.87))).toLocaleString() : '0'}kg
                     </div>
                   </div>
@@ -273,12 +283,6 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
           <h3 className="text-interactive-primary font-dotgothic text-lg text-left">
             今回の記録
           </h3>
-          <button
-            onClick={addSet}
-            className="bg-interactive-primary hover:bg-interactive-primary/80 rounded-[5px] px-[10px] py-[5px] text-surface-primary font-dotgothic text-sm transition-colors"
-          >
-            + セット追加
-          </button>
         </div>
 
         <div className="space-y-[10px]">
@@ -304,29 +308,60 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
             </SortableContext>
           </DndContext>
         </div>
+        <div className="mt-[10px]">
+          <button
+            onClick={addSet}
+            className="bg-interactive-primary rounded-[5px] px-[10px] py-[5px] text-surface-primary font-dotgothic text-sm transition-colors glitch-on-click"
+          >
+            + セット追加
+          </button>
+        </div>
+        <div className="space-y-[10px]">
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={currentSets.map(set => set.setNumber)}
+              strategy={verticalListSortingStrategy}
+            >
+              {currentSets.map((set, index) => (
+                <SortableSetItem
+                  key={set.setNumber}
+                  set={set}
+                  index={index}
+                  currentSets={currentSets}
+                  updateSet={updateSet}
+                  removeSet={removeSet}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
+        </div>
         
         <div className="flex gap-[10px] mt-[10px]">
-          <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
-            <div className="text-surface-primary opacity-80 mb-0.5">
+          <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
+            <div className="text-content-primary opacity-80 mb-0.5">
               総ボリューム
             </div>
-            <div className="text-surface-primary">
+            <div className="text-content-primary">
               {currentSets.reduce((total, set) => total + (set.weight && (set.reps + (set.subReps || 0)) ? set.weight * (set.reps + (set.subReps || 0)) : 0), 0).toLocaleString()}kg
             </div>
           </div>
-          <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
-            <div className="text-surface-primary opacity-80 mb-0.5">
+          <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
+            <div className="text-content-primary opacity-80 mb-0.5">
               1RM
             </div>
-            <div className="text-surface-primary">
+            <div className="text-content-primary">
               {currentSets.filter(set => set.weight > 0 && set.reps > 0).length > 0 ? Math.max(...currentSets.filter(set => set.weight > 0 && set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30)))).toLocaleString() : '0'}kg
             </div>
           </div>
-          <div className="bg-surface-container text-surface-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
-            <div className="text-surface-primary opacity-80 mb-0.5">
+          <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">
+            <div className="text-content-primary opacity-80 mb-0.5">
               5RM
             </div>
-            <div className="text-surface-primary">
+            <div className="text-content-primary">
               {currentSets.filter(set => set.weight > 0 && set.reps > 0).length > 0 ? Math.max(...currentSets.filter(set => set.weight > 0 && set.reps > 0).map(set => Math.round(set.weight * (1 + set.reps / 30) * 0.87))).toLocaleString() : '0'}kg
             </div>
           </div>
