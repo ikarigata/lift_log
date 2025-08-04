@@ -10,7 +10,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/v1/**")
-                .allowedOrigins("http://localhost:5173") // Viteのデフォルトポート
+                .allowedOrigins(
+                    "http://localhost:3000", // Vite dev server
+                    "http://localhost:5173", // Viteのデフォルトポート
+                    "http://localhost:4173"  // Vite preview server
+                )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
