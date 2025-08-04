@@ -136,16 +136,26 @@ const AppContent = () => {
 
   const handleSaveExercise = async (workoutId: string, exerciseId: string, sets: WorkoutSet[], memo?: string, editingRecordId?: string) => {
     try {
-      const savedRecord = await saveWorkoutRecord(workoutId, exerciseId, sets, memo, editingRecordId);
-      if (editingRecordId) {
-        setWorkoutRecords(prev => 
-          prev.map(record => record.id === editingRecordId ? savedRecord : record)
-        );
-      } else {
-        setWorkoutRecords(prev => [...prev, savedRecord]);
-      }
+      await saveWorkoutRecord(workoutId, exerciseId, sets, memo, editingRecordId);
+      
+      // 保存後に最新のworkoutRecordsを再取得
+      console.log('🔄 Refreshing workout records after save...');
+      const updatedRecords = await getWorkoutRecords();
+      setWorkoutRecords(updatedRecords);
+      console.log('✅ Workout records refreshed:', updatedRecords.length, 'records');
+      
     } catch (error) {
       console.error("Failed to save exercise", error);
+      const errorMessage = error instanceof Error ? error.message : '不明なエラー';
+      
+      // 認証エラーの場合は自動的にログアウト
+      if (errorMessage.includes('認証エラー') || errorMessage.includes('認証トークンが無効')) {
+        alert(`${errorMessage}\n自動的にログアウトします。`);
+        handleLogout();
+      } else {
+        alert(`保存に失敗しました: ${errorMessage}`);
+      }
+      throw error; // エラーを再度throwして、呼び出し元で処理できるようにする
     }
   };
 
