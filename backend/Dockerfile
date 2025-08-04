@@ -38,17 +38,26 @@ RUN ./mvnw dependency:go-offline -B
 # アプリケーションソースコードをコピー
 COPY src ./src
 
-# 事前生成されたjOOQクラスをコピー（存在する場合）
-# 実際の環境では事前にjOOQクラスを生成してリポジトリに含める
-# 現在はjOOQクラスが事前生成されていないため、この手順をスキップ
+# jOOQクラスはビルド時に自動生成されるため、事前コピーは不要
 
-# アプリケーションをビルド
-# - テストをスキップしてビルド時間を短縮
-# - Flyway マイグレーションとjOOQ生成をスキップ（実行時に処理）
-# - データベース接続が不要なビルドを実行
-RUN ./mvnw clean package -DskipTests -B \
-    -Dflyway.skip=true \
-    -Djooq.codegen.skip=true
+# データベース接続待機とビルド実行
+# 1. データベースサービスの準備完了を待機
+# 2. Flyway マイグレーション実行
+# 3. jOOQ コード生成実行
+# 4. アプリケーションビルド
+RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/* && \
+    echo "#!/bin/bash" > wait-and-build.sh && \
+    echo "echo 'データベース接続を待機中...'" >> wait-and-build.sh && \
+    echo "DB_HOST=\$(echo \$SPRING_DATASOURCE_URL | sed 's|jdbc:postgresql://||' | sed 's|/.*||' | sed 's|:.*||')" >> wait-and-build.sh && \
+    echo "DB_PORT=\$(echo \$SPRING_DATASOURCE_URL | sed 's|.*:||' | sed 's|/.*||')" >> wait-and-build.sh && \
+    echo "until nc -z \$DB_HOST \$DB_PORT; do" >> wait-and-build.sh && \
+    echo "  echo 'データベース接続待機中... (\$DB_HOST:\$DB_PORT)'" >> wait-and-build.sh && \
+    echo "  sleep 3" >> wait-and-build.sh && \
+    echo "done" >> wait-and-build.sh && \
+    echo "echo 'データベース接続確認完了 - ビルド開始'" >> wait-and-build.sh && \
+    echo "./mvnw clean package -DskipTests -B" >> wait-and-build.sh && \
+    chmod +x wait-and-build.sh && \
+    ./wait-and-build.sh
 
 # -----------------------------------------------------------------------------
 # ステージ2: 実行環境
@@ -59,9 +68,6 @@ FROM eclipse-temurin:21-jre-jammy
 # 作業ディレクトリを設定
 WORKDIR /app
 
-# netcat をインストール（データベース接続確認用）
-RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
-
 # 非rootユーザーを作成（セキュリティ向上）
 RUN groupadd -r spring && useradd -r -g spring spring
 
@@ -69,7 +75,7 @@ RUN groupadd -r spring && useradd -r -g spring spring
 COPY --from=builder /app/target/*.jar app.jar
 
 # ファイルの所有者を変更
-RUN chown spring:spring app.jar && chown spring:spring /app/start.sh
+RUN chown spring:spring app.jar
 
 # 非rootユーザーに切り替え
 USER spring
@@ -81,19 +87,12 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:8080/actuator/health || exit 1
 
-# 起動スクリプトを作成
-# データベース接続待機 → Flyway マイグレーション → アプリケーション起動
-RUN echo '#!/bin/bash' > /app/start.sh && \
-    echo 'echo "データベース接続を待機中..."' >> /app/start.sh && \
-    echo 'until nc -z ${SPRING_DATASOURCE_URL#*//} ${SPRING_DATASOURCE_URL##*:} 2>/dev/null; do' >> /app/start.sh && \
-    echo '  sleep 2' >> /app/start.sh && \
-    echo 'done' >> /app/start.sh && \
-    echo 'echo "データベース接続確認完了"' >> /app/start.sh && \
-    echo 'echo "Flyway マイグレーション実行中..."' >> /app/start.sh && \
-    echo 'java -cp app.jar org.springframework.boot.loader.JarLauncher --spring.flyway.enabled=true --spring.flyway.migrate-at-start=true || echo "マイグレーション完了"' >> /app/start.sh && \
-    echo 'echo "アプリケーション起動中..."' >> /app/start.sh && \
-    echo 'exec java -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom -jar app.jar' >> /app/start.sh && \
-    chmod +x /app/start.sh
-
 # アプリケーション実行コマンド
-ENTRYPOINT ["/app/start.sh"]
+# JVMオプションでメモリ使用量を最適化
+# Flyway マイグレーションは既にビルド時に実行済み
+ENTRYPOINT ["java", \
+    "-XX:+UseContainerSupport", \
+    "-XX:MaxRAMPercentage=75.0", \
+    "-Djava.security.egd=file:/dev/./urandom", \
+    "-jar", \
+    "app.jar"]
