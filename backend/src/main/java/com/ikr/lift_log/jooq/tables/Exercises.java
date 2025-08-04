@@ -29,6 +29,6 @@ public class Exercises extends TableImpl<org.jooq.Record> {
     }
     
     private Exercises(org.jooq.Name alias, Table<org.jooq.Record> aliased) {
-        super(alias, null, aliased, null, null);
+        super(alias, null, aliased, null, (org.jooq.Field<?>[]) null);
     }
 }
