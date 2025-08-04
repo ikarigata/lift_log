@@ -80,3 +80,12 @@ export const getAuthHeader = (): Record<string, string> => {
     Authorization: `Bearer ${token}`
   }
 }
+
+// 開発時用: 古いトークンをクリアしてページをリロード
+export const clearAuthAndReload = (): void => {
+  removeToken()
+  // sessionStorageもクリア
+  sessionStorage.clear()
+  // ページをリロード
+  window.location.reload()
+}
