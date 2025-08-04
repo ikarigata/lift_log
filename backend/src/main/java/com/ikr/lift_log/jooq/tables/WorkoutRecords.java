@@ -29,6 +29,6 @@ public class WorkoutRecords extends TableImpl<org.jooq.Record> {
     }
     
     private WorkoutRecords(org.jooq.Name alias, Table<org.jooq.Record> aliased) {
-        super(alias, null, aliased, null, null);
+        super(alias, null, aliased, null, null, "");
     }
 }

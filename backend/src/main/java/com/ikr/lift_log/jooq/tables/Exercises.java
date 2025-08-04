@@ -21,6 +21,7 @@ public class Exercises extends TableImpl<org.jooq.Record> {
     public final Field<String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
     public final Field<String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(1000), this, "");
     public final Field<UUID> MUSCLE_GROUP_ID = createField(DSL.name("muscle_group_id"), SQLDataType.UUID, this, "");
+    public final Field<UUID> USER_ID = createField(DSL.name("user_id"), SQLDataType.UUID, this, "");
     public final Field<OffsetDateTime> CREATED_AT = createField(DSL.name("created_at"), SQLDataType.OFFSETDATETIME, this, "");
     
     private Exercises() {
@@ -28,6 +29,6 @@ public class Exercises extends TableImpl<org.jooq.Record> {
     }
     
     private Exercises(org.jooq.Name alias, Table<org.jooq.Record> aliased) {
-        super(alias, null, aliased, null, null);
+        super(alias, null, aliased, null, null, "");
     }
 }
