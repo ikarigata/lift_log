@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TitleBar from './TitleBar';
 import CustomDropdown from './CustomDropdown';
+
 import type { Exercise, MuscleGroup } from '../types';
 import { getMuscleGroups } from '../api/muscleGroups';
 
@@ -29,6 +30,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
       try {
         const data = await getMuscleGroups();
         setMuscleGroups(data);
+
       } catch (error) {
         console.error('Failed to fetch muscle groups:', error);
       }

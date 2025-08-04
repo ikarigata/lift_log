@@ -60,9 +60,9 @@ const SortableSetItem: React.FC<SortableSetItemProps> = ({ set, index, currentSe
       <div
         {...attributes}
         {...listeners}
-        className="text-content-secondary font-dotgothic text-xl cursor-grab active:cursor-grabbing mr-[10px] touch-manipulation flex-shrink-0 p-1 rounded hover:bg-surface-secondary transition-colors"
+
+        className="text-content-secondary font-dotgothic text-lg cursor-grab active:cursor-grabbing mr-[10px] touch-manipulation flex-shrink-0"
         style={{ touchAction: 'none' }}
-        title="長押しでセットを並び替え"
       >
         ⋮
       </div>
@@ -118,7 +118,7 @@ const SortableSetItem: React.FC<SortableSetItemProps> = ({ set, index, currentSe
   );
 };
 
-const ExerciseInput: React.FC<ExerciseInputProps> = ({
+const ExerciseInput: React.FC<ExerciseInputProps> = ({ 
   exercise, 
   previousRecords, 
   currentRecord,
@@ -315,6 +315,29 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
           >
             + セット追加
           </button>
+        </div>
+        <div className="space-y-[10px]">
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={currentSets.map(set => set.setNumber)}
+              strategy={verticalListSortingStrategy}
+            >
+              {currentSets.map((set, index) => (
+                <SortableSetItem
+                  key={set.setNumber}
+                  set={set}
+                  index={index}
+                  currentSets={currentSets}
+                  updateSet={updateSet}
+                  removeSet={removeSet}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
         </div>
         
         <div className="flex gap-[10px] mt-[10px]">
