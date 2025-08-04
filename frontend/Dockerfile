@@ -18,7 +18,7 @@ COPY package*.json ./
 
 # 依存関係をインストール
 # npm ci を使用して本番環境向けの高速で信頼性の高いインストール
-RUN npm ci --only=production
+RUN npm ci
 
 # アプリケーションソースコードをコピー
 COPY . .
