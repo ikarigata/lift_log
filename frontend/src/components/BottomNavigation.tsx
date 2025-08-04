@@ -101,6 +101,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddWorkout }) => 
         <button
           onClick={() => handleItemClick(navigationItems[2])} // add-workout ボタン
           className="bg-interactive-primary text-content-inverse rounded-full w-20 h-20 font-bold active:scale-95 transform absolute left-1/2 -translate-x-1/2 -top-6 flex items-center justify-center font-dotgothic transition-all border-none touch-manipulation z-10"
+          data-testid="add-workout-button"
           style={{ 
             WebkitTapHighlightColor: 'transparent',
             minHeight: '80px',
