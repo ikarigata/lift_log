@@ -1,0 +1,84 @@
+services:
+  # PostgreSQL 13データベースサービス
+  # Flyway マイグレーションとjOOQ コード生成のために必要
+  # Flyway 11.10.5でPostgreSQL 13をサポート
+  db:
+    image: postgres:13-alpine
+    container_name: lift_log_postgres
+    environment:
+      # データベース初期設定
+      - POSTGRES_DB=lift_log
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      # データ永続化のための名前付きボリューム
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      # ホストからのアクセス用（開発時のみ）
+      - "5432:5432"
+    healthcheck:
+      # データベースの準備完了を確認するヘルスチェック
+      # バックエンドビルド時にDB接続が必要なため重要
+      test: ["CMD-SHELL", "pg_isready -U postgres -d lift_log"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - lift_log_network
+
+  # Spring Boot バックエンドサービス
+  # マルチステージビルドでFlywayマイグレーションとjOOQコード生成を実行
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        # ビルド時のデータベース接続設定
+        # FlywayとjOOQプラグインがこれらの値を使用
+        - DB_URL=jdbc:postgresql://db:5432/lift_log
+        - DB_USER=postgres
+        - DB_PASSWORD=postgres
+    container_name: lift_log_backend
+    depends_on:
+      db:
+        # データベースがhealthy状態になってからビルド開始
+        condition: service_healthy
+    environment:
+      # 実行時のデータベース接続設定
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/lift_log
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      # JWT設定
+      - JWT_SECRET=aVerySecureAndLongSecretKeyForJwtThatIsAtLeast256BitsLongForProduction
+      - JWT_EXPIRATION=24
+    ports:
+      - "8080:8080"
+    networks:
+      - lift_log_network
+    restart: unless-stopped
+
+  # React フロントエンドサービス
+  # Nginx でSPAルーティングとAPIプロキシを提供
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: lift_log_frontend
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    networks:
+      - lift_log_network
+    restart: unless-stopped
+
+# データ永続化用の名前付きボリューム
+volumes:
+  postgres_data:
+    driver: local
+
+# サービス間通信用のカスタムネットワーク
+networks:
+  lift_log_network:
+    driver: bridge
