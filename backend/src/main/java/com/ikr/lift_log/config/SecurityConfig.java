@@ -33,7 +33,7 @@ public class SecurityConfig {
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .authorizeHttpRequests(authz -> authz
                                                 // ログインエンドポイントは認証不要
-                                                .requestMatchers("/api/v1/login").permitAll()
+                                                .requestMatchers("/api/v1/auth/login").permitAll()
                                                 // その他のAPIエンドポイントは認証必要
                                                 .requestMatchers("/api/**").authenticated()
                                                 // その他のリクエストは許可（静的リソースなど）
@@ -49,6 +49,7 @@ public class SecurityConfig {
                 configuration.setAllowedOrigins(Arrays.asList(
                                 "http://localhost:3000", // フロントエンド開発サーバー (Vite)
                                 "http://localhost:5173", // フロントエンド開発サーバー (Vite default)
+                                "http://localhost:4173", // フロントエンド previewサーバー (Vite)
                                 "http://localhost:8080"  // 同一ポートからのリクエスト
                 ));
                 configuration.setAllowedMethods(Arrays.asList(

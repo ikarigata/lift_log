@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { BASE_URL } from '../api/config';
 import { saveToken } from '../utils/auth';
@@ -13,11 +13,17 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // コンポーネントマウント時に古いトークンをクリア
+  useEffect(() => {
+    localStorage.removeItem('lift_log_auth_token');
+    sessionStorage.clear();
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     try {
-      const response = await fetch(`${BASE_URL}/login`, {
+      const response = await fetch(`${BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,24 +33,55 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('✅ Login response:', data);
         if (data.token) {
           // JWTトークンをlocalStorageに保存
+          console.log('💾 Saving token:', data.token.substring(0, 20) + '...');
           saveToken(data.token);
           onLoginSuccess();
           navigate('/');
         }
       } else {
+        console.error('❌ Login failed:', response.status, response.statusText);
         setError('メールアドレスまたはパスワードが正しくありません。');
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError('ログイン処理中にエラーが発生しました。');
     }
   };
 
-  // 開発用：入力なしでログイン
-  const handleDevLogin = () => {
-    onLoginSuccess();
-    navigate('/');
+  // 開発用：テストユーザーでログイン
+  const handleDevLogin = async () => {
+    setError('');
+    try {
+      const response = await fetch(`${BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          email: 'test@example.com', 
+          password: 'password' 
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.token) {
+          console.log('🔓 Dev login successful, token saved');
+          saveToken(data.token);
+          onLoginSuccess();
+          navigate('/');
+        }
+      } else {
+        console.error('Dev login failed:', response.status);
+        setError('開発用ログインに失敗しました。');
+      }
+    } catch (err) {
+      console.error('Dev login error:', err);
+      setError('開発用ログイン処理中にエラーが発生しました。');
+    }
   };
 
   return (
