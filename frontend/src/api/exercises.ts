@@ -63,7 +63,14 @@ export const saveWorkoutRecord = async (workoutId: string, exerciseId: string, s
     });
 
     if (!response.ok) {
-        throw new Error('Failed to save workout record');
+        if (response.status === 403) {
+            throw new Error('認証エラー: ログインが必要です');
+        }
+        if (response.status === 401) {
+            throw new Error('認証トークンが無効です。再ログインしてください');
+        }
+        const errorText = await response.text();
+        throw new Error(`保存に失敗しました (${response.status}): ${errorText}`);
     }
     return response.json();
 }

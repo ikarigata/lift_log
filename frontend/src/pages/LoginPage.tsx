@@ -33,13 +33,16 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('✅ Login response:', data);
         if (data.token) {
           // JWTトークンをlocalStorageに保存
+          console.log('💾 Saving token:', data.token.substring(0, 20) + '...');
           saveToken(data.token);
           onLoginSuccess();
           navigate('/');
         }
       } else {
+        console.error('❌ Login failed:', response.status, response.statusText);
         setError('メールアドレスまたはパスワードが正しくありません。');
       }
     } catch (err) {
@@ -48,10 +51,37 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     }
   };
 
-  // 開発用：入力なしでログイン
-  const handleDevLogin = () => {
-    onLoginSuccess();
-    navigate('/');
+  // 開発用：テストユーザーでログイン
+  const handleDevLogin = async () => {
+    setError('');
+    try {
+      const response = await fetch(`${BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          email: 'test@example.com', 
+          password: 'password' 
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.token) {
+          console.log('🔓 Dev login successful, token saved');
+          saveToken(data.token);
+          onLoginSuccess();
+          navigate('/');
+        }
+      } else {
+        console.error('Dev login failed:', response.status);
+        setError('開発用ログインに失敗しました。');
+      }
+    } catch (err) {
+      console.error('Dev login error:', err);
+      setError('開発用ログイン処理中にエラーが発生しました。');
+    }
   };
 
   return (

@@ -316,29 +316,6 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
             + セット追加
           </button>
         </div>
-        <div className="space-y-[10px]">
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={currentSets.map(set => set.setNumber)}
-              strategy={verticalListSortingStrategy}
-            >
-              {currentSets.map((set, index) => (
-                <SortableSetItem
-                  key={set.setNumber}
-                  set={set}
-                  index={index}
-                  currentSets={currentSets}
-                  updateSet={updateSet}
-                  removeSet={removeSet}
-                />
-              ))}
-            </SortableContext>
-          </DndContext>
-        </div>
         
         <div className="flex gap-[10px] mt-[10px]">
           <div className="bg-surface-container text-content-primary text-xs font-dotgothic px-2 py-1 rounded-md text-center flex-1">

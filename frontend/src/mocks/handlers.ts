@@ -1062,7 +1062,7 @@ export const handlers = [
   })),
 
   // Login
-  http.post(`${BASE_URL}/login`, async ({ request }) => {
+  http.post(`${BASE_URL}/auth/login`, async ({ request }) => {
     try {
       const { email, password } = await request.json() as any;
       if (email === 'test@example.com' && password === 'password') {

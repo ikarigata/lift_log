@@ -72,13 +72,34 @@ export const isAuthenticated = (): boolean => {
 // Authorization ヘッダーを取得
 export const getAuthHeader = (): Record<string, string> => {
   const token = getToken()
-  if (!token || !isTokenValid(token)) {
+  console.log('🎫 getAuthHeader check:', {
+    hasToken: !!token,
+    tokenLength: token?.length || 0,
+    tokenPreview: token ? `${token.substring(0, 20)}...` : 'none'
+  })
+  
+  if (!token) {
+    console.log('❌ No token found')
     return {}
   }
   
-  return {
+  const isValid = isTokenValid(token)
+  console.log('🔍 Token validation:', {
+    isValid,
+    token: token ? decodeJWT(token) : null
+  })
+  
+  if (!isValid) {
+    console.log('❌ Token is invalid')
+    return {}
+  }
+  
+  const header = {
     Authorization: `Bearer ${token}`
   }
+  console.log('✅ Auth header created:', header)
+  
+  return header
 }
 
 // 開発時用: 古いトークンをクリアしてページをリロード
