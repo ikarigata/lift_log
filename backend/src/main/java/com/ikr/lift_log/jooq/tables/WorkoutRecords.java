@@ -20,14 +20,15 @@ public class WorkoutRecords extends TableImpl<org.jooq.Record> {
     public final Field<UUID> ID = createField(DSL.name("id"), SQLDataType.UUID, this, "");
     public final Field<UUID> WORKOUT_DAY_ID = createField(DSL.name("workout_day_id"), SQLDataType.UUID, this, "");
     public final Field<UUID> EXERCISE_ID = createField(DSL.name("exercise_id"), SQLDataType.UUID, this, "");
-    public final Field<Integer> SET_ORDER = createField(DSL.name("set_order"), SQLDataType.INTEGER, this, "");
+    public final Field<String> NOTES = createField(DSL.name("notes"), SQLDataType.VARCHAR(1000), this, "");
     public final Field<OffsetDateTime> CREATED_AT = createField(DSL.name("created_at"), SQLDataType.OFFSETDATETIME, this, "");
+    public final Field<OffsetDateTime> UPDATED_AT = createField(DSL.name("updated_at"), SQLDataType.OFFSETDATETIME, this, "");
     
     private WorkoutRecords() {
         this(DSL.name("workout_records"), null);
     }
     
     private WorkoutRecords(org.jooq.Name alias, Table<org.jooq.Record> aliased) {
-        super(alias, null, aliased, null, null, "");
+        super(alias, null, aliased, null, null);
     }
 }
