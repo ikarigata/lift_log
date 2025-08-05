@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import WorkoutDetailPage from './pages/WorkoutDetailPage';
@@ -17,7 +17,7 @@ import { isAuthenticated, removeToken } from './utils/auth';
 import { ThemeProvider } from './contexts/ThemeContext';
 
 // レイアウトコンポーネント（ボトムナビゲーション付き）
-const Layout = ({ children, onAddWorkout }: { children: React.ReactNode, onAddWorkout: () => void, onLogout: () => void }) => {
+const Layout = ({ children, onAddWorkout, onLogout: _onLogout }: { children: React.ReactNode, onAddWorkout: () => void, onLogout: () => void }) => {
   const location = useLocation();
   const showBottomNav = location.pathname !== '/login';
 
@@ -77,7 +77,7 @@ const AppContent = () => {
       }
     };
     fetchData();
-  }, [isAuthenticatedState, handleLogout]);
+  }, [isAuthenticatedState]);
 
   const handleAddWorkout = async () => {
     try {
@@ -165,14 +165,14 @@ const AppContent = () => {
   };
 
   // ログアウト時に呼び出される関数
-  const handleLogout = useCallback(() => {
+  const handleLogout = () => {
     removeToken();
     setIsAuthenticatedState(false);
     setWorkoutDays([]);
     setExercises([]);
     setWorkoutRecords([]);
     navigate('/login');
-  }, [navigate]);
+  };
 
   return (
     <Layout onAddWorkout={handleAddWorkout} onLogout={handleLogout}>
