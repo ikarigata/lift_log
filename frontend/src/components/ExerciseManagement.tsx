@@ -7,7 +7,6 @@ import { getMuscleGroups } from '../api/muscleGroups';
 
 interface ExerciseManagementProps {
   exercises: Exercise[];
-  onBack: () => void;
   onAddExercise: (name: string, muscleGroup: string) => void;
   onDeleteExercise: (exerciseId: string) => void;
   onToggleFavorite: (exerciseId: string) => void;
@@ -15,7 +14,6 @@ interface ExerciseManagementProps {
 
 const ExerciseManagement: React.FC<ExerciseManagementProps> = ({
   exercises,
-  onBack: _onBack,
   onAddExercise,
   onDeleteExercise,
   onToggleFavorite
