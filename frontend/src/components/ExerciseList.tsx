@@ -4,11 +4,13 @@ import type { Exercise } from '../types';
 
 interface ExerciseListProps {
   exercises: Exercise[];
+  onBack: () => void;
   onSelectExercise: (exercise: Exercise) => void;
 }
 
 const ExerciseList: React.FC<ExerciseListProps> = ({ 
   exercises, 
+  onBack: _onBack, 
   onSelectExercise
 }) => {
   const favoriteExercises = exercises.filter(exercise => exercise.isFavorite);

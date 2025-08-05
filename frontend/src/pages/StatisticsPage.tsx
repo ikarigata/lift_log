@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ChartData } from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { getExerciseProgress } from '../api/statistics';
 import { getExercises } from '../api/exercises';
@@ -14,7 +14,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 const StatisticsPage: React.FC = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<string>('');
-  const [chartData, setChartData] = useState<ChartData<'line'>>({ labels: [], datasets: [] });
+  const [chartData, setChartData] = useState<any>({ labels: [], datasets: [] });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // 種目一覧を取得
