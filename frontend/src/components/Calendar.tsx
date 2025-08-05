@@ -4,11 +4,10 @@ import type { WorkoutDay, WorkoutRecord } from '../types';
 import { getWorkoutDaysByMonth, getWorkoutRecords } from '../api/workouts';
 
 interface CalendarProps {
-  onBack: () => void;
   onSelectDate: (workoutDay: WorkoutDay) => void;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ onBack: _onBack, onSelectDate }) => {
+const Calendar: React.FC<CalendarProps> = ({ onSelectDate }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([]);
   const [workoutRecords, setWorkoutRecords] = useState<WorkoutRecord[]>([]);

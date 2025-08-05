@@ -5,7 +5,6 @@ import type { WorkoutDay, WorkoutRecord } from '../types';
 interface WorkoutDayDetailProps {
   workoutDay: WorkoutDay;
   workoutRecords: WorkoutRecord[];
-  onBack: () => void;
   onAddExercise: () => void;
   onEditExercise: (record: WorkoutRecord) => void;
 }
@@ -13,7 +12,6 @@ interface WorkoutDayDetailProps {
 const WorkoutDayDetail: React.FC<WorkoutDayDetailProps> = ({ 
   workoutDay, 
   workoutRecords, 
-  onBack: _onBack,
   onAddExercise,
   onEditExercise
 }) => {
