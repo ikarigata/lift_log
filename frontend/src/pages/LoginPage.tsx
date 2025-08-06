@@ -13,10 +13,24 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // コンポーネントマウント時に古いトークンをクリア
+  // ログインページ初回表示時のみ古いトークンをクリア
   useEffect(() => {
-    localStorage.removeItem('lift_log_auth_token');
-    sessionStorage.clear();
+    // 既にトークンがある場合（認証済み）はクリアしない
+    const existingToken = localStorage.getItem('lift_log_auth_token');
+    
+    console.log('🧹 LoginPage mounted, checking if token clear needed:', {
+      hasExistingToken: !!existingToken,
+      currentPath: window.location.pathname
+    });
+    
+    // トークンがない場合のみクリア（無駄なクリアを避ける）
+    if (!existingToken) {
+      console.log('🗑️ Clearing old tokens (no existing token found)');
+      localStorage.removeItem('lift_log_auth_token');
+      sessionStorage.clear();
+    } else {
+      console.log('🔒 Existing token found, skipping clear');
+    }
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -33,13 +47,21 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('✅ Login response:', data);
         if (data.token) {
           // JWTトークンをlocalStorageに保存
+          console.log('💾 Saving token:', data.token.substring(0, 20) + '...');
           saveToken(data.token);
-          onLoginSuccess();
-          navigate('/');
+          
+          // トークン保存後、少し待ってから認証状態を更新
+          setTimeout(() => {
+            console.log('🔄 Calling onLoginSuccess after token save');
+            onLoginSuccess();
+            navigate('/');
+          }, 100);
         }
       } else {
+        console.error('❌ Login failed:', response.status, response.statusText);
         setError('メールアドレスまたはパスワードが正しくありません。');
       }
     } catch (err) {
@@ -48,11 +70,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     }
   };
 
-  // 開発用：入力なしでログイン
-  const handleDevLogin = () => {
-    onLoginSuccess();
-    navigate('/');
-  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-surface-primary text-content-accent font-dotgothic">
@@ -86,14 +103,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
           </Link>
         </p>
       </form>
-      
-      {/* 開発用抜け穴ボタン */}
-      <button
-        onClick={handleDevLogin}
-        className="mt-4 px-4 py-1 bg-interactive-secondary text-content-secondary text-sm font-dotgothic rounded border-none hover:bg-interactive-secondary/80 opacity-50 hover:opacity-70"
-      >
-        🔓 開発用ログイン
-      </button>
     </div>
   );
 };

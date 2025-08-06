@@ -51,13 +51,42 @@ const AppContent = () => {
   const [isAuthenticatedState, setIsAuthenticatedState] = useState(false); // 認証状態を管理
 
   // 認証チェックのロジック（JWTトークンの有効性を確認）
+  // ページロード時とルート変更時に認証状態をチェック
   useEffect(() => {
-    setIsAuthenticatedState(isAuthenticated());
+    const checkAuth = () => {
+      const authStatus = isAuthenticated();
+      console.log('🔐 Authentication check:', {
+        isAuthenticated: authStatus,
+        hasToken: !!localStorage.getItem('lift_log_auth_token'),
+        currentPath: window.location.pathname
+      });
+      setIsAuthenticatedState(authStatus);
+    };
+    
+    // 初回チェック
+    checkAuth();
+    
+    // ストレージイベントリスナー（他のタブでのログイン/ログアウトを検出）
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'lift_log_auth_token') {
+        console.log('🔄 Token storage changed, rechecking auth');
+        checkAuth();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
 
   useEffect(() => {
-    if (!isAuthenticatedState) return; // 認証されていない場合はデータをフェッチしない
+    console.log('📊 Data fetch useEffect triggered:', { isAuthenticatedState });
+    if (!isAuthenticatedState) {
+      console.log('❌ Not authenticated, skipping data fetch');
+      return; // 認証されていない場合はデータをフェッチしない
+    }
+    
+    console.log('🚀 Starting data fetch...');
     const fetchData = async () => {
       try {
         const [days, exs, records] = await Promise.all([
@@ -65,13 +94,26 @@ const AppContent = () => {
           getExercises(),
           getWorkoutRecords(),
         ]);
+        console.log('✅ Data fetch successful');
         setWorkoutDays(days);
         setExercises(exs);
         setWorkoutRecords(records);
       } catch (error) {
         console.error("Failed to fetch initial data", error);
-        // 認証エラーの場合はログアウト
-        if (error instanceof Error && error.message.includes('Unauthorized')) {
+        console.log('🚨 Error details:', {
+          errorType: typeof error,
+          errorMessage: error instanceof Error ? error.message : 'Unknown error',
+          errorName: error instanceof Error ? error.name : 'Unknown',
+          errorString: String(error)
+        });
+        
+        // 認証エラーの場合はログアウト - より広範囲のエラーをキャッチ
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        if (errorMessage.includes('Unauthorized') || 
+            errorMessage.includes('401') || 
+            errorMessage.includes('403') ||
+            errorMessage.includes('認証')) {
+          console.log('🚨 Authentication error detected, logging out...');
           handleLogout();
         }
       }
@@ -136,22 +178,39 @@ const AppContent = () => {
 
   const handleSaveExercise = async (workoutId: string, exerciseId: string, sets: WorkoutSet[], memo?: string, editingRecordId?: string) => {
     try {
-      const savedRecord = await saveWorkoutRecord(workoutId, exerciseId, sets, memo, editingRecordId);
-      if (editingRecordId) {
-        setWorkoutRecords(prev => 
-          prev.map(record => record.id === editingRecordId ? savedRecord : record)
-        );
-      } else {
-        setWorkoutRecords(prev => [...prev, savedRecord]);
-      }
+      await saveWorkoutRecord(workoutId, exerciseId, sets, memo, editingRecordId);
+      
+      // 保存後に最新のworkoutRecordsを再取得
+      console.log('🔄 Refreshing workout records after save...');
+      const updatedRecords = await getWorkoutRecords();
+      setWorkoutRecords(updatedRecords);
+      console.log('✅ Workout records refreshed:', updatedRecords.length, 'records');
+      
     } catch (error) {
       console.error("Failed to save exercise", error);
+      const errorMessage = error instanceof Error ? error.message : '不明なエラー';
+      
+      // 認証エラーの場合は自動的にログアウト
+      if (errorMessage.includes('認証エラー') || errorMessage.includes('認証トークンが無効')) {
+        alert(`${errorMessage}\n自動的にログアウトします。`);
+        handleLogout();
+      } else {
+        alert(`保存に失敗しました: ${errorMessage}`);
+      }
+      throw error; // エラーを再度throwして、呼び出し元で処理できるようにする
     }
   };
 
   // ログイン成功時に呼び出される関数
   const handleLoginSuccess = () => {
-    setIsAuthenticatedState(true);
+    console.log('✅ Login success handler called');
+    // トークンが保存されたことを確認してから認証状態を更新
+    const authStatus = isAuthenticated();
+    console.log('🔐 Post-login auth check:', {
+      isAuthenticated: authStatus,
+      hasToken: !!localStorage.getItem('lift_log_auth_token')
+    });
+    setIsAuthenticatedState(authStatus);
   };
 
   // ログアウト時に呼び出される関数

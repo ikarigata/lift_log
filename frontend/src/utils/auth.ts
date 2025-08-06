@@ -72,13 +72,44 @@ export const isAuthenticated = (): boolean => {
 // Authorization ヘッダーを取得
 export const getAuthHeader = (): Record<string, string> => {
   const token = getToken()
-  if (!token || !isTokenValid(token)) {
+  console.log('🎫 getAuthHeader check:', {
+    hasToken: !!token,
+    tokenLength: token?.length || 0,
+    tokenPreview: token ? `${token.substring(0, 20)}...` : 'none',
+    localStorage: typeof localStorage !== 'undefined' ? 'available' : 'unavailable',
+    storageItems: typeof localStorage !== 'undefined' ? Object.keys(localStorage).filter(key => key.includes('lift_log')) : []
+  })
+  
+  if (!token) {
+    console.log('❌ No token found in localStorage')
+    // デバッグ用：localStorageの内容をすべて確認
+    if (typeof localStorage !== 'undefined') {
+      console.log('📝 All localStorage items:', Object.keys(localStorage).reduce((acc, key) => {
+        acc[key] = localStorage.getItem(key)?.substring(0, 50) + '...'
+        return acc
+      }, {} as Record<string, string>))
+    }
     return {}
   }
   
-  return {
+  const isValid = isTokenValid(token)
+  console.log('🔍 Token validation:', {
+    isValid,
+    tokenPayload: token ? decodeJWT(token) : null
+  })
+  
+  if (!isValid) {
+    console.log('❌ Token is invalid, removing from storage')
+    removeToken() // 無効なトークンを削除
+    return {}
+  }
+  
+  const header = {
     Authorization: `Bearer ${token}`
   }
+  console.log('✅ Auth header created successfully')
+  
+  return header
 }
 
 // 開発時用: 古いトークンをクリアしてページをリロード

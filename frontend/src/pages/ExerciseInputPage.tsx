@@ -6,7 +6,7 @@ import type { Exercise, WorkoutRecord, WorkoutSet } from '../types';
 interface ExerciseInputPageProps {
   exercises: Exercise[];
   workoutRecords: WorkoutRecord[];
-  onSaveExercise: (workoutId: string, exerciseId: string, sets: WorkoutSet[], memo?: string, editingRecordId?: string) => void;
+  onSaveExercise: (workoutId: string, exerciseId: string, sets: WorkoutSet[], memo?: string, editingRecordId?: string) => Promise<void>;
   
 }
 
@@ -35,10 +35,15 @@ const ExerciseInputPage: React.FC<ExerciseInputPageProps> = ({
     navigate(`/workout/${workoutId}`);
   };
 
-  const handleSave = (sets: WorkoutSet[], memo?: string) => {
+  const handleSave = async (sets: WorkoutSet[], memo?: string) => {
     if (!workoutId || !exerciseId) return;
-    onSaveExercise(workoutId, exerciseId, sets, memo, editingRecord?.id);
-    navigate(`/workout/${workoutId}`);
+    try {
+      await onSaveExercise(workoutId, exerciseId, sets, memo, editingRecord?.id);
+      navigate(`/workout/${workoutId}`);
+    } catch (error) {
+      // エラーはApp.tsxで既にalertで表示されるため、ここでは何もしない
+      console.error("Save failed in ExerciseInputPage", error);
+    }
   };
 
   return (

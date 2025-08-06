@@ -17,6 +17,22 @@ const StatisticsPage: React.FC = () => {
   const [chartData, setChartData] = useState<any>({ labels: [], datasets: [] });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // 種目一覧を取得
+  useEffect(() => {
+    const fetchExercises = async () => {
+      if (!isAuthenticated()) return;
+      
+      try {
+        const exerciseList = await getExercises();
+        setExercises(exerciseList);
+      } catch (error) {
+        console.error('Failed to fetch exercises', error);
+      }
+    };
+
+    fetchExercises();
+  }, []);
+
   useEffect(() => {
     if (exercises.length > 0 && !selectedExercise) {
       setSelectedExercise(exercises[0].id);
@@ -75,15 +91,6 @@ const StatisticsPage: React.FC = () => {
     fetchData();
   }, [selectedExercise]);
 
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleExerciseSelect = (exerciseId: string) => {
-    setSelectedExercise(exerciseId);
-    setIsDropdownOpen(false);
-  };
 
   const options = {
     responsive: true,

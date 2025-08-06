@@ -23,6 +23,14 @@ export const authenticatedFetch = async (
 ): Promise<Response> => {
   const authHeaders = getAuthHeader()
   
+  // デバッグログ: リクエスト詳細を出力
+  console.log('🔐 authenticatedFetch:', {
+    url,
+    method: options.method || 'GET',
+    authHeaders,
+    hasToken: Object.keys(authHeaders).length > 0
+  })
+  
   const mergedOptions: RequestInit = {
     ...options,
     headers: {
@@ -32,7 +40,17 @@ export const authenticatedFetch = async (
     },
   }
   
-  return fetch(url, mergedOptions)
+  console.log('📤 Request headers:', mergedOptions.headers)
+  
+  const response = await fetch(url, mergedOptions)
+  
+  console.log('📥 Response:', {
+    status: response.status,
+    statusText: response.statusText,
+    url: response.url
+  })
+  
+  return response
 }
 
 // デバッグ用ログ
