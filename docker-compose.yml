@@ -1,0 +1,78 @@
+# Docker Composeファイルのバージョンを指定します。'3.8'は広く使われているバージョンです。
+version: '3.8'
+
+# 'services'セクションで、アプリケーションを構成する各コンテナ（サービス）を定義します。
+services:
+
+  # フロントエンドサービス（Nginx）
+  frontend:
+    # 'build'セクションで、このサービスのDockerイメージのビルド方法を指定します。
+    build:
+      # 'context'はDockerfileがあるディレクトリのパスです。
+      context: ./frontend
+      # 使用するDockerfileの名前を指定します。
+      dockerfile: Dockerfile
+    # 'ports'セクションで、ホストマシンとコンテナのポートをマッピングします。
+    # ホストのポート80をコンテナのポート80に接続します。
+    ports:
+      - "80:80"
+    # 'depends_on'で、このサービスが依存する他のサービスを指定します。
+    # 'frontend'は'backend'が起動した後に起動します。
+    depends_on:
+      - backend
+    # サービス間の接続を容易にするためのネットワーク設定です。
+    networks:
+      - app-network
+
+  # バックエンドサービス（Spring Boot）
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    # 'backend'は'db'（データベース）が起動した後に起動します。
+    depends_on:
+      - db
+    # 'environment'セクションで、コンテナ内で使用する環境変数を設定します。
+    # これらはSpring Bootアプリケーションがデータベースに接続するために使用します。
+    environment:
+      # 'db:5432'は、'db'という名前のサービスのポート5432に接続することを意味します。
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/liftlog
+      - SPRING_DATASOURCE_USERNAME=user
+      # 注意: 本番環境では、パスワードを直接ここに記述する代わりに、Docker Secretsや他の秘密管理ツールを使用してください。
+      - SPRING_DATASOURCE_PASSWORD=password
+      # Flywayを有効にして、起動時にデータベースのマイグレーションを実行します。
+      - SPRING_FLYWAY_ENABLED=true
+    networks:
+      - app-network
+
+  # データベースサービス（PostgreSQL）
+  db:
+    # 'image'で、Docker Hubから取得する公式のPostgreSQLイメージを指定します。
+    image: postgres:16-alpine
+    environment:
+      # PostgreSQLコンテナの初期設定用の環境変数です。
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=liftlog
+    # 'volumes'セクションで、データの永続化を設定します。
+    # 'db-data'という名前付きボリュームをコンテナの/var/lib/postgresql/dataディレクトリにマウントします。
+    # これにより、コンテナを停止・再作成してもデータが保持されます。
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    # データベースは外部に公開する必要がないため、ポートはマッピングしません。
+    # 'backend'サービスは同じDockerネットワーク内から直接接続できます。
+    networks:
+      - app-network
+
+# 'volumes'セクションで、サービスで使用する名前付きボリュームを定義します。
+volumes:
+  db-data:
+    # 'driver: local'は、Dockerホスト上でローカルにボリュームを管理することを意味します。
+    driver: local
+
+# 'networks'セクションで、サービスが通信するためのカスタムネットワークを定義します。
+networks:
+  app-network:
+    driver: bridge
