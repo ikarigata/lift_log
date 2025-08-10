@@ -1,6 +1,6 @@
-DELETE FROM muscle_groups;
+DELETE FROM public.muscle_groups;
 
-INSERT INTO muscle_groups (name) VALUES 
+INSERT INTO public.muscle_groups (name) VALUES 
 ('胸'),
 ('肩'),
 ('背中'),
