@@ -14,9 +14,9 @@ import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.ikr.lift_log.jooq.tables.Exercises.EXERCISES;
-import static com.ikr.lift_log.jooq.tables.MuscleGroups.MUSCLE_GROUPS;
-import static com.ikr.lift_log.jooq.tables.Users.USERS;
+import static com.ikr.lift_log.jooq.public_.tables.Exercises.EXERCISES;
+import static com.ikr.lift_log.jooq.public_.tables.MuscleGroups.MUSCLE_GROUPS;
+import static com.ikr.lift_log.jooq.public_.tables.Users.USERS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

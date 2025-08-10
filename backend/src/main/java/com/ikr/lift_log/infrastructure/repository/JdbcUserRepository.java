@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.ikr.lift_log.jooq.tables.Users.USERS;
+import static com.ikr.lift_log.jooq.public_.tables.Users.USERS;
 
 @Repository
 public class JdbcUserRepository implements UserRepository {
