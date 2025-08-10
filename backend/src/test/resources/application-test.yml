@@ -2,17 +2,15 @@ spring:
   application:
     name: lift_log
   datasource:
-    url: jdbc:postgresql://localhost:5439/lift_log_test
-    username: postgres
-    password: postgres
+    url: ${SPRING_DATASOURCE_URL_TEST:jdbc:postgresql://localhost:5439/lift_log_test}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   flyway:
-    locations: classpath:db/migration
-    baseline-on-migrate: true
-    validate-on-migrate: true
+    enabled: false
 
 server:
-  port: 8081
+  port: ${SERVER_TEST_PORT:8081}
 
 logging:
   level:
