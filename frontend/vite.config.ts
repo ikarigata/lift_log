@@ -12,7 +12,12 @@ export default defineConfig({
   },
   server: {
     port: Number(process.env.FRONTEND_PORT) || 3000,
-    // プロキシなし - MSWまたは直接APIコールを使用
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      }
+    }
   },
   preview: {
     port: 4173,
