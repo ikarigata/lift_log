@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.ikr.lift_log.jooq.tables.MuscleGroups.MUSCLE_GROUPS;
+import static com.ikr.lift_log.jooq.public_.tables.MuscleGroups.MUSCLE_GROUPS;
 
 @Repository
 public class JdbcMuscleGroupRepository implements MuscleGroupRepository {

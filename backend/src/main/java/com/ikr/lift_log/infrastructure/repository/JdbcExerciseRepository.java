@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.ikr.lift_log.jooq.tables.Exercises.EXERCISES;
+import static com.ikr.lift_log.jooq.public_.tables.Exercises.EXERCISES;
 
 @Repository
 public class JdbcExerciseRepository implements ExerciseRepository {

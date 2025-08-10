@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.ikr.lift_log.jooq.tables.WorkoutDays.WORKOUT_DAYS;
+import static com.ikr.lift_log.jooq.public_.tables.WorkoutDays.WORKOUT_DAYS;
 
 @Repository
 public class JdbcWorkoutDayRepository implements WorkoutDayRepository {
