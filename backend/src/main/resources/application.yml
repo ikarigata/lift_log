@@ -7,7 +7,7 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: true
     validate-on-migrate: true
