@@ -161,12 +161,6 @@ cat ~/.ssh/lift-log-key.pub
    # terraform.tfvars の allowed_ssh_cidrs に "203.0.113.1/32" を設定
    ```
 
-4. **セキュリティ関連の環境変数設定**
-   ```bash
-   # セキュリティ設定（必須）
-   export TF_VAR_db_password="$(openssl rand -base64 24)"
-   export TF_VAR_jwt_secret="$(openssl rand -hex 32)"
-   ```
 
 ### 2. Terraform実行
 
@@ -251,18 +245,25 @@ nano .env.aws
 
 **重要な設定項目:**
 ```bash
-# 必須変更項目（Terraformで生成された値を使用）
-POSTGRES_PASSWORD=${TF_VAR_db_password}  # Terraformで生成されたパスワード
-JWT_SECRET=${TF_VAR_jwt_secret}          # Terraformで生成されたJWTシークレット
-DOMAIN_NAME=your-domain.com              # ドメインを使用する場合
-SSL_EMAIL=your-email@example.com
+# 必須変更項目（セキュリティ重要）
+POSTGRES_PASSWORD=your_secure_password_here    # 強固なパスワードに変更
+JWT_SECRET=your_secure_jwt_secret_here         # 長いランダム文字列に変更
+DOMAIN_NAME=your-domain.com                    # ドメインを使用する場合
+SSL_EMAIL=your-email@example.com               # Let's Encrypt用メール
 ```
 
-**パスワード確認方法:**
+**セキュアなパスワード・シークレット生成:**
 ```bash
-# Terraform実行時に設定した値を確認
-echo "DB Password: $TF_VAR_db_password"
-echo "JWT Secret: $TF_VAR_jwt_secret"
+# 強固なパスワード生成
+openssl rand -base64 24
+# 結果例: XYZ123abc789DEF456ghi012JKL
+
+# JWT シークレット生成（256ビット推奨）
+openssl rand -hex 32
+# 結果例: a7f3d8e9b2c4f6a1e8d9b3c7f2a5e8d9b4c6f1a7e3d8b9c2f5a8e1d4b7c3f6a9
+
+# 生成した値を .env.aws に設定
+nano .env.aws
 ```
 
 ### 5. ディレクトリ構造作成
@@ -514,7 +515,6 @@ terraform destroy
 - [ ] AWS CLI設定完了
 - [ ] SSH鍵ペア作成完了
 - [ ] terraform.tfvars設定完了
-- [ ] セキュリティ環境変数設定完了
 
 ### デプロイ後
 - [ ] EC2インスタンス正常起動
@@ -524,8 +524,7 @@ terraform destroy
 - [ ] データベース接続確認
 
 ### セキュリティ
-- [ ] 強固なパスワード設定
-- [ ] JWT秘密鍵更新
+- [ ] .env.aws でパスワード・JWT秘密鍵設定
 - [ ] SSH接続IPアドレス制限
 - [ ] SSL証明書設定（本番環境）
 
