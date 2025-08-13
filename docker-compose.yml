@@ -8,7 +8,7 @@ services:
     # ports:
     #   - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -18,9 +18,9 @@ services:
     build: ./backend
     env_file: [.env]
     environment:
-      # 例: jdbc:postgresql://db:5432/${POSTGRES_DB}
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_DOCKER}
-    expose: ["8080"]  # 内部のみ公開
+      # Docker環境用のデータベース接続URL
+      DB_URL: ${DB_URL_DOCKER}
+    expose: ["${SERVER_PORT}"]  # 内部のみ公開
     depends_on:
       db:
         condition: service_healthy
@@ -35,11 +35,11 @@ services:
     build:
       context: ./frontend
       args:
-        VITE_API_BASE_URL: "/api"
-        VITE_USE_MSW: "false"
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+        VITE_USE_MSW: ${VITE_USE_MSW}
     env_file: [.env]
     ports:
-      - "80:80"     # 必要に応じて443も
+      - "${FRONTEND_DOCKER_PORT}:80"     # 必要に応じて443も
     depends_on:
       - backend
     restart: unless-stopped
@@ -52,7 +52,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      FLYWAY_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      FLYWAY_URL: ${DB_URL_DOCKER}
       FLYWAY_USER: ${POSTGRES_USER}
       FLYWAY_PASSWORD: ${POSTGRES_PASSWORD}
       FLYWAY_LOCATIONS: filesystem:/flyway/sql

@@ -1,10 +1,10 @@
 spring:
   application:
-    name: lift_log
+    name: ${APP_NAME}
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5439/lift_log}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    url: ${DB_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
   flyway:
     enabled: false
@@ -13,11 +13,11 @@ spring:
     validate-on-migrate: true
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT}
   servlet:
     context-path: /
 
 # JWT設定
 jwt:
-  secret: ${JWT_SECRET:mySecretKey1234567890123456789012345678901234567890}
-  expiration: ${JWT_EXPIRATION:24}
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
