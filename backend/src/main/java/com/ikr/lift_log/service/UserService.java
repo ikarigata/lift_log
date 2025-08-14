@@ -29,6 +29,11 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        // パスワードをBCryptでハッシュ化（認証時と同じ方式）
+        if (user.getPasswordHash() != null && !user.getPasswordHash().isEmpty()) {
+            String hashedPassword = passwordEncoder.encode(user.getPasswordHash());
+            user.setPasswordHash(hashedPassword);
+        }
         return userRepository.save(user);
     }
 
