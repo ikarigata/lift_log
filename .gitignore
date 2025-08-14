@@ -14,4 +14,7 @@ terraform/*.tfstate.backup
 terraform/*.tfstate.lock.info
 terraform/*.tfvars
 
+# Terraform providers and plugins
+terraform/.terraform/**
+
 *.log
