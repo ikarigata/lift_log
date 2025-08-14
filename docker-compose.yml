@@ -18,8 +18,8 @@ services:
     build: ./backend
     env_file: [.env]
     environment:
-      # 例: jdbc:postgresql://db:5432/${POSTGRES_DB}
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_DOCKER}
+      # Docker環境でのデータベース接続URL
+      DB_URL: ${DB_URL_DOCKER}
     expose: ["8080"]  # 内部のみ公開
     depends_on:
       db:
