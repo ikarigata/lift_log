@@ -1,0 +1,19 @@
+
+> lift-log-frontend@0.0.0 dev
+> vite
+
+
+  VITE v4.5.14  ready in 360 ms
+
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: use --host to expose
+10:09:03 AM [vite] hmr update /src/App.tsx, /src/index.css, /src/pages/StatisticsPage.tsx, /src/pages/LoginPage.tsx, /src/components/Calendar.tsx, /src/pages/SignupPage.tsx, /src/components/ExerciseManagement.tsx
+10:09:56 AM [vite] hmr update /src/App.tsx, /src/index.css
+10:10:12 AM [vite] hmr update /src/App.tsx, /src/index.css
+10:10:18 AM [vite] hmr update /src/App.tsx, /src/index.css
+10:11:20 AM [vite] hmr update /src/App.tsx, /src/index.css
+10:11:26 AM [vite] hmr update /src/App.tsx, /src/index.css
+10:11:46 AM [vite] hmr update /src/pages/LoginPage.tsx, /src/index.css
+10:11:51 AM [vite] hmr update /src/pages/LoginPage.tsx, /src/index.css
+10:13:18 AM [vite] hmr update /src/pages/LoginPage.tsx, /src/index.css
+10:14:03 AM [vite] hmr update /src/pages/LoginPage.tsx, /src/index.css

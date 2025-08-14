@@ -1,17 +1,12 @@
 import { getAuthHeader } from '../utils/auth'
 
-// API設定
+// API設定 - すべて相対パスで統一
 const getBaseUrl = (): string => {
-  const useMSW = import.meta.env.VITE_USE_MSW === 'true'
-  
-  if (useMSW) {
-    // MSW使用時は相対パス（Service Workerがインターセプト）
-    return '/api/v1'
-  } else {
-    // 実API使用時は環境変数から取得（直接APIサーバーに接続）
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
-    return `${apiBaseUrl}/api/v1`
-  }
+  // 開発環境: Viteプロキシ
+  // プレビュー環境: MSW推奨
+  // 統合テスト: Docker Nginxプロキシ  
+  // 本番環境: Nginxプロキシ
+  return '/api/v1'
 }
 
 export const BASE_URL = getBaseUrl()
@@ -54,7 +49,7 @@ export const authenticatedFetch = async (
 }
 
 // デバッグ用ログ
-console.log(`API Base URL: ${BASE_URL} (MSW: ${import.meta.env.VITE_USE_MSW})`)
+console.log(`API Base URL: ${BASE_URL} (MSW: ${import.meta.env.VITE_USE_MSW === 'true' ? 'enabled' : 'disabled'})`)
 
 // デフォルトエクスポート
 export default { BASE_URL, authenticatedFetch }

@@ -1,5 +1,5 @@
 -- Insert initial muscle groups
-INSERT INTO muscle_groups (name) VALUES 
+INSERT INTO public.muscle_groups (name) VALUES 
 ('胸'),
 ('背中'),
 ('腕(2頭)'),
