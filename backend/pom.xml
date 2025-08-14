@@ -142,9 +142,9 @@
         <artifactId>flyway-maven-plugin</artifactId>
         <version>${flyway.version}</version>
         <configuration>
-          <url>${env.DB_URL}</url>
-          <user>${env.POSTGRES_USER}</user>
-          <password>${env.POSTGRES_PASSWORD}</password>
+          <url>${env.SPRING_DATASOURCE_URL}</url>
+          <user>${env.SPRING_DATASOURCE_USERNAME}</user>
+          <password>${env.SPRING_DATASOURCE_PASSWORD}</password>
           <locations>
             <location>filesystem:src/main/resources/db/migration</location>
           </locations>

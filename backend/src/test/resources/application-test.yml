@@ -1,16 +1,16 @@
 spring:
   application:
-    name: ${APP_NAME}
+    name: lift_log
   datasource:
-    url: ${DB_URL_TEST}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL_TEST:jdbc:postgresql://localhost:5439/lift_log_test}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   flyway:
     enabled: false
 
 server:
-  port: ${SERVER_TEST_PORT}
+  port: ${SERVER_TEST_PORT:8081}
 
 logging:
   level:

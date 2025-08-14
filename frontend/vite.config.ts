@@ -11,16 +11,16 @@ export default defineConfig({
     },
   },
   server: {
-    port: Number(process.env.FRONTEND_PORT),
+    port: Number(process.env.FRONTEND_PORT) || 3000,
     proxy: {
       '/api': {
-        target: `http://localhost:${process.env.SERVER_PORT}`,
+        target: 'http://localhost:8080',
         changeOrigin: true,
       }
     }
   },
   preview: {
-    port: Number(process.env.FRONTEND_PREVIEW_PORT),
+    port: 4173,
     // previewモードでも環境変数を読み込む
     cors: true,
   },

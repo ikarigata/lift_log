@@ -4,16 +4,19 @@
 variable "aws_region" {
   description = "AWS region for deployment"
   type        = string
+  default     = "ap-northeast-1" # Tokyo region (lowest latency for Japan)
 }
 
 variable "environment" {
   description = "Environment name (e.g., dev, staging, prod)"
   type        = string
+  default     = "prod"
 }
 
 variable "instance_type" {
   description = "EC2 instance type (cost-optimized)"
   type        = string
+  default     = "t3.micro" # Free Tier eligible
   
   validation {
     condition = contains([
@@ -27,6 +30,7 @@ variable "instance_type" {
 variable "root_volume_size" {
   description = "Size of the root EBS volume in GB"
   type        = number
+  default     = 20 # Minimum size for cost optimization
   
   validation {
     condition     = var.root_volume_size >= 8 && var.root_volume_size <= 100
@@ -37,6 +41,7 @@ variable "root_volume_size" {
 variable "data_volume_size" {
   description = "Size of the additional data EBS volume in GB (for Docker volumes)"
   type        = number
+  default     = 20 # For PostgreSQL data and Docker images
   
   validation {
     condition     = var.data_volume_size >= 10 && var.data_volume_size <= 100
@@ -57,6 +62,7 @@ variable "public_key" {
 variable "allowed_ssh_cidrs" {
   description = "CIDR blocks allowed for SSH access"
   type        = list(string)
+  default     = ["0.0.0.0/0"] # CAUTION: Open to all IPs (consider restricting to your IP)
   
   validation {
     condition     = length(var.allowed_ssh_cidrs) > 0
@@ -64,7 +70,20 @@ variable "allowed_ssh_cidrs" {
   }
 }
 
-# Application-specific variables (optional)
+# Application-specific variables
+variable "db_password" {
+  description = "Password for PostgreSQL database"
+  type        = string
+  sensitive   = true
+  # No default - must be provided via environment variable TF_VAR_db_password
+}
+
+variable "jwt_secret" {
+  description = "JWT secret key for authentication"
+  type        = string
+  sensitive   = true
+  # No default - must be provided via environment variable TF_VAR_jwt_secret
+}
 
 variable "domain_name" {
   description = "Domain name for the application (optional)"
