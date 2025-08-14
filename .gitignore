@@ -1,9 +1,9 @@
 backend/backend_server.log
 frontend/frontend_dev.log
+frontend/test-results/**
 
 # SSH keys (プロジェクト直下に配置)
-lift-log-key
-lift-log-key.pub
+.ssh/**
 
 # AWS環境変数ファイル
 aws-deploy/.env.aws
@@ -13,3 +13,5 @@ terraform/*.tfstate
 terraform/*.tfstate.backup
 terraform/*.tfstate.lock.info
 terraform/*.tfvars
+
+*.log
