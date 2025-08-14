@@ -1,0 +1,90 @@
+# シンプルなCI/CDワークフロー（.env配置型デプロイ）
+name: Build and Deploy
+
+# トリガー条件
+on:
+  push:
+    branches: [ main ]  # mainブランチプッシュ時のみ
+  pull_request:
+    branches: [ main ]  # PR作成時はテストのみ
+
+jobs:
+  # テストジョブ
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    # バックエンドテスト
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    
+    - name: Test backend
+      working-directory: ./backend
+      run: |
+        # 軽量テスト（単体テストのみ）
+        mvn clean test -Dtest=!*IntegrationTest
+    
+    # フロントエンドテスト
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: ./frontend/package-lock.json
+    
+    - name: Test frontend
+      working-directory: ./frontend
+      run: |
+        npm ci
+        npm run build  # ビルドテストのみ
+  
+  # デプロイジョブ（mainブランチのみ）
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    # SSH鍵の設定
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+    
+    # .envファイルをサーバーに配置
+    - name: Copy .env file
+      run: |
+        # .envファイルを暗号化してsecretsに保存した内容をサーバーに配置
+        echo "${{ secrets.ENV_FILE_CONTENT }}" > .env.deploy
+        scp -i ~/.ssh/id_rsa .env.deploy ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/opt/lift-log/app/.env
+    
+    # アプリケーションコードをサーバーに送信してデプロイ
+    - name: Deploy to server
+      run: |
+        # プロジェクト全体をサーバーにコピー
+        rsync -avz --exclude='.git' --exclude='node_modules' --exclude='target' \
+          -e "ssh -i ~/.ssh/id_rsa" \
+          ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/opt/lift-log/app/
+        
+        # サーバーでデプロイ実行
+        ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          cd /opt/lift-log/app
+          
+          # Docker Composeでアプリケーションを再起動
+          docker-compose -f aws-deploy/docker-compose.aws.yml down
+          docker-compose -f aws-deploy/docker-compose.aws.yml up -d --build
+          
+          # ヘルスチェック
+          echo "Waiting for application..."
+          sleep 30
+          curl -f http://localhost/api/actuator/health || echo "Health check failed"
+        EOF

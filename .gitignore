@@ -1,2 +1,20 @@
 backend/backend_server.log
 frontend/frontend_dev.log
+frontend/test-results/**
+
+# SSH keys (プロジェクト直下に配置)
+.ssh/**
+
+# AWS環境変数ファイル
+aws-deploy/.env.aws
+
+# Terraform state files
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/*.tfstate.lock.info
+terraform/*.tfvars
+
+# Terraform providers and plugins
+terraform/.terraform/**
+
+*.log

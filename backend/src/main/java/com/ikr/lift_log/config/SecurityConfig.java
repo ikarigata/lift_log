@@ -3,6 +3,7 @@ package com.ikr.lift_log.config;
 import com.ikr.lift_log.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -34,6 +35,7 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(authz -> authz
                                                 // ログインエンドポイントは認証不要
                                                 .requestMatchers("/api/v1/auth/login").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                                                 // その他のAPIエンドポイントは認証必要
                                                 .requestMatchers("/api/**").authenticated()
                                                 // その他のリクエストは許可（静的リソースなど）

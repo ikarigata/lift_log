@@ -1,0 +1,64 @@
+services:
+  db:
+    image: postgres:15
+    env_file: [.env]   # POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB を必ず定義
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # DBは外部公開しない（必要ならSSHトンネル）
+    # ports:
+    #   - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    env_file: [.env]
+    environment:
+      # Docker環境でのデータベース接続URL
+      DB_URL: ${DB_URL_DOCKER}
+    expose: ["8080"]  # 内部のみ公開
+    depends_on:
+      db:
+        condition: service_healthy
+    # healthcheck:
+    #   test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health"]
+    #   interval: 15s
+    #   timeout: 5s
+    #   retries: 5
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: "/api"
+        VITE_USE_MSW: "false"
+    env_file: [.env]
+    ports:
+      - "80:80"     # 必要に応じて443も
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # 一時実行専用（通常起動から外す）
+  flyway:
+    image: flyway/flyway:10
+    profiles: ["migrate"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      FLYWAY_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      FLYWAY_USER: ${POSTGRES_USER}
+      FLYWAY_PASSWORD: ${POSTGRES_PASSWORD}
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    volumes:
+      - ./backend/src/main/resources/db/migration:/flyway/sql:ro
+    command: ["migrate"]
+
+volumes:
+  postgres_data:

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { signup } from '../api/auth';
 
 const SignupPage: React.FC = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
@@ -21,7 +22,7 @@ const SignupPage: React.FC = () => {
     }
 
     try {
-      await signup(email, password);
+      await signup(email, password, name);
       setSuccessMessage('新規登録が成功しました。ログインページにリダイレクトします。');
       setTimeout(() => {
         navigate('/login');
@@ -40,6 +41,14 @@ const SignupPage: React.FC = () => {
       <h1 className="text-6xl font-bold mb-8">lift_log</h1>
       <h2 className="text-2xl mb-6">新規登録</h2>
       <form onSubmit={handleSignup} className="flex flex-col items-center">
+        <input
+          type="text"
+          placeholder="ユーザーネーム"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-80 p-2 mb-4 bg-input-bg text-input-text border-none rounded focus:outline-none placeholder:text-input-placeholder"
+          required
+        />
         <input
           type="email"
           placeholder="メールアドレス"
