@@ -70,21 +70,6 @@ variable "allowed_ssh_cidrs" {
   }
 }
 
-# Application-specific variables
-variable "db_password" {
-  description = "Password for PostgreSQL database"
-  type        = string
-  sensitive   = true
-  # No default - must be provided via environment variable TF_VAR_db_password
-}
-
-variable "jwt_secret" {
-  description = "JWT secret key for authentication"
-  type        = string
-  sensitive   = true
-  # No default - must be provided via environment variable TF_VAR_jwt_secret
-}
-
 variable "domain_name" {
   description = "Domain name for the application (optional)"
   type        = string
