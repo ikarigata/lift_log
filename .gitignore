@@ -24,3 +24,7 @@ terraform/*.tfvars
 terraform/.terraform/**
 
 *.log
+terraform/session-manager-plugin.deb
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+.env

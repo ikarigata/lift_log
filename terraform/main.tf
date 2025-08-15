@@ -1,4 +1,4 @@
-# Terraform configuration for Lift Log application deployment on AWS
+# Terraform configuration for Vol Log application deployment on AWS
 # Cost-optimized configuration for personal use
 
 terraform {
@@ -51,9 +51,9 @@ data "aws_subnets" "default" {
 }
 
 # セキュリティグループ: Lift Log アプリケーション用
-resource "aws_security_group" "lift_log_sg" {
-  name_prefix = "lift-log-sg-"
-  description = "Security group for Lift Log application"
+resource "aws_security_group" "vol_log_sg" {
+  name_prefix = "vol-log-sg-"
+  description = "Security group for Vol Log application"
   vpc_id      = data.aws_vpc.default.id
 
   # HTTP アクセス
@@ -92,15 +92,15 @@ resource "aws_security_group" "lift_log_sg" {
   }
 
   tags = {
-    Name        = "lift-log-security-group"
+    Name        = "vol-log-security-group"
     Environment = var.environment
-    Project     = "lift-log"
+    Project     = "vol-log"
   }
 }
 
 # IAMロール: EC2インスタンス用
 resource "aws_iam_role" "ec2_role" {
-  name = "lift-log-ec2-role"
+  name = "vol-log-ec2-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -116,9 +116,9 @@ resource "aws_iam_role" "ec2_role" {
   })
 
   tags = {
-    Name        = "lift-log-ec2-role"
+    Name        = "vol-log-ec2-role"
     Environment = var.environment
-    Project     = "lift-log"
+    Project     = "vol-log"
   }
 }
 
@@ -130,28 +130,28 @@ resource "aws_iam_role_policy_attachment" "ssm_managed_instance_core" {
 
 # IAMインスタンスプロファイル
 resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "lift-log-ec2-profile"
+  name = "vol-log-ec2-profile"
   role = aws_iam_role.ec2_role.name
 }
 
 # EC2キーペア
-resource "aws_key_pair" "lift_log_key" {
-  key_name   = "lift-log-key"
+resource "aws_key_pair" "vol_log_key" {
+  key_name   = "vol-log-key"
   public_key = var.public_key
 
   tags = {
-    Name        = "lift-log-key-pair"
+    Name        = "vol-log-key-pair"
     Environment = var.environment
-    Project     = "lift-log"
+    Project     = "vol-log"
   }
 }
 
 # EC2インスタンス: Lift Log アプリケーション
-resource "aws_instance" "lift_log_app" {
+resource "aws_instance" "vol_log_app" {
   ami                    = data.aws_ami.amazon_linux.id
   instance_type          = var.instance_type
-  key_name              = aws_key_pair.lift_log_key.key_name
-  vpc_security_group_ids = [aws_security_group.lift_log_sg.id]
+  key_name              = aws_key_pair.vol_log_key.key_name
+  vpc_security_group_ids = [aws_security_group.vol_log_sg.id]
   subnet_id             = data.aws_subnets.default.ids[0]
   iam_instance_profile  = aws_iam_instance_profile.ec2_profile.name
 
@@ -162,9 +162,9 @@ resource "aws_instance" "lift_log_app" {
     encrypted   = true
     
     tags = {
-      Name        = "lift-log-root-volume"
+      Name        = "vol-log-root-volume"
       Environment = var.environment
-      Project     = "lift-log"
+      Project     = "vol-log"
     }
   }
 
@@ -176,9 +176,9 @@ resource "aws_instance" "lift_log_app" {
     encrypted   = true
     
     tags = {
-      Name        = "lift-log-data-volume"
+      Name        = "vol-log-data-volume"
       Environment = var.environment
-      Project     = "lift-log"
+      Project     = "vol-log"
     }
   }
 
@@ -186,27 +186,53 @@ resource "aws_instance" "lift_log_app" {
   user_data = file("${path.module}/user-data.sh")
 
   tags = {
-    Name        = "lift-log-application"
+    Name        = "vol-log-application"
     Environment = var.environment
-    Project     = "lift-log"
-    Purpose     = "Docker host for Lift Log application"
+    Project     = "vol-log"
+    Purpose     = "Docker host for Vol Log application"
   }
 
   # インスタンス作成時の依存関係
   depends_on = [
-    aws_security_group.lift_log_sg,
-    aws_key_pair.lift_log_key
+    aws_security_group.vol_log_sg,
+    aws_key_pair.vol_log_key
   ]
 }
 
-# Elastic IP（オプション、コスト削減のためコメントアウト）
-# resource "aws_eip" "lift_log_eip" {
-#   instance = aws_instance.lift_log_app.id
-#   domain   = "vpc"
-#   
-#   tags = {
-#     Name        = "lift-log-eip"
-#     Environment = var.environment
-#     Project     = "lift-log"
-#   }
-# }
+# Elastic IP
+resource "aws_eip" "vol_log_eip" {
+  instance = aws_instance.vol_log_app.id
+  domain   = "vpc"
+  
+  tags = {
+    Name        = "vol-log-eip"
+    Environment = var.environment
+    Project     = "vol-log"
+  }
+}
+
+# Route 53 Hosted Zone (use existing zone created during domain registration)
+data "aws_route53_zone" "main" {
+  count = var.domain_name != null ? 1 : 0
+  name  = var.domain_name
+}
+
+# Route 53 A Record for root domain
+resource "aws_route53_record" "root" {
+  count   = var.domain_name != null ? 1 : 0
+  zone_id = data.aws_route53_zone.main[0].zone_id
+  name    = var.domain_name
+  type    = "A"
+  ttl     = 300
+  records = [aws_eip.vol_log_eip.public_ip]
+}
+
+# Route 53 A Record for www subdomain
+resource "aws_route53_record" "www" {
+  count   = var.domain_name != null ? 1 : 0
+  zone_id = data.aws_route53_zone.main[0].zone_id
+  name    = "www.${var.domain_name}"
+  type    = "A"
+  ttl     = 300
+  records = [aws_eip.vol_log_eip.public_ip]
+}

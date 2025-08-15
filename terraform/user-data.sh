@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# EC2 User Data Script for Lift Log Application
+# EC2 User Data Script for Vol Log Application
 # This script runs automatically when the EC2 instance starts
 # Compatible with Amazon Linux 2023
 
 set -e  # Exit on any error
 
 # Log file for debugging
-LOGFILE="/var/log/lift-log-setup.log"
+LOGFILE="/var/log/vol-log-setup.log"
 exec > >(tee -a $LOGFILE)
 exec 2>&1
 
-echo "$(date): Starting Lift Log application setup..."
+echo "$(date): Starting Vol Log application setup..."
 
 # Update system packages
 echo "$(date): Updating system packages..."
@@ -39,7 +39,7 @@ ln -sf /usr/local/bin/docker-compose /usr/bin/docker-compose
 # Mount additional EBS volume for Docker data
 echo "$(date): Setting up additional EBS volume..."
 DATA_DEVICE="/dev/nvme1n1"  # Device name for additional EBS volume
-DATA_MOUNT="/opt/lift-log"
+DATA_MOUNT="/opt/vol-log"
 
 # Check if the device exists
 if [ -b "$DATA_DEVICE" ]; then
@@ -66,7 +66,7 @@ if [ -b "$DATA_DEVICE" ]; then
     echo "$(date): EBS volume mounted at $DATA_MOUNT"
 else
     echo "$(date): Additional EBS volume not found, using root volume"
-    DATA_MOUNT="/opt/lift-log"
+    DATA_MOUNT="/opt/vol-log"
     mkdir -p $DATA_MOUNT
     chown -R ec2-user:ec2-user $DATA_MOUNT
 fi
@@ -80,21 +80,21 @@ cd $APP_DIR
 echo "$(date): Setting up application files..."
 
 # Create directory structure for manual deployment
-mkdir -p lift_log/{aws-deploy,terraform}
+mkdir -p vol_log/{aws-deploy,terraform}
 chown -R ec2-user:ec2-user $APP_DIR
 
 # Create systemd service for auto-start
 echo "$(date): Creating systemd service..."
-cat > /etc/systemd/system/lift-log.service << 'EOF'
+cat > /etc/systemd/system/vol-log.service << 'EOF'
 [Unit]
-Description=Lift Log Application
+Description=Vol Log Application
 Requires=docker.service
 After=docker.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-WorkingDirectory=/opt/lift-log/app/lift_log
+WorkingDirectory=/opt/vol-log/app/vol_log
 ExecStart=/usr/bin/docker-compose -f aws-deploy/docker-compose.aws.yml up -d
 ExecStop=/usr/bin/docker-compose -f aws-deploy/docker-compose.aws.yml down
 TimeoutStartSec=0
@@ -119,8 +119,8 @@ systemctl enable --now dnf-automatic-install.timer
 
 # Create deployment status file
 echo "$(date): Creating deployment status file..."
-cat > /opt/lift-log/deployment-status.txt << EOF
-Lift Log EC2 Instance Setup Complete
+cat > /opt/vol-log/deployment-status.txt << EOF
+Vol Log EC2 Instance Setup Complete
 =====================================
 Timestamp: $(date)
 Instance ID: $(curl -s http://169.254.169.254/latest/meta-data/instance-id)
@@ -136,22 +136,22 @@ Setup Status:
 ✓ Systemd service configured
 
 Next Steps:
-1. Upload application files to /opt/lift-log/app/lift_log/
+1. Upload application files to /opt/vol-log/app/vol_log/
 2. Configure environment variables
-3. Start the application: sudo systemctl start lift-log
+3. Start the application: sudo systemctl start vol-log
 
 Manual Commands:
 - Check Docker status: sudo systemctl status docker
-- View this log: tail -f /var/log/lift-log-setup.log
-- Access app directory: cd /opt/lift-log/app
+- View this log: tail -f /var/log/vol-log-setup.log
+- Access app directory: cd /opt/vol-log/app
 EOF
 
-chown ec2-user:ec2-user /opt/lift-log/deployment-status.txt
+chown ec2-user:ec2-user /opt/vol-log/deployment-status.txt
 
 # Set up log rotation for application logs
 echo "$(date): Setting up log rotation..."
-cat > /etc/logrotate.d/lift-log << 'EOF'
-/opt/lift-log/app/lift_log/logs/*.log {
+cat > /etc/logrotate.d/vol-log << 'EOF'
+/opt/vol-log/app/vol_log/logs/*.log {
     daily
     missingok
     rotate 7
@@ -166,7 +166,7 @@ EOF
 echo "$(date): Final setup steps..."
 
 # Update file permissions
-chown -R ec2-user:ec2-user /opt/lift-log
+chown -R ec2-user:ec2-user /opt/vol-log
 
 # Install convenience tools
 dnf install -y tree nano vim wget curl unzip
@@ -174,13 +174,13 @@ dnf install -y tree nano vim wget curl unzip
 # Create welcome message
 cat > /etc/motd << 'EOF'
 ====================================
-  Lift Log Application Server
+  Vol Log Application Server
 ====================================
 
 Application Status:
-- Check status: sudo systemctl status lift-log
-- View logs: tail -f /var/log/lift-log-setup.log
-- App directory: /opt/lift-log/app/
+- Check status: sudo systemctl status vol-log
+- View logs: tail -f /var/log/vol-log-setup.log
+- App directory: /opt/vol-log/app/
 
 Useful Commands:
 - docker ps                 # View running containers
@@ -188,18 +188,18 @@ Useful Commands:
 - htop                      # System monitoring
 
 For support, check deployment-status.txt:
-cat /opt/lift-log/deployment-status.txt
+cat /opt/vol-log/deployment-status.txt
 ====================================
 EOF
 
-echo "$(date): Lift Log application setup completed successfully!"
+echo "$(date): Vol Log application setup completed successfully!"
 echo "$(date): Instance is ready for application deployment."
 
 # Signal that setup is complete
-touch /opt/lift-log/setup-complete
+touch /opt/vol-log/setup-complete
 
 # Send completion notification to CloudWatch (optional)
 if command -v aws &> /dev/null; then
-    aws logs create-log-group --log-group-name "/lift-log/setup" --region $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/.$//')
-    aws logs put-log-events --log-group-name "/lift-log/setup" --log-stream-name "$(date +%Y%m%d)" --log-events timestamp=$(date +%s)000,message="EC2 setup completed successfully"
+    aws logs create-log-group --log-group-name "/vol-log/setup" --region $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/.$//')
+    aws logs put-log-events --log-group-name "/vol-log/setup" --log-stream-name "$(date +%Y%m%d)" --log-events timestamp=$(date +%s)000,message="EC2 setup completed successfully"
 fi

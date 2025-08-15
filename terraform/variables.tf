@@ -1,4 +1,4 @@
-# Variables for Lift Log AWS deployment
+# Variables for Vol Log AWS deployment
 # Cost-optimized configuration for personal use
 
 variable "aws_region" {
@@ -73,7 +73,7 @@ variable "allowed_ssh_cidrs" {
 variable "domain_name" {
   description = "Domain name for the application (optional)"
   type        = string
-  default     = null
+  default     = "vollog.net"
 }
 
 # Tags
