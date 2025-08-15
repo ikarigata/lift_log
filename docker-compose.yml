@@ -20,6 +20,8 @@ services:
     environment:
       # Docker環境でのデータベース接続URL
       DB_URL: ${DB_URL_DOCKER}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
     expose: ["8080"]  # 内部のみ公開
     depends_on:
       db:
@@ -35,8 +37,8 @@ services:
     build:
       context: ./frontend
       args:
-        VITE_API_BASE_URL: "/api"
-        VITE_USE_MSW: "false"
+        VITE_API_BASE_URL: "${VITE_API_BASE_URL}"
+        VITE_USE_MSW: "${VITE_USE_MSW}"
     env_file: [.env]
     ports:
       - "80:80"     # 必要に応じて443も

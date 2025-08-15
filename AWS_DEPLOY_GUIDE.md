@@ -50,7 +50,19 @@
    # https://www.terraform.io/downloads からダウンロード
    ```
 
-3. **Git, SSH**（通常プリインストール済み）
+3. **Git, SSH, AWS CLI Session Manager Plugin**（一部要インストール）
+   ```bash
+   # Session Manager Plugin インストール
+   # macOS
+   brew install session-manager-plugin
+   
+   # Linux
+   curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm" -o "session-manager-plugin.rpm"
+   sudo yum install -y session-manager-plugin.rpm
+   
+   # Windows
+   # https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html
+   ```
 
 ### AWSアカウント設定
 
@@ -196,7 +208,8 @@ cat ~/.ssh/lift-log-key.pub
    ```
    instance_id = "i-0123456789abcdef0"
    public_ip = "54.249.123.456"
-   ssh_connection_command = "ssh -i ~/.ssh/lift-log-key ec2-user@54.249.123.456"
+   ssm_connection_command = "aws ssm start-session --target i-0123456789abcdef0"
+   ssh_connection_command = "ssh -i ~/.ssh/lift-log-key ec2-user@54.249.123.456 (deprecated)"
    application_url_http = "http://54.249.123.456"
    ```
 
@@ -207,11 +220,18 @@ cat ~/.ssh/lift-log-key.pub
 ### 1. EC2インスタンスに接続
 
 ```bash
-# SSH接続（terraform outputで表示されたコマンドを使用）
-ssh -i ~/.ssh/lift-log-key ec2-user@YOUR_PUBLIC_IP
+# SSM接続（推奨方法）
+# terraform outputで表示されたコマンドを使用
+aws ssm start-session --target YOUR_INSTANCE_ID
 
-# 接続できない場合のデバッグ
-ssh -i ~/.ssh/lift-log-key -v ec2-user@YOUR_PUBLIC_IP
+# または、terraform outputから直接取得
+aws ssm start-session --target $(terraform output -raw instance_id)
+
+# 接続後、ec2-userに切り替え
+sudo su - ec2-user
+
+# 従来のSSH接続（非推奨、22番ポートがブロックされているため使用不可）
+# ssh -i ~/.ssh/lift-log-key ec2-user@YOUR_PUBLIC_IP
 ```
 
 ### 2. セットアップ状況確認
@@ -242,11 +262,11 @@ scp -i ~/.ssh/lift-log-key -r /path/to/lift_log ec2-user@YOUR_PUBLIC_IP:/opt/lif
 ### 4. 環境変数設定
 
 ```bash
-cd /opt/lift-log/app/lift_log/aws-deploy
+cd /opt/lift-log/app/lift_log
 
 # 環境変数ファイル作成
-cp .env.aws.template .env.aws
-nano .env.aws
+cp .env.example .env
+nano .env
 ```
 
 **重要な設定項目:**
@@ -269,10 +289,7 @@ echo "JWT Secret: $TF_VAR_jwt_secret"
 
 ```bash
 # 必要なディレクトリを作成
-sudo mkdir -p /opt/lift-log/{data/postgres,data/postgres-backups,nginx,logs/{nginx,backend},scripts}
-
-# nginxの設定ファイルコピー
-sudo cp nginx.aws.conf /opt/lift-log/nginx/nginx.conf
+sudo mkdir -p /opt/lift-log/{data/postgres,data/postgres-backups,logs/{nginx,backend},scripts}
 
 # 権限設定
 sudo chown -R ec2-user:ec2-user /opt/lift-log
@@ -282,13 +299,13 @@ sudo chown -R ec2-user:ec2-user /opt/lift-log
 
 ```bash
 # データベースマイグレーション実行
-docker-compose -f docker-compose.aws.yml --profile migrate up flyway
+docker-compose --profile migrate up flyway
 
 # アプリケーション起動
-docker-compose -f docker-compose.aws.yml up -d
+docker-compose up -d
 
 # ログ確認
-docker-compose -f docker-compose.aws.yml logs -f
+docker-compose logs -f
 ```
 
 ### 7. 動作確認
@@ -315,29 +332,23 @@ curl http://localhost/api/actuator/health
 ### 1. Let's Encrypt証明書取得
 
 ```bash
-# Certbotコンテナ実行
-docker-compose -f docker-compose.aws.yml --profile ssl up certbot
-
-# 証明書確認
-sudo ls -la /opt/lift-log/nginx/ssl/live/
+# 注意: 現在の構成ではCertbot自動化は含まれていません
+# 手動でのSSL証明書設定が必要です
+# または別途Certbotを設定してください
 ```
 
 ### 2. SSL設定でNginx再起動
 
 ```bash
-# SSL用のnginx設定に更新
-# 443ポートでのアクセスが可能になります
-docker-compose -f docker-compose.aws.yml restart frontend
+# SSL証明書を手動で配置後、コンテナ再起動
+docker-compose restart frontend
 ```
 
 ### 3. 自動更新設定
 
 ```bash
-# crontab設定
-sudo crontab -e
-
-# 以下の行を追加（毎月1日の午前3時に証明書更新）
-0 3 1 * * /usr/local/bin/docker-compose -f /opt/lift-log/app/lift_log/aws-deploy/docker-compose.aws.yml --profile ssl up certbot && /usr/local/bin/docker-compose -f /opt/lift-log/app/lift_log/aws-deploy/docker-compose.aws.yml restart frontend
+# SSL証明書の自動更新が必要な場合は
+# 別途Certbotの設定を行ってください
 ```
 
 ---
@@ -349,10 +360,10 @@ sudo crontab -e
 ```bash
 # アプリケーション状況確認
 docker ps
-docker-compose -f docker-compose.aws.yml logs --tail=50
+docker-compose logs --tail=50
 
 # アプリケーション再起動
-docker-compose -f docker-compose.aws.yml restart
+docker-compose restart
 
 # システムリソース確認
 htop
@@ -362,11 +373,11 @@ df -h
 ### バックアップ
 
 ```bash
-# 手動バックアップ実行
-docker-compose -f docker-compose.aws.yml --profile backup up backup
+# 手動バックアップ（例）
+docker exec lift-log-db pg_dump -U postgres lift_log > backup_$(date +%Y%m%d).sql
 
 # バックアップファイル確認
-ls -la /opt/lift-log/data/postgres-backups/
+ls -la *.sql
 ```
 
 ### ログローテーション
@@ -380,28 +391,39 @@ ls -la /opt/lift-log/data/postgres-backups/
 git pull origin main
 
 # イメージ再ビルド
-docker-compose -f docker-compose.aws.yml build
+docker-compose build
 
 # アプリケーション再起動
-docker-compose -f docker-compose.aws.yml up -d
+docker-compose up -d
 ```
 
 ---
 
 ## 🐛 トラブルシューティング
 
-### 1. SSH接続できない
+### 1. SSM接続できない
 
-**症状**: `Connection timed out`
+**症状**: `An error occurred (TargetNotConnected) when calling the StartSession operation`
 ```bash
-# セキュリティグループ確認
-aws ec2 describe-security-groups --group-ids sg-xxxxxxxxx
+# SSM Agent状態確認
+aws ssm describe-instance-information --query "InstanceInformationList[?InstanceId=='YOUR_INSTANCE_ID']"
 
-# 自分のIPアドレス確認
-curl ifconfig.me
+# インスタンスのIAMロール確認
+aws ec2 describe-instances --instance-ids YOUR_INSTANCE_ID --query 'Reservations[*].Instances[*].IamInstanceProfile'
 
-# Terraform設定更新
-terraform apply -var="allowed_ssh_cidrs=[\"NEW_IP/32\"]"
+# Session Manager Plugin確認
+session-manager-plugin
+
+# AWS CLI設定確認
+aws sts get-caller-identity
+```
+
+### 2. 従来のSSH接続エラー（参考）
+
+**症状**: `Connection timed out`（22番ポートがブロックされているため）
+```bash
+# セキュリティグループでSSHポートが無効化されています
+# SSM Session Managerを使用してください
 ```
 
 ### 2. アプリケーションが起動しない
@@ -409,11 +431,11 @@ terraform apply -var="allowed_ssh_cidrs=[\"NEW_IP/32\"]"
 **症状**: 500エラーまたはコンテナが停止する
 ```bash
 # ログ確認
-docker-compose -f docker-compose.aws.yml logs backend
-docker-compose -f docker-compose.aws.yml logs db
+docker-compose logs backend
+docker-compose logs db
 
 # 一般的な原因と対処法
-# - 環境変数設定ミス → .env.aws を確認
+# - 環境変数設定ミス → .env を確認
 # - ポート競合 → docker ps で確認
 # - メモリ不足 → free -h で確認
 ```
@@ -422,10 +444,10 @@ docker-compose -f docker-compose.aws.yml logs db
 
 ```bash
 # データベースコンテナ確認
-docker exec -it lift-log-db psql -U lift_log_user -d lift_log
+docker exec -it lift_log_db psql -U postgres -d lift_log
 
 # マイグレーション再実行
-docker-compose -f docker-compose.aws.yml --profile migrate up flyway
+docker-compose --profile migrate up flyway
 ```
 
 ### 4. Let's Encrypt証明書取得失敗
@@ -512,13 +534,13 @@ terraform destroy
 ### デプロイ前
 - [ ] AWSアカウント作成完了
 - [ ] AWS CLI設定完了
-- [ ] SSH鍵ペア作成完了
+- [ ] Session Manager Plugin インストール完了
 - [ ] terraform.tfvars設定完了
 - [ ] セキュリティ環境変数設定完了
 
 ### デプロイ後
 - [ ] EC2インスタンス正常起動
-- [ ] SSH接続確認
+- [ ] SSM接続確認
 - [ ] アプリケーション起動確認
 - [ ] HTTP/HTTPSアクセス確認
 - [ ] データベース接続確認
@@ -526,7 +548,7 @@ terraform destroy
 ### セキュリティ
 - [ ] 強固なパスワード設定
 - [ ] JWT秘密鍵更新
-- [ ] SSH接続IPアドレス制限
+- [ ] SSM Session Manager アクセス（SSH無効化済み）
 - [ ] SSL証明書設定（本番環境）
 
 ---

@@ -32,8 +32,13 @@ output "security_group_id" {
 }
 
 # Connection information
+output "ssm_connection_command" {
+  description = "SSM command to connect to the instance"
+  value       = "aws ssm start-session --target ${aws_instance.lift_log_app.id}"
+}
+
 output "ssh_connection_command" {
-  description = "SSH command to connect to the instance"
+  description = "SSH command to connect to the instance (deprecated, use SSM instead)"
   value       = "ssh -i ~/.ssh/lift-log-key ec2-user@${aws_instance.lift_log_app.public_ip}"
 }
 
@@ -75,11 +80,12 @@ output "next_steps" {
   description = "Next steps after Terraform deployment"
   value = <<-EOT
     1. Connect to the instance: ${aws_instance.lift_log_app.public_ip}
-    2. SSH command: ssh -i ~/.ssh/lift-log-key ec2-user@${aws_instance.lift_log_app.public_ip}
+    2. SSM command (recommended): aws ssm start-session --target ${aws_instance.lift_log_app.id}
     3. Check the deployment status: sudo systemctl status docker
     4. View application logs: docker-compose logs
     5. Access the application: http://${aws_instance.lift_log_app.public_ip}
     
-    Note: It may take 5-10 minutes for the application to be fully operational after the instance starts.
+    Note: SSM Session Manager is now used instead of SSH for secure access.
+    It may take 5-10 minutes for the application to be fully operational after the instance starts.
   EOT
 }

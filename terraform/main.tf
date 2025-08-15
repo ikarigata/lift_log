@@ -74,14 +74,14 @@ resource "aws_security_group" "lift_log_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # SSH アクセス（管理用）
-  ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_ssh_cidrs
-  }
+  # SSH アクセス（SSM使用のため削除済み）
+  # ingress {
+  #   description = "SSH"
+  #   from_port   = 22
+  #   to_port     = 22
+  #   protocol    = "tcp"
+  #   cidr_blocks = var.allowed_ssh_cidrs
+  # }
 
   # アウトバウンド通信（すべて許可）
   egress {
@@ -120,6 +120,12 @@ resource "aws_iam_role" "ec2_role" {
     Environment = var.environment
     Project     = "lift-log"
   }
+}
+
+# IAMポリシーアタッチメント: SSM管理用
+resource "aws_iam_role_policy_attachment" "ssm_managed_instance_core" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 # IAMインスタンスプロファイル

@@ -5,8 +5,14 @@ frontend/test-results/**
 # SSH keys (プロジェクト直下に配置)
 .ssh/**
 
-# AWS環境変数ファイル
-aws-deploy/.env.aws
+# Environment variables files
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+**/.env
+**/.env.*
 
 # Terraform state files
 terraform/*.tfstate

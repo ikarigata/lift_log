@@ -12,7 +12,7 @@ RUN npm ci
 COPY . .
 
 # ビルド時引数を定義（.envファイルからの値がデフォルト）
-ARG VITE_API_BASE_URL=http://localhost:8080
+ARG VITE_API_BASE_URL=/api/v1
 ARG VITE_USE_MSW=false
 
 # 環境変数として設定
