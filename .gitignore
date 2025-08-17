@@ -5,6 +5,9 @@ frontend/test-results/**
 # SSH keys (プロジェクト直下に配置)
 .ssh/**
 
+# Cloudflare origin certificates
+ssl/**
+
 # Environment variables files
 .env
 .env.local
