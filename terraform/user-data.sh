@@ -81,7 +81,34 @@ echo "$(date): Setting up application files..."
 
 # Create directory structure for manual deployment
 mkdir -p vol_log/{aws-deploy,terraform}
-chown -R ec2-user:ec2-user $APP_DIR
+
+# Setup SSL certificate directory
+echo "$(date): Setting up SSL certificates..."
+SSL_DIR="$DATA_MOUNT/ssl"
+mkdir -p $SSL_DIR/{certs,private}
+
+# Get AWS region from metadata
+AWS_REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/.$//')
+
+# Retrieve SSL certificate from Parameter Store
+echo "$(date): Retrieving SSL certificate from Parameter Store..."
+if aws ssm get-parameter --name "/vol-log/ssl/certificate" --with-decryption --region $AWS_REGION --query 'Parameter.Value' --output text > $SSL_DIR/certs/cert.pem 2>/dev/null; then
+    echo "$(date): SSL certificate retrieved successfully"
+    chmod 644 $SSL_DIR/certs/cert.pem
+else
+    echo "$(date): Warning: SSL certificate not found in Parameter Store. Skipping SSL setup."
+fi
+
+# Retrieve SSL private key from Parameter Store  
+echo "$(date): Retrieving SSL private key from Parameter Store..."
+if aws ssm get-parameter --name "/vol-log/ssl/private-key" --with-decryption --region $AWS_REGION --query 'Parameter.Value' --output text > $SSL_DIR/private/key.pem 2>/dev/null; then
+    echo "$(date): SSL private key retrieved successfully"
+    chmod 600 $SSL_DIR/private/key.pem
+else
+    echo "$(date): Warning: SSL private key not found in Parameter Store. Skipping SSL setup."
+fi
+
+chown -R ec2-user:ec2-user $APP_DIR $SSL_DIR
 
 # Create systemd service for auto-start
 echo "$(date): Creating systemd service..."
@@ -95,8 +122,9 @@ After=docker.service
 Type=oneshot
 RemainAfterExit=yes
 WorkingDirectory=/opt/vol-log/app/vol_log
-ExecStart=/usr/bin/docker-compose -f aws-deploy/docker-compose.aws.yml up -d
-ExecStop=/usr/bin/docker-compose -f aws-deploy/docker-compose.aws.yml down
+Environment=NGINX_CONF=./frontend/nginx.prod.conf
+ExecStart=/usr/bin/docker-compose up -d
+ExecStop=/usr/bin/docker-compose down
 TimeoutStartSec=0
 User=ec2-user
 Group=ec2-user
@@ -133,12 +161,18 @@ Setup Status:
 ✓ Docker Compose installed
 ✓ Additional EBS volume mounted (if available)
 ✓ Application directory created
+✓ SSL certificates retrieved from Parameter Store
 ✓ Systemd service configured
 
 Next Steps:
 1. Upload application files to /opt/vol-log/app/vol_log/
 2. Configure environment variables
 3. Start the application: sudo systemctl start vol-log
+
+SSL Configuration:
+- Certificate: /opt/vol-log/ssl/certs/cert.pem
+- Private Key: /opt/vol-log/ssl/private/key.pem
+- Nginx Config: Production mode with Cloudflare IP restrictions
 
 Manual Commands:
 - Check Docker status: sudo systemctl status docker

@@ -128,6 +128,29 @@ resource "aws_iam_role_policy_attachment" "ssm_managed_instance_core" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
+# IAMポリシー: Parameter Store読み取り権限
+resource "aws_iam_role_policy" "parameter_store_policy" {
+  name = "vol-log-parameter-store-policy"
+  role = aws_iam_role.ec2_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath"
+        ]
+        Resource = [
+          "arn:aws:ssm:${var.aws_region}:*:parameter/vol-log/ssl/*"
+        ]
+      }
+    ]
+  })
+}
+
 # IAMインスタンスプロファイル
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "vol-log-ec2-profile"
@@ -235,4 +258,40 @@ resource "aws_route53_record" "www" {
   type    = "A"
   ttl     = 300
   records = [aws_eip.vol_log_eip.public_ip]
+}
+
+# Parameter Store: SSL Certificate
+resource "aws_ssm_parameter" "ssl_certificate" {
+  name  = "/vol-log/ssl/certificate"
+  type  = "SecureString"
+  value = "placeholder-certificate-content"
+  description = "SSL Certificate for Vol Log application (Cloudflare Origin Certificate)"
+
+  tags = {
+    Name        = "vol-log-ssl-certificate"
+    Environment = var.environment
+    Project     = "vol-log"
+  }
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
+# Parameter Store: SSL Private Key
+resource "aws_ssm_parameter" "ssl_private_key" {
+  name  = "/vol-log/ssl/private-key"
+  type  = "SecureString"
+  value = "placeholder-private-key-content"
+  description = "SSL Private Key for Vol Log application (Cloudflare Origin Certificate)"
+
+  tags = {
+    Name        = "vol-log-ssl-private-key"
+    Environment = var.environment
+    Project     = "vol-log"
+  }
+
+  lifecycle {
+    ignore_changes = [value]
+  }
 }
