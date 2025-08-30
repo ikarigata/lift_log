@@ -183,6 +183,20 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
   };
 
   const handleSave = () => {
+    // 空入力がある場合のチェック
+    const incompleteSets = currentSets.filter(set => 
+      (set.weight === 0 || set.weight === null || set.weight === undefined) || 
+      (set.reps === 0 || set.reps === null || set.reps === undefined)
+    );
+    
+    if (incompleteSets.length > 0) {
+      alert(
+        `${incompleteSets.length}個のセットで重量または回数が入力されていません。\n` +
+        'すべてのセットで重量と回数を入力してから保存してください。'
+      );
+      return;
+    }
+    
     onSave(currentSets, memo);
   };
 
