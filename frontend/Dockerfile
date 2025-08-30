@@ -28,8 +28,13 @@ FROM nginx:alpine
 # ビルド結果をNginxにコピー
 COPY --from=0 /app/dist /usr/share/nginx/html
 
+# defaultのNginx設定を削除
+RUN rm /etc/nginx/conf.d/default.conf
+
 # Nginxの設定ファイル
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx/conf.d/ /etc/nginx/conf.d/
+
+
 
 EXPOSE 80
 

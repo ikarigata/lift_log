@@ -85,10 +85,35 @@ else
     exit 1
 fi
 
+# Parameter Store からクライアント証明書を取得
+echo "🔑 クライアント証明書を Parameter Store から取得中..."
+if aws ssm get-parameter \
+    --name "/vol-log/ssl/client-certificate" \
+    --with-decryption \
+    --region "$AWS_REGION" \
+    --query 'Parameter.Value' \
+    --output text > ssl/certs/cloudflare-origin-pull-ca.pem 2>/dev/null; then
+    
+    echo "✅ クライアント証明書を取得しました: ssl/certs/cloudflare-origin-pull-ca.pem"
+    chmod 644 ssl/certs/cloudflare-origin-pull-ca.pem
+    
+    # クライアント証明書の内容確認（最初と最後の行のみ表示）
+    echo "📋 クライアント証明書内容確認:"
+    head -1 ssl/certs/cloudflare-origin-pull-ca.pem
+    echo "   ... (省略) ..."
+    tail -1 ssl/certs/cloudflare-origin-pull-ca.pem
+else
+    echo "❌ Error: クライアント証明書の取得に失敗しました"
+    echo "   Parameter Store に '/vol-log/ssl/client-certificate' が登録されているか確認してください"
+    echo "   登録方法: SSL_SETUP_COMMANDS.md を参照"
+    exit 1
+fi
+
 # ファイル権限確認
 echo "🔒 ファイル権限を確認中..."
 echo "   証明書: $(ls -la ssl/certs/cert.pem | awk '{print $1 " " $3 ":" $4}')"
 echo "   秘密鍵: $(ls -la ssl/private/key.pem | awk '{print $1 " " $3 ":" $4}')"
+echo "   クライアント証明書: $(ls -la ssl/certs/cloudflare-origin-pull-ca.pem | awk '{print $1 " " $3 ":" $4}')"
 
 # docker-compose.yml のボリューム設定確認
 echo "🐳 docker-compose.yml のボリューム設定確認..."
@@ -106,6 +131,7 @@ echo ""
 echo "📁 配置されたファイル:"
 echo "   - ssl/certs/cert.pem (644)"
 echo "   - ssl/private/key.pem (600)"
+echo "   - ssl/certs/cloudflare-origin-pull-ca.pem (644)"
 echo ""
 echo "🚀 次のステップ:"
 echo "   1. 本番用nginx設定を使用:"

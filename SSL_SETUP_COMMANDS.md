@@ -27,6 +27,16 @@ aws ssm put-parameter \
   --overwrite
 ```
 
+### クライアント証明書の登録（Cloudflare Origin Pull用）
+```bash
+aws ssm put-parameter \
+  --name "/vol-log/ssl/client-certificate" \
+  --type "SecureString" \
+  --value "$(cat ssl/certs/cloudflare-origin-pull-ca.pem)" \
+  --description "SSL Client Certificate for Cloudflare Origin Pull authentication" \
+  --overwrite
+```
+
 ## 2. 登録確認
 
 ### Parameter Store一覧確認
@@ -48,6 +58,15 @@ aws ssm get-parameter \
 ```bash
 aws ssm get-parameter \
   --name "/vol-log/ssl/private-key" \
+  --with-decryption \
+  --query 'Parameter.Value' \
+  --output text
+```
+
+### クライアント証明書内容確認（復号化）
+```bash
+aws ssm get-parameter \
+  --name "/vol-log/ssl/client-certificate" \
   --with-decryption \
   --query 'Parameter.Value' \
   --output text
@@ -111,6 +130,14 @@ aws ssm put-parameter \
   --type "SecureString" \
   --value "$(cat ssl/private/key.pem)" \
   --description "SSL Private Key for Vol Log application (Cloudflare Origin Certificate)" \
+  --overwrite
+
+# クライアント証明書の登録
+aws ssm put-parameter \
+  --name "/vol-log/ssl/client-certificate" \
+  --type "SecureString" \
+  --value "$(cat ssl/certs/cloudflare-origin-pull-ca.pem)" \
+  --description "SSL Client Certificate for Cloudflare Origin Pull authentication" \
   --overwrite
 
 echo "SSL証明書のParameter Store登録が完了しました"

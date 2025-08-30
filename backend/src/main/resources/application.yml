@@ -2,9 +2,9 @@ spring:
   application:
     name: lift_log
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5439/lift_log}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: ${DB_URL_DOCKER}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
   flyway:
     enabled: false
@@ -19,5 +19,5 @@ server:
 
 # JWT設定
 jwt:
-  secret: ${JWT_SECRET:mySecretKey1234567890123456789012345678901234567890}
-  expiration: ${JWT_EXPIRATION:24}
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}

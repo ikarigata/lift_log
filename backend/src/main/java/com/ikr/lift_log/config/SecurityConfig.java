@@ -52,7 +52,9 @@ public class SecurityConfig {
                                 "http://localhost:3000", // フロントエンド開発サーバー (Vite)
                                 "http://localhost:5173", // フロントエンド開発サーバー (Vite default)
                                 "http://localhost:4173", // フロントエンド previewサーバー (Vite)
-                                "http://localhost:8080"  // 同一ポートからのリクエスト
+                                "http://localhost:8080", // 同一ポートからのリクエスト
+                                "http://localhost",      // Docker環境 HTTP
+                                "https://localhost"      // Docker環境 HTTPS
                 ));
                 configuration.setAllowedMethods(Arrays.asList(
                                 "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
